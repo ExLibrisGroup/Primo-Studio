@@ -1,0 +1,135 @@
+
+<div ng-cloak>
+    <md-content layout="row" flex>
+        <md-tabs md-dynamic-height md-border-bottom flex="60">
+            <md-tab label="Configuration">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Configuration</h1>
+                    <div layout="column" layout-padding ng-cloak>
+
+                        <br/>
+                        <md-content class="md-no-momentum">
+                            <md-input-container class="md-icon-float md-block">
+                                <!-- Use floating label instead of placeholder -->
+                                <label>Primo URL</label>
+                                <md-icon class="name" role="img" aria-hidden="true"><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z"/>
+                                </svg></md-icon>
+                                <input type="text" ng-model="$ctrl.config.url" >
+                            </md-input-container>
+
+                            <md-input-container md-no-float class="md-block">
+                                <label>Primo View</label>
+                                <md-icon class="name" role="img" aria-hidden="true"><svg fill="#000000" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 0h24v24H0z" fill="none"/>
+                                    <path d="M12 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm7-7H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-1.75 9c0 .23-.02.46-.05.68l1.48 1.16c.13.11.17.3.08.45l-1.4 2.42c-.09.15-.27.21-.43.15l-1.74-.7c-.36.28-.76.51-1.18.69l-.26 1.85c-.03.17-.18.3-.35.3h-2.8c-.17 0-.32-.13-.35-.29l-.26-1.85c-.43-.18-.82-.41-1.18-.69l-1.74.7c-.16.06-.34 0-.43-.15l-1.4-2.42c-.09-.15-.05-.34.08-.45l1.48-1.16c-.03-.23-.05-.46-.05-.69 0-.23.02-.46.05-.68l-1.48-1.16c-.13-.11-.17-.3-.08-.45l1.4-2.42c.09-.15.27-.21.43-.15l1.74.7c.36-.28.76-.51 1.18-.69l.26-1.85c.03-.17.18-.3.35-.3h2.8c.17 0 .32.13.35.29l.26 1.85c.43.18.82.41 1.18.69l1.74-.7c.16-.06.34 0 .43.15l1.4 2.42c.09.15.05.34-.08.45l-1.48 1.16c.03.23.05.46.05.69z"/>
+                                </svg></md-icon>
+                                <input  type="text" ng-model="$ctrl.config.view" placeholder="Primo View Identifier (vid)" >
+                            </md-input-container>
+
+                            <md-button ng-click="$ctrl.start()">Start server with url and view</md-button>
+
+
+
+                        </md-content>
+
+                    </div>
+                </md-content>
+            </md-tab>
+            <md-tab label="Theme">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Theme</h1>
+
+                    <md-card>
+                        <md-card-title>
+                            <md-card-title-text>
+                                <span class="md-headline">Choose colors</span>
+                                <span class="md-subhead">Review the Preview on the right and apply changes</span>
+                            </md-card-title-text>
+                        </md-card-title>
+
+                        <md-card-content>
+                            <div layout="row" ng-repeat="(key,value) in $ctrl.getColors()" flex="20" layout-align="space-between center">
+                                <span>{{key}}</span>
+                                <input flex="10" type="color" id="primary" onchange="clickColor(0, -1, -1, 5)" ng-model="$ctrl.colors[key]" style="width:85%;">
+                            </div>
+
+
+
+
+                        </md-card-content>
+                        <md-button ng-click="$ctrl.createTheme()">Create Theme</md-button>
+                    </md-card>
+
+
+
+
+                </md-content>
+            </md-tab>
+            <md-tab label="Images">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Images</h1>
+                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                </md-content>
+            </md-tab>
+            <md-tab label="Templates">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Templates</h1>
+                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+                </md-content>
+            </md-tab>
+            <md-tab label="Features">
+                <md-content class="md-padding">
+                    <h1 class="md-display-2">Features</h1>
+                    <div layout="row">
+
+
+                        <div ng-cloak layout-gt-sm="row" layout="column" flex="60">
+
+                            <div flex="100">
+
+                                <md-toolbar layout="row" class="md-hue-3">
+                                    <div class="md-toolbar-tools">
+                                        <span>App Store</span>
+                                    </div>
+                                </md-toolbar>
+
+                                <md-content>
+                                    <md-list flex>
+                                        <md-subheader class="md-no-sticky">Choose a feature</md-subheader>
+                                        <md-list-item class="md-3-line" ng-repeat="item in $ctrl.getFeatures()" ng-click="null">
+                                            <img src="{{item.face}}" class="md-avatar" alt="{{item.who}}" />
+                                            <div class="md-list-item-text" layout="column">
+                                                <h3>{{ item.who }}</h3>
+                                                <h4>{{ item.what }}</h4>
+                                                <a target="_blank" href="{{item.linkGit}}">Link to Github</a>
+                                            </div>
+                                            <md-button ng-click="$ctrl.addFeature(item.npmid)">Click to add</md-button>
+                                        </md-list-item>
+                                        <md-divider ></md-divider>
+                                    </md-list>
+                                </md-content>
+                            </div>
+
+                            <md-divider></md-divider>
+
+
+
+                        </div>
+
+
+
+                    </div>
+                </md-content>
+            </md-tab>
+        </md-tabs>
+
+        <div style="min-width:600px" flex="40">
+            <iframe style="min-width:600px;min-height:780px" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
+            <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
+        </div>
+    </md-content>
+</div>
+
+

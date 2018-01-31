@@ -1,0 +1,188 @@
+'use strict';
+
+let autoprefixer = require('gulp-autoprefixer');
+let config= require('../config');
+let buildParams = config.buildParams;
+let useScss = require('../config').getUseScss;
+let proxy_server = require('../config').PROXY_SERVER
+let gulp = require('gulp');
+let cssnano = require('gulp-cssnano');
+let debug = require('gulp-debug');
+let rename = require("gulp-rename");
+let sass = require('gulp-sass');
+let sourcemaps = require('gulp-sourcemaps');
+let plumber = require('gulp-plumber');
+let splitCss = require('../cssSplitter');
+let merge = require('merge-stream');
+let clone = require('gulp-clone');
+let wait = require('gulp-wait')
+let template = require('gulp-template');
+let request = require('request');
+let  zlib = require('zlib');
+let tar = require('tar-fs');
+let stylesBaseDir = 'www/styles/partials';
+let templateFile = stylesBaseDir+'/_variables.tmpl.scss';
+let OTBColorsFile = stylesBaseDir+'/../colors.json';
+let scssFile = '_variables.scss';
+var runSequence = require('run-sequence');
+let  fs = require('fs');
+let del = require('del');
+let lodashMerge = require('lodash/merge');
+let gutil = require('gulp-util');
+let expressExports= require('./express');
+// let config= require('../config');
+
+gulp.task('cleanup',()=> del(['www']));
+
+gulp.task('extract-scss-files', ()=> {
+    return extractScssFiles(config.view());
+});
+
+function extractScssFiles(userId){
+    let proxy_server = config.PROXY_SERVER;
+    console.log(proxy_server+'/primo-explore/lib/scsss.tar.gz');
+    let url = proxy_server+'/primo-explore/lib/scsss.tar.gz';
+    var headers = {
+		/*'Accept-Encoding': 'gzip'*/
+    };
+    let userCustomDir=userId? expressExports.getUserCustomDir(userId) : '.';
+    return request({url:url, 'headers': headers})
+        .pipe(zlib.createGunzip()) // unzip
+        .pipe(tar.extract(userCustomDir));
+}
+
+
+gulp.task('color-variables',() => {
+    // console.log('aaaaa'+buildParams.viewCssDir());
+    // let colorVariables = JSON.parse(fs.readFileSync(buildParams.viewCssDir() + '/../colors.json', 'utf8'));
+    // let colorVariablesOTB =JSON.parse(fs.readFileSync(OTBColorsFile, 'utf8'));
+    // let colorsMeregd = lodashMerge(colorVariablesOTB, colorVariables);
+    // return gulp.src(templateFile)
+    //     .pipe(template(colorsMeregd))
+    //     .pipe(rename(scssFile))
+    //     .pipe(gulp.dest(stylesBaseDir))
+		// 		.pipe(gulp.dest(buildParams.customScssDir() + "/partials"));
+    colorVariables(config.view());
+});
+
+function colorVariables(userId){
+    let userCustomDir= expressExports.getUserCustomDir(userId);
+    console.log('aaaaa'+userCustomDir + '/css');
+    let colorVariables = JSON.parse(fs.readFileSync(userCustomDir + '/css' + '/../colors.json', 'utf8'));
+    let colorVariablesOTB =JSON.parse(fs.readFileSync(userCustomDir + '/' + OTBColorsFile, 'utf8'));
+    let colorsMeregd = lodashMerge(colorVariablesOTB, colorVariables);
+    return gulp.src(templateFile)
+        .pipe(template(colorsMeregd))
+        .pipe(rename(scssFile))
+        .pipe(gulp.dest(userCustomDir + '/' + stylesBaseDir))
+        .pipe(gulp.dest(userCustomDir + "/scss/partials"));
+}
+
+gulp.task('compile-scss',() => {
+    compileScss(config.view());
+    // let allCss  = gulp.src('www/styles/main.scss')
+    //     .pipe(plumber({
+    //         errorHandler: function (err) {
+    //             console.log('Error:' + err);
+    //             this.emit('end');
+    //         }
+    //     }))
+    //     // .pipe(sourcemaps.init())
+    //     .pipe(sass())
+    //     .pipe(autoprefixer({
+    //         browsers: ['last 2 versions'],
+    //         cascade: false
+    //     }));
+    // let colorStream = allCss
+    //     .pipe(clone())
+    //     .pipe(rename('app-colors.css'))
+    //     //.pipe(cssnano({safe: true}))
+    //     .pipe(splitCss({colors:true}))
+    //     //.pipe(sourcemaps.write('.'))
+    //     .pipe(gulp.dest(buildParams.viewCssDir()));
+    //
+    // return colorStream;
+});
+
+function compileScss(userId) {
+    let userCustomDir= expressExports.getUserCustomDir(userId);
+    let allCss  = gulp.src(userCustomDir + '/www/styles/main.scss')
+        .pipe(plumber({
+            errorHandler: function (err) {
+                console.log('Error:' + err);
+                this.emit('end');
+            }
+        }))
+        // .pipe(sourcemaps.init())
+        .pipe(sass({
+            includePaths: ['./primo-explore/custom/1Mozilla50WindowsNT61Win64x64rv570Gecko20100101Firefox570/www/components/search/searchResult/searchResultAvailability/', 'C:/dev/app-store/primo-app-store-aws/primo-app-store-aws/primo-app-store-deploy/primo-explore-devenv/primo-explore/custom/1Mozilla50WindowsNT61Win64x64rv570Gecko20100101Firefox570/www/components/search/searchResult/searchResultAvailability/']
+        }))
+        .pipe(autoprefixer({
+            browsers: ['last 2 versions'],
+            cascade: false
+        }));
+    let colorStream = allCss
+        .pipe(clone())
+        .pipe(rename('app-colors.css'))
+        //.pipe(cssnano({safe: true}))
+        .pipe(splitCss({colors:true}))
+        //.pipe(sourcemaps.write('.'))
+        .pipe(gulp.dest(userCustomDir + '/css'));
+
+    return colorStream;
+}
+
+gulp.task('app-css', (cb) => {
+	runSequence('extract-scss-files', 'color-variables', 'compile-scss', 'custom-css', 'cleanup', cb);
+});
+
+/**
+ * Task to watch custom scss files contained in /scss directory in view package folder
+ *
+ * Please note. The logic of this task will only execute if the run task is
+ * executed with the "useScss" parameter, e.g.: gulp run --view UNIBZ --useScss
+ */
+gulp.task("watch-custom-scss", () => {
+	if (!useScss()) {
+		return;
+	}
+
+	gulp.watch([buildParams.customScssDir() + "/**/*.scss"], ["custom-scss"]);
+});
+
+/**
+ * Compiles the custom scss to a css file called custom-scss-compiled.css which
+ * in turn is then concatenated with all other css files present in the /css folder
+ * of the view package folder to the custom1.css file that constitutes the entirety
+ * of the view package css.
+ *
+ * Please note. The logic of this task will only execute if the run task is
+ * executed with the "useScss" parameter, e.g.: gulp run --view UNIBZ --useScss
+ */
+gulp.task("custom-scss", () => {
+	if (!useScss()) {
+		return;
+	}
+
+	gutil.log("Start Creating custom CSS from custom SCSS");
+
+	let customScss = gulp.src(buildParams.customScssMainPath())
+		.pipe(plumber({
+				errorHandler: function (err) {
+						console.log('1111111' + err);
+						this.emit('end');
+				}
+		}))
+		// .pipe(sourcemaps.init())
+		.pipe(sass())
+		.pipe(autoprefixer({
+				browsers: ['last 2 versions'],
+				cascade: false
+		}))
+		.pipe(rename("custom-scss-compiled.css"))
+		.pipe(gulp.dest(buildParams.viewCssDir()));
+
+	gutil.log("End Creating custom CSS from custom SCSS");
+
+	return customScss;
+});

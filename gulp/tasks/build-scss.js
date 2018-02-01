@@ -28,13 +28,16 @@ let  fs = require('fs');
 let del = require('del');
 let lodashMerge = require('lodash/merge');
 let gutil = require('gulp-util');
-let expressExports= require('./express');
+let utils= require('./utils/utils');
+let customCss=  require('./buildCustomCss').customCss;
 // let config= require('../config');
+
+var Readable = require('stream').Readable;
 
 gulp.task('cleanup',()=> del(['www']));
 
 gulp.task('extract-scss-files', ()=> {
-    return extractScssFiles(config.view());
+    return extractScssFiles();
 });
 
 function extractScssFiles(userId){
@@ -44,96 +47,78 @@ function extractScssFiles(userId){
     var headers = {
 		/*'Accept-Encoding': 'gzip'*/
     };
-    let userCustomDir=userId? expressExports.getUserCustomDir(userId) : '.';
-    return request({url:url, 'headers': headers})
-        .pipe(zlib.createGunzip()) // unzip
-        .pipe(tar.extract(userCustomDir));
+    let userCustomDir=userId? utils.getUserCustomDir(userId) : '.';
+    return new Promise((resolve, reject)=>{
+        let stream= request({url:url, 'headers': headers})
+            .pipe(zlib.createGunzip()) // unzip
+            .pipe(tar.extract(userCustomDir));
+            stream.on('finish', resolve);
+            stream.on( 'error', reject);
+    });
 }
 
 
 gulp.task('color-variables',() => {
-    // console.log('aaaaa'+buildParams.viewCssDir());
-    // let colorVariables = JSON.parse(fs.readFileSync(buildParams.viewCssDir() + '/../colors.json', 'utf8'));
-    // let colorVariablesOTB =JSON.parse(fs.readFileSync(OTBColorsFile, 'utf8'));
-    // let colorsMeregd = lodashMerge(colorVariablesOTB, colorVariables);
-    // return gulp.src(templateFile)
-    //     .pipe(template(colorsMeregd))
-    //     .pipe(rename(scssFile))
-    //     .pipe(gulp.dest(stylesBaseDir))
-		// 		.pipe(gulp.dest(buildParams.customScssDir() + "/partials"));
-    colorVariables(config.view());
+    return colorVariables();
 });
 
 function colorVariables(userId){
-    let userCustomDir= expressExports.getUserCustomDir(userId);
-    console.log('aaaaa'+userCustomDir + '/css');
+    let userCustomDir=userId? utils.getUserCustomDir(userId): utils.getUserCustomDir(config.view());
     let colorVariables = JSON.parse(fs.readFileSync(userCustomDir + '/css' + '/../colors.json', 'utf8'));
-    let colorVariablesOTB =JSON.parse(fs.readFileSync(userCustomDir + '/' + OTBColorsFile, 'utf8'));
+    let colorVariablesOTB =JSON.parse(fs.readFileSync((userId? userCustomDir + '/' : '') + OTBColorsFile, 'utf8'));
     let colorsMeregd = lodashMerge(colorVariablesOTB, colorVariables);
-    return gulp.src(templateFile)
-        .pipe(template(colorsMeregd))
-        .pipe(rename(scssFile))
-        .pipe(gulp.dest(userCustomDir + '/' + stylesBaseDir))
-        .pipe(gulp.dest(userCustomDir + "/scss/partials"));
+    return new Promise((resolve, reject)=>{
+        let stream= gulp.src((userId? userCustomDir + '/' : '') + templateFile)
+            .pipe(template(colorsMeregd))
+            .pipe(rename(scssFile))
+            .pipe(gulp.dest((userId? userCustomDir + '/' : '') + stylesBaseDir));
+        stream.on('end', resolve);
+        stream.on( 'error', reject);
+    });
 }
 
 gulp.task('compile-scss',() => {
-    compileScss(config.view());
-    // let allCss  = gulp.src('www/styles/main.scss')
-    //     .pipe(plumber({
-    //         errorHandler: function (err) {
-    //             console.log('Error:' + err);
-    //             this.emit('end');
-    //         }
-    //     }))
-    //     // .pipe(sourcemaps.init())
-    //     .pipe(sass())
-    //     .pipe(autoprefixer({
-    //         browsers: ['last 2 versions'],
-    //         cascade: false
-    //     }));
-    // let colorStream = allCss
-    //     .pipe(clone())
-    //     .pipe(rename('app-colors.css'))
-    //     //.pipe(cssnano({safe: true}))
-    //     .pipe(splitCss({colors:true}))
-    //     //.pipe(sourcemaps.write('.'))
-    //     .pipe(gulp.dest(buildParams.viewCssDir()));
-    //
-    // return colorStream;
+    return compileScss();
 });
 
 function compileScss(userId) {
-    let userCustomDir= expressExports.getUserCustomDir(userId);
-    let allCss  = gulp.src(userCustomDir + '/www/styles/main.scss')
-        .pipe(plumber({
-            errorHandler: function (err) {
-                console.log('Error:' + err);
-                this.emit('end');
-            }
-        }))
-        // .pipe(sourcemaps.init())
-        .pipe(sass({
-            includePaths: ['./primo-explore/custom/1Mozilla50WindowsNT61Win64x64rv570Gecko20100101Firefox570/www/components/search/searchResult/searchResultAvailability/', 'C:/dev/app-store/primo-app-store-aws/primo-app-store-aws/primo-app-store-deploy/primo-explore-devenv/primo-explore/custom/1Mozilla50WindowsNT61Win64x64rv570Gecko20100101Firefox570/www/components/search/searchResult/searchResultAvailability/']
-        }))
-        .pipe(autoprefixer({
-            browsers: ['last 2 versions'],
-            cascade: false
-        }));
-    let colorStream = allCss
-        .pipe(clone())
-        .pipe(rename('app-colors.css'))
-        //.pipe(cssnano({safe: true}))
-        .pipe(splitCss({colors:true}))
-        //.pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(userCustomDir + '/css'));
+    let userCustomDir=userId? utils.getUserCustomDir(userId): utils.getUserCustomDir(config.view());
+    return new Promise((resolve, reject)=>{
+        let allCss  = gulp.src((userId? userCustomDir + '/' : '') + 'www/styles/main.scss')
+            .pipe(plumber({
+                errorHandler: function (err) {
+                    console.log('Error:' + err);
+                    this.emit('end');
+                }
+            }))
+            // .pipe(sourcemaps.init())
+            .pipe(sass())
+            .pipe(autoprefixer({
+                browsers: ['last 2 versions'],
+                cascade: false
+            }));
+        let colorStream = allCss
+            .pipe(clone())
+            .pipe(rename('app-colors.css'))
+            //.pipe(cssnano({safe: true}))
+            .pipe(splitCss({colors:true}))
+            //.pipe(sourcemaps.write('.'))
+            .pipe(gulp.dest(userCustomDir + '/css'));
 
-    return colorStream;
+        colorStream.on('end', resolve);
+        colorStream.on( 'error', reject);
+    });
 }
 
 gulp.task('app-css', (cb) => {
 	runSequence('extract-scss-files', 'color-variables', 'compile-scss', 'custom-css', 'cleanup', cb);
 });
+
+
+function appCss(userId){
+    return utils.promiseSerial([extractScssFiles, colorVariables, compileScss, customCss], userId);
+}
+
 
 /**
  * Task to watch custom scss files contained in /scss directory in view package folder
@@ -185,3 +170,7 @@ gulp.task("custom-scss", () => {
 
 	return customScss;
 });
+
+module.exports={
+    appCss: appCss,
+}

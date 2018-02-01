@@ -13,6 +13,8 @@ const configG = require('../config');
 /*const requireNPM = require('require-npm').decorate(require);*/
 const rimrafAsync = Promise.promisify(require('rimraf'));
 const streamToPromise = require('./streamToPromise');
+const appCss= require('./build-scss').appCss;
+const utils= require('./utils/utils');
 
 gulp.task('serve', function() {
     //1. serve with default settings
@@ -34,7 +36,7 @@ gulp.task('serve', function() {
 
 
     appS.get('/feature', function (req, res) {
-        var userId= getUserId(req);
+        var userId= utils.getUserId(req);
         configG.setView(userId);
         // childP.exec('npm install --prefix primo-explore/custom/'+req.query.dirName+' '+req.query.id);
         childP.exec('npm install --prefix primo-explore/custom/'+userId+' '+req.query.id);
@@ -43,10 +45,10 @@ gulp.task('serve', function() {
         res.send(response);
     })
     appS.get('/restart',function(req,res){
-        if(!process.cwd().includes("primo-explore-devenv")) {
-            process.chdir("primo-explore-devenv");
+        if(!process.cwd().includes("Primo-App-Store")) {
+            process.chdir("Primo-App-Store");
         }
-        var userId= getUserId(req);
+        var userId= utils.getUserId(req);
         // configG.setView(req.query.dirName);
         configG.setView(userId);
 
@@ -57,17 +59,17 @@ gulp.task('serve', function() {
     appS.post('/colors', function (req, res) {
         var colors = req.body.data.colors;
         var conf = req.body.data.conf;
-        var userId= getUserId(req);
+        var userId= utils.getUserId(req);
         // configG.setView(conf.dirName);
         configG.setView(userId);
-        var baseDir = 'primo-explore/custom/'+conf.dirName;
+        var baseDir = utils.getUserCustomDir(userId);
         process.argv = ["","", "","--view="+conf.dirName];
 
         console.log('aaa'+baseDir);
         fs.writeFileAsync(baseDir+'/colors.json', JSON.stringify(colors), { encoding: 'utf-8' })
             .then(() => {
             console.log('finished writing colors.json');
-            gulp.start('app-css');
+            appCss(userId);
     });
 
         var response = {status:'200'};
@@ -77,14 +79,14 @@ gulp.task('serve', function() {
 
 
     appS.get('/start', function (req, res) {
-        if(!process.cwd().includes("primo-explore-devenv")) {
-            process.chdir("primo-explore-devenv");
+        if(!process.cwd().includes("Primo-App-Store")) {
+            process.chdir("Primo-App-Store");
         }
         var confObj = {"view":req.query.view,
             "url": req.query.url};
         // var d = new Date();
         // var n = d.getTime();
-        var userId= getUserId(req);
+        var userId= utils.getUserId(req);
 
         configG.setView(userId);
 
@@ -169,19 +171,26 @@ function buildByBrowserify() {
 }
 
 
-function getUserId(req){
-    var ip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var userAgent= req.headers['user-agent'] || '';
-    var userId= ip + userAgent;
-    userId= userId.replace(/[^\d\w]/g, ''); //sanitize user id since it is user as a folder name
-    return userId;
-}
-
-function getUserCustomDir(userId){
-    return `primo-explore/custom/${userId}`;
-}
-
-module.exports={
-    getUserId: getUserId,
-    getUserCustomDir: getUserCustomDir
-}
+// function getUserId(req){
+//     var ip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+//     var userAgent= req.headers['user-agent'] || '';
+//     var userId= ip + userAgent;
+//     userId= userId.replace(/[^\d\w]/g, ''); //sanitize user id since it is user as a folder name
+//     return userId;
+// }
+//
+// function getUserCustomDir(userId){
+//     return `primo-explore/custom/${userId}`;
+// }
+//
+// function promiseSerial(funcs, param) {
+//     return funcs.reduce((promise, func) =>
+//             promise.then(result => func(param).then(Array.prototype.concat.bind(result))),
+//         Promise.resolve([]));
+// }
+//
+// module.exports={
+//     promiseSerial: promiseSerial,
+//     getUserId: getUserId,
+//     getUserCustomDir: getUserCustomDir
+// }

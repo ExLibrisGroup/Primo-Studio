@@ -18,7 +18,7 @@ let viewForProxy;
 let urlForProxy;
 // let dirForProxy;
 
-let expressExports= require('./express');
+let utils= require('./utils/utils');
 
 gulp.task('setup_watchers', ['watch-js', 'watch-custom-scss', 'watch-css'], () => {
     gulp.watch(config.buildParams.customPath(),() => {
@@ -66,7 +66,7 @@ gulp.task('connect:primo_explore', function() {
 
 
                 let fixConfiguration = function(res,res1,isConfByFile){
-                    let dirForProxy= expressExports.getUserId(req);
+                    let dirForProxy= utils.getUserId(req);
                     let body = '';
 
                     res1.setEncoding('utf8');

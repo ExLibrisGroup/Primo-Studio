@@ -15,7 +15,6 @@ let plumber = require('gulp-plumber');
 let splitCss = require('../cssSplitter');
 let merge = require('merge-stream');
 let clone = require('gulp-clone');
-let wait = require('gulp-wait')
 let template = require('gulp-template');
 let request = require('request');
 let  zlib = require('zlib');

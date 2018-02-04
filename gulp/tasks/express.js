@@ -68,12 +68,17 @@ gulp.task('serve', function() {
         console.log('aaa'+baseDir);
         fs.writeFileAsync(baseDir+'/colors.json', JSON.stringify(colors), { encoding: 'utf-8' })
             .then(() => {
-            console.log('finished writing colors.json');
-            appCss(userId);
-    });
-
-        var response = {status:'200'};
-        res.send(response);
+                console.log('finished writing colors.json');
+                appCss(userId).then(()=>{
+                    console.log('finished app css');
+                    var response = {status:'200'};
+                    res.send(response);
+                }, ()=>{
+                    console.log('failed app css');
+                    var response = {status:'500'};
+                    res.send(response);
+                });
+            });
     })
 
 

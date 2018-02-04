@@ -126,7 +126,7 @@
         </md-tabs>
 
         <div style="min-width:600px" flex="40">
-            <iframe style="min-width:600px;min-height:780px" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
+            <iframe id="primo-explore-iframe" style="min-width:600px;min-height:780px" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
             <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
         </div>
     </md-content>

@@ -12,12 +12,13 @@ var gulp = require('gulp');*/
 
 
 class Server {
-    constructor($mdToast,$http,$sce) {
+    constructor($mdToast,$http,$sce, $location) {
         console.log('constructor running');
         this.$mdToast = $mdToast;
         this.up = false;
         this.$http = $http;
         this.$sce = $sce;
+        this.$location= $location;
         //this.startServer();
         //this.up = true;
         this.config={"view":"NORTH",
@@ -170,7 +171,7 @@ class Server {
     }
 
         getIframeUrl(){
-            return this.$sce.trustAsResourceUrl('http://localhost:8003/primo-explore/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
+            return this.$sce.trustAsResourceUrl(this.$location.protocol + '://' + this.$location.host + ':8003/primo-explore/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
         }
         isUp(){
             return this.up;

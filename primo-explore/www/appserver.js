@@ -107,7 +107,7 @@ class Server {
             conf: this.config
             }
         };
-        this.$http.post('http://localhost:8004/colors',config).then((resp)=>{
+        this.$http.post('/colors',config).then((resp)=>{
             if(resp.status === 200){
                 console.log('theme created');
                 this.refreshNuiIFrame();
@@ -121,7 +121,7 @@ class Server {
         var config={params:
         this.config
         };
-        this.$http.get('http://localhost:8004/restart',config).then(function(resp){
+        this.$http.get('/restart',config).then(function(resp){
             if(resp.status === 200){
             }
 
@@ -132,7 +132,7 @@ class Server {
         var config={params:
         this.config
         };
-        this.$http.get('http://localhost:8004/start',config).then(function(resp){
+        this.$http.get('/start',config).then(function(resp){
             if(resp.status === 200){
                 _this.config.dirName = resp.data.dirName;
                 console.log('created new directory: '+ _this.config.dirName);
@@ -149,7 +149,7 @@ class Server {
         var config={params:
         this.config
         };
-        this.$http.get('http://localhost:8004/feature',config).then(function(resp){
+        this.$http.get('/feature',config).then(function(resp){
 
         });
 

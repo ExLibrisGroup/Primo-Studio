@@ -18,8 +18,15 @@ function promiseSerial(funcs, param) {
         Promise.resolve([]));
 }
 
+function sendErrorResponse(res, err){
+    console.log(err.message);
+    var response = {status:'500'};
+    res.send(response);
+}
+
 module.exports={
     promiseSerial: promiseSerial,
     getUserId: getUserId,
-    getUserCustomDir: getUserCustomDir
+    getUserCustomDir: getUserCustomDir,
+    sendErrorResponse: sendErrorResponse
 }

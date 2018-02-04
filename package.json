@@ -46,6 +46,7 @@
     "lodash": "4.16.4",
     "merge-stream": "1.0.0",
     "minimist": "1.2.0",
+    "npmi": "^4.0.0",
     "prompt": "1.0.0",
     "protractor": "5.0.0",
     "protractor-image-comparison": "1.2.3",

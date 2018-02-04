@@ -15,6 +15,8 @@ const rimrafAsync = Promise.promisify(require('rimraf'));
 const streamToPromise = require('./streamToPromise');
 const appCss= require('./build-scss').appCss;
 const utils= require('./utils/utils');
+const npmi= require('npmi');
+const buildCustomJs= require('./buildCustomJs');
 
 gulp.task('serve', function() {
     //1. serve with default settings
@@ -36,13 +38,32 @@ gulp.task('serve', function() {
 
 
     appS.get('/feature', function (req, res) {
+        if(!process.cwd().includes("Primo-App-Store")) {
+            process.chdir("Primo-App-Store");
+        }
         var userId= utils.getUserId(req);
-        configG.setView(userId);
+        // configG.setView(userId);
         // childP.exec('npm install --prefix primo-explore/custom/'+req.query.dirName+' '+req.query.id);
-        childP.exec('npm install --prefix primo-explore/custom/'+userId+' '+req.query.id);
+        npmi({path: 'primo-explore/custom/' + userId, name: req.query.id}, (err, result)=>{
+            if (err){
+                console.log('failed to install feature:');
+                utils.sendErrorResponse(res, err);
+            }
+            else{
+                buildCustomJs.customJs(userId).then(()=>{
+                    var response = {data:'noam', status: '200'};
+                    res.send(response);
+                }, (err)=>{
+                    console.log('failed to build custom js:');
+                    utils.sendErrorResponse(res, err);
+                });
 
-        var response = {data:'noam'};
-        res.send(response);
+            }
+        });
+        // childP.exec('npm install --prefix primo-explore/custom/'+userId+' '+req.query.id);
+        //
+        // var response = {data:'noam'};
+        // res.send(response);
     })
     appS.get('/restart',function(req,res){
         if(!process.cwd().includes("Primo-App-Store")) {
@@ -75,8 +96,7 @@ gulp.task('serve', function() {
                     res.send(response);
                 }, ()=>{
                     console.log('failed app css');
-                    var response = {status:'500'};
-                    res.send(response);
+                    utils.sendErrorResponse(res, err);
                 });
             });
     })
@@ -158,6 +178,8 @@ gulp.task('custom', function() {
     });
     gulp.watch('primo-explore/app/server.js', server.start);
 });
+
+
 
 
 

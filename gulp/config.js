@@ -145,6 +145,7 @@ var SERVERS = {
 
 
 let buildParams = {
+    customModuleFile: customModuleFile,
     customFile: customFile,
     customCssFile: customCssFile,
     customPath: customPath,

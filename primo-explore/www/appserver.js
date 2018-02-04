@@ -150,8 +150,11 @@ class Server {
         var config={params:
         this.config
         };
-        this.$http.get('/feature',config).then(function(resp){
-
+        this.$http.get('/feature',config).then((resp)=>{
+            console.log('feature installed');
+            this.refreshNuiIFrame();
+        }, (err)=>{
+            console.log('something went wrong when installing feature:' + err.message);
         });
 
     }

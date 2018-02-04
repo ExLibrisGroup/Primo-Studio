@@ -171,7 +171,7 @@ class Server {
     }
 
         getIframeUrl(){
-            return this.$sce.trustAsResourceUrl(this.$location.protocol + '://' + this.$location.host + ':8003/primo-explore/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
+            return this.$sce.trustAsResourceUrl(this.$location.protocol() + '://' + this.$location.host() + ':8003/primo-explore/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
         }
         isUp(){
             return this.up;

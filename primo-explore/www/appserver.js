@@ -82,6 +82,21 @@ class Server {
         };
     }
 
+    get nuiIframeElement(){
+        if (!this._nuiIFrameElement){
+            let iframeElement= document.getElementById('primo-explore-iframe');
+            this._nuiIFrameElement= iframeElement;
+        }
+        return this._nuiIFrameElement;
+    }
+
+    refreshNuiIFrame(){
+        if (!this.nuiIframeElement){
+            return;
+        }
+        this.nuiIframeElement.src = this.nuiIframeElement.src;
+    }
+
     getConfig(){
         return this.config;
     }
@@ -92,9 +107,10 @@ class Server {
             conf: this.config
             }
         };
-        this.$http.post('http://localhost:8004/colors',config).then(function(resp){
+        this.$http.post('http://localhost:8004/colors',config).then((resp)=>{
             if(resp.status === 200){
                 console.log('theme created');
+                this.refreshNuiIFrame();
             }
 
         });

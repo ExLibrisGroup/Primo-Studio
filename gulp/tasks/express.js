@@ -18,13 +18,12 @@ const utils= require('./utils/utils');
 const npmi= require('npmi');
 const buildCustomJs= require('./buildCustomJs');
 
-gulp.task('serve', function() {
+gulp.task('serve', ['bundle-js'], function() {
     //1. serve with default settings
     /* var server = gls.static(); //equals to gls.static('public', 3000);
      server.start();*/
 
     //2. serve at custom port
-    buildByBrowserify();
 
     if (gulp.tasks.run) {
         gulp.start('run')
@@ -196,28 +195,3 @@ function buildByBrowserify() {
         .bundle()
         .pipe(fs.createWriteStream('./primo-explore/www/bundle.js'));
 }
-
-
-// function getUserId(req){
-//     var ip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-//     var userAgent= req.headers['user-agent'] || '';
-//     var userId= ip + userAgent;
-//     userId= userId.replace(/[^\d\w]/g, ''); //sanitize user id since it is user as a folder name
-//     return userId;
-// }
-//
-// function getUserCustomDir(userId){
-//     return `primo-explore/custom/${userId}`;
-// }
-//
-// function promiseSerial(funcs, param) {
-//     return funcs.reduce((promise, func) =>
-//             promise.then(result => func(param).then(Array.prototype.concat.bind(result))),
-//         Promise.resolve([]));
-// }
-//
-// module.exports={
-//     promiseSerial: promiseSerial,
-//     getUserId: getUserId,
-//     getUserCustomDir: getUserCustomDir
-// }

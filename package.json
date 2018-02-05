@@ -57,7 +57,9 @@
     "shelljs": "0.6.0",
     "shorthash": "0.0.2",
     "tar-fs": "1.13.0",
-    "unzip": "^0.1.11"
+    "uglifyjs-webpack-plugin": "^1.1.8",
+    "unzip": "^0.1.11",
+    "webpack-stream": "^4.0.0"
   },
   "engines": {
     "node": ">=4.2"

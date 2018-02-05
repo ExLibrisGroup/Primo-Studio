@@ -266,8 +266,7 @@ class Server {
 
         }
     }
-    console.log('in');
-    //Server.$inject = ['$mdToast'];
+    Server.$inject= ['$mdToast', '$http', '$sce', '$location'];
 
 
 module.exports = {

@@ -18,7 +18,6 @@ function bundleJs(){
             extensions: ['.js']
         },
         output:{
-            path: path.resolve('./primo-explore/www/'),
             filename: 'bundle.js'
         },
         target: 'web',
@@ -26,7 +25,8 @@ function bundleJs(){
         plugins: [new UglifyJsPlugin({sourceMap: true})]
     };
 
-    return webpackStream(bundleConfig);
+    return webpackStream(bundleConfig)
+        .pipe(gulp.dest('./primo-explore/www/'));
 }
 
 

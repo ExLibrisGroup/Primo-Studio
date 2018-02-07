@@ -91,18 +91,7 @@ class Server {
         });
     }
 
-    start(){
-        var _this = this;
-        var config={params: this.configurationService.config};
-        this.$http.get('/start',config).then(function(resp){
-            if(resp.status === 200){
-                _this.configurationService.config.dirName = resp.data.dirName;
-                console.log('created new directory: '+ _this.configurationService.config.dirName);
-                _this.iframeService.up = true;
-            }
 
-        });
-    }
 
     addFeature(npmid){
         this.config={"id":npmid,"dirName":this.configurationService.config.dirName};

@@ -12,6 +12,9 @@ let app = angular.module('devenv', [material_module])
 const serverComponent = require('./appserver');
 app.component(serverComponent.name, serverComponent.config );
 
+const configurationForm = require('./configurationForm/configurationForm.directive');
+app.component(configurationForm.name, configurationForm.config);
+
 const colorTheme= require('./colorTheme/colorTheme.directive');
 app.component(colorTheme.name, colorTheme.config);
 

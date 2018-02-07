@@ -94,11 +94,13 @@ class Server {
 
 
     addFeature(npmid){
-        this.config={"id":npmid,"dirName":this.configurationService.config.dirName};
-        var config={params: this.configurationService.config};
-        this.$http.get('/feature',config).then((resp)=>{
+        console.log('adding feature');
+        let config= this.config;
+        config['id']= npmid;
+        var data = {params: config};
+        this.$http.get('/feature',data).then((resp)=>{
             console.log('feature installed');
-            this.refreshNuiIFrame();
+            this.iframeService.refreshNuiIFrame();
         }, (err)=>{
             console.log('something went wrong when installing feature:' + err.message);
         });

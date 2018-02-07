@@ -39,32 +39,7 @@
             </md-tab>
             <md-tab label="Theme">
                 <md-content class="md-padding">
-                    <h1 class="md-display-2">Theme</h1>
-
-                    <md-card>
-                        <md-card-title>
-                            <md-card-title-text>
-                                <span class="md-headline">Choose colors</span>
-                                <span class="md-subhead">Review the Preview on the right and apply changes</span>
-                            </md-card-title-text>
-                        </md-card-title>
-
-                        <md-card-content>
-                            <div layout="row" ng-repeat="(key,value) in $ctrl.getColors()" flex="20" layout-align="space-between center">
-                                <span>{{key}}</span>
-                                <input flex="10" type="color" id="primary" onchange="clickColor(0, -1, -1, 5)" ng-model="$ctrl.colors[key]" style="width:85%;">
-                            </div>
-
-
-
-
-                        </md-card-content>
-                        <md-button ng-click="$ctrl.createTheme()">Create Theme</md-button>
-                    </md-card>
-
-
-
-
+                    <prm-color-theme></prm-color-theme>
                 </md-content>
             </md-tab>
             <md-tab label="Images">

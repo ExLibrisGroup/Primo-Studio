@@ -12,7 +12,7 @@ const template = require('lodash/template');
 
 
 class Server {
-    constructor($mdToast,$http,$sce, $location, configurationService, iframeService) {
+    constructor($mdToast,$http,$sce, $location, configurationService, iframeService, featuresService) {
         console.log('constructor running');
         this.$mdToast = $mdToast;
         this.$http = $http;
@@ -20,53 +20,13 @@ class Server {
         this.$location= $location;
         this.configurationService = configurationService;
         this.iframeService = iframeService;
+        this.featuresService= featuresService;
 
-        this.features = [
-            {
-                face : 'https://avatars1.githubusercontent.com/u/8035487?s=460&v=4',
-                what: 'Linked data',
-                who: 'Noam Amit',
-                when: '3:08PM',
-                notes: "Adding an linked data widget to the Primo full view",
-                linkGit: "https://github.com/ExLibrisGroup/primo-explore-linked-data-demo",
-                npmid: "primo-explore-linked-data-demo"
-            },
-            {
-                face : 'https://avatars1.githubusercontent.com/u/8035487?s=460&v=4',
-                notes: 'Search Bar Demo',
-                who: 'Noam Amit',
-                what: "Demo from Eluna",
-                linkGit: "https://github.com/noamamit92/primo-explore-search-bar-demo",
-                npmid: "primo-explore-search-bar-demo"
-            },
-            {
-                face : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSmXqD0HzChZD5uBY-xTjHpVWdiSu_EhkqokwF91P73xSZcZ4Klxg',
-                what: 'Google Maps in Locations',
-                who: 'Noam Amit',
-                when: '3:08PM',
-                notes: "Integrating a Google maps iframe to each location item based on the callNumber",
-                linkGit: "https://github.com/noamamit92/primo-explore-location-item-after-google-maps-demo",
-                npmid: "primo-explore-location-item-after-protractor-demo"
-            },
-            {
-                face : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRrMmvgnyOTSLXKKifrhwmwZLmjsdq_9qsjf5hPAecOYp-jJEbc',
-                what: 'Google Maps in Locations',
-                who: 'Noam Amit',
-                when: '3:08PM',
-                notes: "Integrating a Google maps iframe to each location item based on the callNumber",
-                linkGit: "https://github.com/noamamit92/primo-explore-location-item-after-google-maps-demo",
-                npmid: "https://github.com/noamamit92/primo-explore-location-item-after-google-maps-demo"
-            },
-            {
-                face : 'http://documents.el-una.org/images/ELUNASm.jpg',
-                what: 'Google Maps in Locations',
-                who: 'Noam Amit',
-                when: '3:08PM',
-                notes: "Integrating a Google maps iframe to each location item based on the callNumber",
-                linkGit: "https://github.com/noamamit92/primo-explore-location-item-after-google-maps-demo",
-                npmid: "https://github.com/noamamit92/primo-explore-location-item-after-google-maps-demo"
-            },
-        ];
+        this.features = [];
+
+        this.featuresService.fetchFeaturesData().then((data)=>{
+            this.features = data;
+        })
     }
 
     get config(){
@@ -111,7 +71,7 @@ class Server {
         return this.features;
     }
 }
-Server.$inject= ['$mdToast', '$http', '$sce', '$location', 'configurationService', 'iframeService'];
+Server.$inject= ['$mdToast', '$http', '$sce', '$location', 'configurationService', 'iframeService', 'featuresService'];
 
 
 module.exports = {

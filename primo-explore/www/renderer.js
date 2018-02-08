@@ -20,9 +20,12 @@ app.component(colorTheme.name, colorTheme.config);
 
 
 /*-----------------services------------ */
-const iframeService= require('./utils/iframe.service')
+const iframeService= require('./utils/iframe.service');
 app.service(iframeService.name, iframeService.service);
 
 const configurationService= require('./utils/configuration.service');
 app.service(configurationService.name, configurationService.service);
+
+const featuesService= require('./utils/features.service');
+app.service(featuesService.name, featuesService.service);
 

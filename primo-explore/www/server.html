@@ -26,46 +26,7 @@
             </md-tab>
             <md-tab label="Features">
                 <md-content class="md-padding">
-                    <h1 class="md-display-2">Features</h1>
-                    <div layout="row">
-
-
-                        <div ng-cloak layout-gt-sm="row" layout="column" flex="60">
-
-                            <div flex="100">
-
-                                <md-toolbar layout="row" class="md-hue-3">
-                                    <div class="md-toolbar-tools">
-                                        <span>App Store</span>
-                                    </div>
-                                </md-toolbar>
-
-                                <md-content>
-                                    <md-list flex>
-                                        <md-subheader class="md-no-sticky">Choose a feature</md-subheader>
-                                        <md-list-item class="md-3-line" ng-repeat="item in $ctrl.getFeatures()" ng-click="null">
-                                            <img src="{{item.face}}" class="md-avatar" alt="{{item.who}}" />
-                                            <div class="md-list-item-text" layout="column">
-                                                <h3>{{ item.who }}</h3>
-                                                <h4>{{ item.what }}</h4>
-                                                <a target="_blank" href="{{item.linkGit}}">Link to Github</a>
-                                            </div>
-                                            <md-button ng-click="$ctrl.addFeature(item.npmid)">Click to add</md-button>
-                                        </md-list-item>
-                                        <md-divider ></md-divider>
-                                    </md-list>
-                                </md-content>
-                            </div>
-
-                            <md-divider></md-divider>
-
-
-
-                        </div>
-
-
-
-                    </div>
+                    <prm-features-list></prm-features-list>
                 </md-content>
             </md-tab>
         </md-tabs>

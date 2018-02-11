@@ -18,6 +18,9 @@ app.component(configurationForm.name, configurationForm.config);
 const colorTheme= require('./colorTheme/colorTheme.directive');
 app.component(colorTheme.name, colorTheme.config);
 
+const featuresList= require('./featuresList/featuresList.directive');
+app.component(featuresList.name, featuresList.config);
+
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');

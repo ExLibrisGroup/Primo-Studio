@@ -33,6 +33,5 @@ module.exports = {
     config: {
         controller: PrmConfigurationForm,
         templateUrl: '/configurationForm/configuration-form.html'
-
     }
 }

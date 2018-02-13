@@ -1,11 +1,12 @@
 const material_module = require('angular-material');
 const angular = require('angular');
+const ngCookies= require('angular-cookies');
 
 
 
 
 
-let app = angular.module('devenv', [material_module])
+let app = angular.module('devenv', [material_module, ngCookies])
 
 
 /*----------------directives---------------*/

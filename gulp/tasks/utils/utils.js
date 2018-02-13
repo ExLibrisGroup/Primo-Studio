@@ -24,9 +24,37 @@ function sendErrorResponse(res, err){
     res.send(response);
 }
 
+function parseCookies (request) {
+    var list = {},
+        rc = request.headers.cookie;
+
+    rc && rc.split(';').forEach(function( cookie ) {
+        var parts = cookie.split('=');
+        list[parts.shift().trim()] = decodeURIComponent(parts.join('='));
+    });
+
+    return list;
+}
+
+function getRequestBody(request){
+    return new Promise((resolve, reject)=>{
+        let body = [];
+        request.on('data', (chunk) => {
+            body.push(chunk);
+        }).on('end', () => {
+            body = Buffer.concat(body).toString();
+            // at this point, `body` has the entire request body stored in it as a string
+            resolve(body);
+        });
+    });
+
+}
+
 module.exports={
     promiseSerial: promiseSerial,
     getUserId: getUserId,
     getUserCustomDir: getUserCustomDir,
-    sendErrorResponse: sendErrorResponse
+    sendErrorResponse: sendErrorResponse,
+    parseCookies: parseCookies,
+    getRequestBody: getRequestBody
 }

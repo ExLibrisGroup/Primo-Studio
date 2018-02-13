@@ -14,8 +14,8 @@ let runSequence = require('run-sequence');
 var _url = require("url");
 const bodyParser = require('body-parser');
 const fs= require('fs');
-let viewForProxy;
-let urlForProxy;
+// let viewForProxy;
+// let urlForProxy;
 // let dirForProxy;
 
 let utils= require('./utils/utils');
@@ -38,6 +38,11 @@ gulp.task('connect:primo_explore', function() {
         label: 'production',
         middleware:[
             function(req,res,next) {
+                let cookies= utils.parseCookies(req);
+                let urlForProxy= cookies['urlForProxy'];
+                let viewForProxy= cookies['viewForProxy'];
+                console.log(urlForProxy);
+                console.log(viewForProxy);
                 let confPath = config.getVe() ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
                 let confAsJsPath = '/primo-explore/config_';
                 var regex = /[?&]([^=#]+)=([^&#]*)/g,
@@ -181,44 +186,46 @@ function _next(req,res,next,url,vid){
     console.log('port:'+port);
     console.log('hostname:'+hostname);
     console.log('req.url :'+req.url);
-    let headers= {};
+    let headers= req.headers;
     headers['X-From-ExL-API-Gateway']= '1';
-    if (req.headers['authorization']){
-        headers['authorization']= req.headers['authorization'];
-    }
+    headers['Accept-Encoding']='';  //cancels server sending gzip which causes a decoding error in the Iframe
     console.log(headers);
     let options = {
         hostname: hostname,
         port: port,
         path: req.url,
-        method: 'GET',
-        headers: headers
+        method: req.method,
+        headers: headers,
+        agent: false
     };
     let requestObject = http;
     if(method === 'https') {
         requestObject = https;
+        console.log('method is https');
     }
 
     let req2 = requestObject.request(options, (res1) => {
-    let body = '';
+        let body = '';
+        res1.setEncoding('utf8');
 
-    res1.setEncoding('utf8');
+        res1.on("data", function(chunk) {
+            body = body + chunk.toString();
+        });
 
-    res1.on("data", function(chunk) {
-        body = body + chunk;
+        res1.on("end", function(){
+            let responseHeaders= res1.headers;
+            for (let header in responseHeaders){
+                res.setHeader(header, responseHeaders[header]);
+            }
+            res.statusCode= res1.statusCode;
+            res.end(body);
+        });
+    });
+    utils.getRequestBody(req).then((body)=>{ //we need to add the body of the original request to the new request
+        req2.write(body, 'utf8');
+        req2.end();
     });
 
-    res1.on("end", function(){
-        res.body = body;
-        res.end(body);
-    });
-
-
-});
-
-
-    req2.write('');
-    req2.end();
 
 }
 

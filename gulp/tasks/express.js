@@ -25,8 +25,8 @@ gulp.task('serve', ['bundle-js'], function() {
 
     //2. serve at custom port
 
-    if (gulp.tasks.run) {
-        gulp.start('run')
+    if (gulp.tasks.runAppStore) {
+        gulp.start('runAppStore')
     }
 
     //var server = gls.static(['primo-explore/www','primo-explore/api'], 8888);

@@ -8,6 +8,8 @@ const path = require('path')
 const unzip = require('unzip')
 const template = require('lodash/template');
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const upload = multer();
 const childP = require('child_process');
 const configG = require('../config');
 /*const requireNPM = require('require-npm').decorate(require);*/
@@ -30,10 +32,12 @@ gulp.task('serve', ['bundle-js'], function() {
     }
 
     //var server = gls.static(['primo-explore/www','primo-explore/api'], 8888);
-    const express = require('express')
-    const appS = express()
+    const express = require('express');
+    const appS = express();
     appS.use( bodyParser.json() );
-    appS.use(express.static('primo-explore/www'))
+    appS.use(bodyParser.urlencoded({extended: true}));
+    appS.use(express.static('primo-explore/www'));
+
 
 
     appS.get('/feature', function (req, res) {
@@ -99,6 +103,31 @@ gulp.task('serve', ['bundle-js'], function() {
                 });
             });
     })
+
+    let imagesUpload= upload.fields([
+            {name: 'library-logo', maxCount:1},
+            {name: 'favicon', maxCount:1}
+        ]);
+    appS.post('/images', imagesUpload, (req, res)=>{
+        let userId= utils.getUserId(req);
+        let baseDir = utils.getUserCustomDir(userId);
+        let data = req.files;
+        console.log(data);
+        let fileWritePromises=[];
+        for (let key in data){
+            let fileObject = data[key][0];
+            let fileName= fileObject.fieldname + '.' + fileObject.originalname.split('.')[1];
+            let filePath= baseDir + '/img/' + fileName;
+            console.log(filePath);
+            fileWritePromises.push(
+                fs.writeFileAsync(filePath, Buffer.from(fileObject.buffer))
+            )
+        }
+        Promise.all(fileWritePromises).then(()=>{
+            let response = {status:'200'};
+            res.send(response);
+        })
+    });
 
 
 

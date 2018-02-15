@@ -19,6 +19,9 @@ app.component(configurationForm.name, configurationForm.config);
 const colorTheme= require('./colorTheme/colorTheme.directive');
 app.component(colorTheme.name, colorTheme.config);
 
+const editImages= require('./editImages/editImages.directive');
+app.component(editImages.name, editImages.config);
+
 const featuresList= require('./featuresList/featuresList.directive');
 app.component(featuresList.name, featuresList.config);
 
@@ -33,3 +36,5 @@ app.service(configurationService.name, configurationService.service);
 const featuesService= require('./utils/features.service');
 app.service(featuesService.name, featuesService.service);
 
+const fileUploaderService = require('./utils/fileUploader.service');
+app.service(fileUploaderService.name, fileUploaderService.service);

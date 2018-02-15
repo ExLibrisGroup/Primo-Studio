@@ -1,0 +1,20 @@
+<h1 class="md-display-2">Images</h1>
+<md-card>
+    <md-card-title>
+        <md-card-title-text>
+            <span class="md-headline">Choose images</span>
+        </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+        <div>
+            <span layout="row">Logo image</span>
+            <input type="file" name="library-logo" onchange="console.log('file selected'); angular.element(this).scope().$ctrl.setImage('library-logo', this.files);" accept="image/png"/>
+        </div>
+        <div>
+            <span layout="row">Library favicon</span>
+            <input type="file" name="favicon" onchange="console.log('file selected'); angular.element(this).scope().$ctrl.setImage('favicon', this.files);" accept=".ico"/>
+        </div>
+    </md-card-content>
+
+    <md-button ng-click="$ctrl.uploadImages()">Upload images</md-button>
+</md-card>

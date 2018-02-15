@@ -17,12 +17,12 @@
                     <prm-edit-images></prm-edit-images>
                 </md-content>
             </md-tab>
-            <md-tab label="Templates">
-                <md-content class="md-padding">
-                    <h1 class="md-display-2">Templates</h1>
-                    <p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
-                </md-content>
-            </md-tab>
+            <!--<md-tab label="Templates">-->
+                <!--<md-content class="md-padding">-->
+                    <!--<h1 class="md-display-2">Templates</h1>-->
+                    <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->
+                <!--</md-content>-->
+            <!--</md-tab>-->
             <md-tab label="Features">
                 <md-content class="md-padding">
                     <prm-features-list></prm-features-list>
@@ -30,7 +30,8 @@
             </md-tab>
         </md-tabs>
 
-        <div style="min-width:600px" flex="40">
+        <div style="min-width:600px" flex="40" ng-if="$ctrl.isUp()">
+            <md-button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</md-button>
             <iframe id="primo-explore-iframe" style="min-width:600px;min-height:780px" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
             <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
         </div>

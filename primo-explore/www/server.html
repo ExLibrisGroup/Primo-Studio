@@ -1,7 +1,7 @@
 
-<div ng-cloak>
-    <md-content layout="row" flex>
-        <md-tabs md-dynamic-height md-border-bottom flex="60">
+<div ng-cloak style="height: 100%">
+    <md-content layout="row" flex style="height: 100%">
+        <md-tabs md-dynamic-height md-border-bottom flex="40">
             <md-tab label="Configuration">
                 <md-content class="md-padding">
                     <prm-configuration-form></prm-configuration-form>
@@ -30,9 +30,9 @@
             </md-tab>
         </md-tabs>
 
-        <div style="min-width:600px" flex="40" ng-if="$ctrl.isUp()">
+        <div  flex="60" ng-if="$ctrl.isUp()">
             <md-button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</md-button>
-            <iframe id="primo-explore-iframe" style="min-width:600px;min-height:780px" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
+            <iframe id="primo-explore-iframe" style="min-width:100%;min-height:100%" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
             <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
         </div>
     </md-content>

@@ -25,6 +25,9 @@ app.component(editImages.name, editImages.config);
 const featuresList= require('./featuresList/featuresList.directive');
 app.component(featuresList.name, featuresList.config);
 
+const downloadPackage= require('./downloadPackage/downloadPackage.directive');
+app.component(downloadPackage.name, downloadPackage.config);
+
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');

@@ -10,6 +10,8 @@ const template = require('lodash/template');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const upload = multer();
+const cookieParser = require('cookie-parser');
+const zip = require('gulp-zip');
 const childP = require('child_process');
 const configG = require('../config');
 /*const requireNPM = require('require-npm').decorate(require);*/
@@ -18,6 +20,7 @@ const streamToPromise = require('./streamToPromise');
 const appCss= require('./build-scss').appCss;
 const utils= require('./utils/utils');
 const npmi= require('npmi');
+const rename= require('gulp-rename');
 const buildCustomJs= require('./buildCustomJs');
 
 gulp.task('serve', ['bundle-js'], function() {
@@ -37,6 +40,7 @@ gulp.task('serve', ['bundle-js'], function() {
     appS.use( bodyParser.json() );
     appS.use(bodyParser.urlencoded({extended: true}));
     appS.use(express.static('primo-explore/www'));
+    appS.use(cookieParser());
 
 
 
@@ -127,6 +131,25 @@ gulp.task('serve', ['bundle-js'], function() {
             let response = {status:'200'};
             res.send(response);
         })
+    });
+
+    appS.get('/package', (req, res)=>{
+        let userId= utils.getUserId(req);
+        let vid= req.cookies['viewForProxy'];
+        let readableStream = gulp.src(['./primo-explore/custom/'+userId,'./primo-explore/custom/'+userId+'/html/**','./primo-explore/custom/'+userId+'/img/**','./primo-explore/custom/'+userId+'/css/custom1.css','./primo-explore/custom/'+userId+'/js/custom.js'], {base: './primo-explore/custom'})
+            .pipe(rename((file)=>{
+                file.basename= file.basename.replace(userId, vid);
+                file.dirname = file.dirname.replace(userId, vid);
+            }))
+            .pipe(zip(vid+'.zip', {buffer: true}));
+        let buffer;
+        readableStream.on('data', (data)=>{
+            buffer= data;
+        });
+        readableStream.on('end',()=>{
+            res.type('zip');
+            res.end(buffer._contents, 'binary');
+        });
     });
 
 

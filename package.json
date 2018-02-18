@@ -18,6 +18,7 @@
     "browserify": "13.1.1",
     "concat-stream": "1.5.1",
     "connect-modrewrite": "0.8.2",
+    "cookie-parser": "^1.4.3",
     "css": "2.2.1",
     "css-color-extractor": "0.0.4",
     "css-color-extractor-cli": "0.0.1",

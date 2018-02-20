@@ -16,10 +16,11 @@ class FeaturesService{
         });
     }
 
-    addFeature(npmid){
+    addFeature(npmid, hook){
         console.log('adding feature');
         let config= this.configurationService.config;
-        config['id']= npmid;
+        config['id'] = npmid;
+        config['hook'] = hook;
         var data = {params: config};
         return this.$http.get('/feature',data).then((resp)=>{
             console.log('feature installed');

@@ -50,11 +50,23 @@ function getRequestBody(request){
 
 }
 
+
+function getUserInstalledFeaturesList(userFeaturesManifest){
+    let installedFeaturesList = [];
+    for(let hook in userFeaturesManifest){
+        console.log('found hook : '+ hook);
+        console.log(userFeaturesManifest[hook]);
+        installedFeaturesList = installedFeaturesList.concat(userFeaturesManifest[hook]);
+    }
+    return installedFeaturesList;
+}
+
 module.exports={
     promiseSerial: promiseSerial,
     getUserId: getUserId,
     getUserCustomDir: getUserCustomDir,
     sendErrorResponse: sendErrorResponse,
     parseCookies: parseCookies,
-    getRequestBody: getRequestBody
+    getRequestBody: getRequestBody,
+    getUserInstalledFeaturesList: getUserInstalledFeaturesList
 }

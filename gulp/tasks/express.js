@@ -22,6 +22,7 @@ const utils= require('./utils/utils');
 const npmi= require('npmi');
 const rename= require('gulp-rename');
 const buildCustomJs= require('./buildCustomJs');
+const storage = require('node-persist');
 
 gulp.task('serve', ['bundle-js'], function() {
     //1. serve with default settings
@@ -29,6 +30,10 @@ gulp.task('serve', ['bundle-js'], function() {
      server.start();*/
 
     //2. serve at custom port
+
+    storage.initSync({
+       dir: 'userManifestStorage/'
+    });
 
     if (gulp.tasks.runAppStore) {
         gulp.start('runAppStore')
@@ -48,30 +53,37 @@ gulp.task('serve', ['bundle-js'], function() {
         if(!process.cwd().includes("Primo-App-Store")) {
             process.chdir("Primo-App-Store");
         }
-        var userId= utils.getUserId(req);
-        // configG.setView(userId);
-        // childP.exec('npm install --prefix primo-explore/custom/'+req.query.dirName+' '+req.query.id);
-        npmi({path: 'primo-explore/custom/' + userId, name: req.query.id}, (err, result)=>{
-            if (err){
-                console.log('failed to install feature:');
-                utils.sendErrorResponse(res, err);
-            }
-            else{
-                buildCustomJs.customJs(userId).then(()=>{
-                    var response = {data:'noam', status: '200'};
-                    res.send(response);
-                }, (err)=>{
-                    console.log('failed to build custom js:');
-                    utils.sendErrorResponse(res, err);
-                });
+        let userId= utils.getUserId(req);
 
-            }
+        storage.getItem(userId).then((userManifest)=>{
+            let npmId= req.query.id;
+            let hookName= req.query.hook;
+            npmi({path: 'primo-explore/custom/' + userId, name: req.query.id}, (err, result)=>{
+                if (err){
+                    console.log('failed to install feature:');
+                    utils.sendErrorResponse(res, err);
+                }
+                else{
+                    let hookFeatureList= userManifest[hookName]? userManifest[hookName] : [];
+                    hookFeatureList.push(npmId);
+                    buildCustomJs.buildCustomHookJsFile(userId, hookName, hookFeatureList).then(()=>{
+                        buildCustomJs.customJs(userId).then(()=>{
+                            userManifest[hookName] = hookFeatureList;
+                            storage.setItem(userId, userManifest);
+                            var response = {data:'noam', status: '200'};
+                            res.send(response);
+                        }, (err)=>{
+                            console.log('failed to build custom js: ' + err);
+                        });
+                    }, (err)=>{
+                        console.log('failed to build custom hook js file');
+                        utils.sendErrorResponse(res, err);
+                    });
+                }
+            });
         });
-        // childP.exec('npm install --prefix primo-explore/custom/'+userId+' '+req.query.id);
-        //
-        // var response = {data:'noam'};
-        // res.send(response);
-    })
+    });
+
     appS.get('/restart',function(req,res){
         if(!process.cwd().includes("Primo-App-Store")) {
             process.chdir("Primo-App-Store");
@@ -164,6 +176,7 @@ gulp.task('serve', ['bundle-js'], function() {
         // var n = d.getTime();
         var userId= utils.getUserId(req);
 
+
         configG.setView(userId);
 
         //create a directory from MOCK
@@ -187,14 +200,25 @@ gulp.task('serve', ['bundle-js'], function() {
         //let p2 = rimrafAsync("primo-explore-devenv/primo-explore/custom/" + n);
         Promise.join(p1).then(() => {
             return fs.rename("./tmp/VIEW_CODE", "primo-explore/custom/" + userId, ()=>{
-                gulp.start('custom-js');
+                buildCustomJs.customJs(userId);
             });
     })
 
+        storage.getItem(userId).then((userFeaturesManifest)=>{
+            let userInstalledFeaturesList = [];
+            if (!userFeaturesManifest){
+                console.log('set new user features manifest');
+                storage.setItem(userId, {});
+            }
+            else{
+                console.log('found features manifest for existing user');
+                userInstalledFeaturesList= utils.getUserInstalledFeaturesList(userFeaturesManifest);
+            }
 
+            res.setHeader('Content-Type', 'application/json');
+            res.send(JSON.stringify({status:'200',dirName:userId, installedFeatures: userInstalledFeaturesList}));
+        });
 
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({status:'200',dirName:userId}));
     })
 
     appS.listen(8004, function () {

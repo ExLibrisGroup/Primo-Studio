@@ -1,0 +1,17 @@
+/*
+    hookName is a place holder with should hold the hook name not including "prm" at the beginning and in upper camel case
+    e.g: for hook prmSearchBarAfter (in html prm-search-bar-after) it should be given "SearchBarAfter"
+ */
+app.controller('<%= hookName %>Controller', [function () {
+    var vm = this;
+}]);
+
+
+app.component('prm<%= hookName %>', {
+    bindings: {parentCtrl: '<'},
+    controller: '<%= hookName %>Controller',
+    template: `
+    <%= hookTemplate %>
+`
+
+});

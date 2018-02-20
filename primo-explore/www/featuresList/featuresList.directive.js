@@ -12,8 +12,8 @@ class FeaturesList{
         })
     }
 
-    addFeature(npmid){
-        this.featuresService.addFeature(npmid).then((resp)=>{
+    addFeature(npmid, hook){
+        this.featuresService.addFeature(npmid, hook).then((resp)=>{
             this.iframeService.refreshNuiIFrame();
         }, (err)=>{
 

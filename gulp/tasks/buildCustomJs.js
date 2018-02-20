@@ -11,8 +11,12 @@ const glob = require('glob');
 const gutil = require('gulp-util');
 const fs = require("fs");
 const browserify = require("browserify");
+const template = require('gulp-template');
 const utils= require('./utils/utils');
 const buildCustomHtmlTemplatesExports= require('./buildCustomHtmlTemplates');
+const hookJSTemplateFile= 'gulp/tasks/utils/custom.js.tmpl';
+
+// const componentRegex= /app\.component[\s\S]*?\(\s*['"](\w*?)['"][\s\S]*?template:[\s\S]*?([`'"])([\s\S]*?)\2[\s\S]*?\);/g
 
 let buildParams = config.buildParams;
 
@@ -94,6 +98,37 @@ function buildByBrowserify(userId) {
 
 }
 
+function buildCustomHookJsFile(userId, hookName, hookFeatureList){
+    let hookTemplate = '';
+    for (let npmId of hookFeatureList){
+        hookTemplate = hookTemplate + `<${npmId} parent-ctrl="$ctrl.parentCtrl"></${npmId}>`
+    }
+    let formatedHookName= getFormattedHookName(hookName);
+    let templateParameters= {
+        hookName: formatedHookName,
+        hookTemplate: hookTemplate
+    };
+    return new Promise((resolve, reject)=>{
+        let stream= gulp.src(hookJSTemplateFile)
+            .pipe(template(templateParameters))
+            .pipe(rename(hookName + '.js'))
+            .pipe(gulp.dest(utils.getUserCustomDir(userId) + '/js/'));
+        stream.on('end', resolve);
+        stream.on( 'error', reject);
+    });
+}
+
+function getFormattedHookName(hookName){
+    let arr= hookName.split('-');
+    arr.shift();
+    return arr.reduce((cur, value)=>{
+        return cur + (value.charAt(0).toUpperCase() + value.slice(1));
+    }, '');
+}
+
+
+
 module.exports={
-    customJs: customJs
+    customJs: customJs,
+    buildCustomHookJsFile: buildCustomHookJsFile
 }

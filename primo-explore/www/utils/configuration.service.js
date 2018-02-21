@@ -2,10 +2,13 @@
  * Created by shoulm on 06/02/2018.
  */
 class ConfigurationService{
-    constructor(){
-        this._config={"view":"NORTH",
-            "url": "http://primo-demo.exlibrisgroup.com:1701",
-            "dirName": "MOCK",
+    constructor($location){
+        let queryParams= $location.search();
+        let url= queryParams['url'] || 'http://primo-demo.exlibrisgroup.com:1701';
+        let view= queryParams['vid'] || 'NORTH'
+        this._config={'view': view,
+            'url': url,
+            'dirName': 'MOCK',
             installedFeatures: []
         };
     }
@@ -18,6 +21,8 @@ class ConfigurationService{
         this._config= config;
     }
 }
+
+ConfigurationService.$inject = ['$location']
 
 module.exports = {
     name: 'configurationService',

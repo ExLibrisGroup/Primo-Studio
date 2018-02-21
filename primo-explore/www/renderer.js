@@ -7,6 +7,12 @@ const ngCookies= require('angular-cookies');
 
 
 let app = angular.module('devenv', [material_module, ngCookies])
+app.config(['$locationProvider', function($locationProvider){
+    $locationProvider.html5Mode({
+        enabled: true,
+        requireBase: false
+    })
+}])
 
 
 /*----------------directives---------------*/

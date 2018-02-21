@@ -70,7 +70,7 @@ gulp.task('serve', ['bundle-js'], function() {
                         buildCustomJs.customJs(userId).then(()=>{
                             userManifest[hookName] = hookFeatureList;
                             storage.setItem(userId, userManifest);
-                            var response = {data:'noam', status: '200'};
+                            var response = {status: '200'};
                             res.send(response);
                         }, (err)=>{
                             console.log('failed to build custom js: ' + err);
@@ -83,6 +83,38 @@ gulp.task('serve', ['bundle-js'], function() {
             });
         });
     });
+
+    appS.get('/remove_feature', function (req, res) {
+        let userId= utils.getUserId(req);
+        storage.getItem(userId).then((userManifest)=>{
+            let npmId= req.query.id;
+            let hookName= req.query.hook;
+            let hookFeatureList= userManifest[hookName]? userManifest[hookName] : [];
+            let index = hookFeatureList.indexOf(npmId);
+            if (index === -1){
+                //for some reason we tried to remove a feature which wasn't installed. No need to do anything...
+                res.send({status: '200'});
+                return;
+            }
+            else{
+                hookFeatureList.splice(index, 1); // remove the feature from the installed feature list
+                buildCustomJs.buildCustomHookJsFile(userId, hookName, hookFeatureList).then(()=>{
+                    buildCustomJs.customJs(userId).then(()=>{
+                        userManifest[hookName] = hookFeatureList;
+                        storage.setItem(userId, userManifest);
+                        var response = {status: '200'};
+                        res.send(response);
+                    }, (err)=>{
+                        console.log('failed to build custom js: ' + err);
+                    });
+                }, (err)=>{
+                    console.log('failed to build custom hook js file');
+                    utils.sendErrorResponse(res, err);
+                });
+
+            }
+        });
+    })
 
     appS.get('/restart',function(req,res){
         if(!process.cwd().includes("Primo-App-Store")) {

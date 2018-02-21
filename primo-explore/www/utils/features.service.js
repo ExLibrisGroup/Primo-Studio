@@ -17,16 +17,35 @@ class FeaturesService{
     }
 
     addFeature(npmid, hook){
-        console.log('adding feature');
+        console.log('adding feature with npm id: ' + npmid);
         let config= this.configurationService.config;
         config['id'] = npmid;
         config['hook'] = hook;
         var data = {params: config};
         return this.$http.get('/feature',data).then((resp)=>{
             console.log('feature installed');
+            this.configurationService.config.installedFeatures.push(npmid);
             return resp;
         }, (err)=>{
             console.log('something went wrong when installing feature:' + err.message);
+        });
+    }
+
+    removeFeature(npmid, hook){
+        console.log('uninstalling feature with npm id: ' + npmid);
+        let config= this.configurationService.config;
+        config['id'] = npmid;
+        config['hook'] = hook;
+        var data = {params: config};
+        return this.$http.get('/remove_feature',data).then((resp)=>{
+            console.log('feature uninstalled');
+            let index = this.configurationService.config.installedFeatures.indexOf(npmid);
+            if (index !== -1){
+                this.configurationService.config.installedFeatures.splice(index, 1);
+            }
+            return resp;
+        }, (err)=>{
+            console.log('something went wrong when uninstalling feature:' + err.message);
         });
     }
 }

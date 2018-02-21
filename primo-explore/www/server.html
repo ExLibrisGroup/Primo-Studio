@@ -7,12 +7,12 @@
                     <prm-configuration-form></prm-configuration-form>
                 </md-content>
             </md-tab>
-            <md-tab label="Theme">
+            <md-tab label="Theme" ng-disabled="!$ctrl.isUp()">
                 <md-content class="md-padding">
                     <prm-color-theme></prm-color-theme>
                 </md-content>
             </md-tab>
-            <md-tab label="Images">
+            <md-tab label="Images" ng-disabled="!$ctrl.isUp()">
                 <md-content class="md-padding">
                     <prm-edit-images></prm-edit-images>
                 </md-content>
@@ -23,12 +23,12 @@
                     <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->
                 <!--</md-content>-->
             <!--</md-tab>-->
-            <md-tab label="Features">
+            <md-tab label="Features" ng-disabled="!$ctrl.isUp()">
                 <md-content class="md-padding">
                     <prm-features-list></prm-features-list>
                 </md-content>
             </md-tab>
-            <md-tab label="Download Package">
+            <md-tab label="Download Package" ng-disabled="!$ctrl.isUp()">
                 <md-content class="md-padding">
                     <prm-download-package></prm-download-package>
                 </md-content>

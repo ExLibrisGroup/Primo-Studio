@@ -20,7 +20,8 @@
                             <h4>{{ item.what }}</h4>
                             <a target="_blank" href="{{item.linkGit}}">Link to Github</a>
                         </div>
-                        <md-button ng-click="$ctrl.addFeature(item.npmid, item.hook)">Click to add</md-button>
+                        <md-button ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.addFeature(item.npmid, item.hook)">Click to add</md-button>
+                        <md-button ng-if="$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.removeFeature(item.npmid, item.hook)">Click to remove</md-button>
                     </md-list-item>
                     <md-divider ></md-divider>
                 </md-list>

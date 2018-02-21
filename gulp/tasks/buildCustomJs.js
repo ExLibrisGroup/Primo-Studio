@@ -12,6 +12,7 @@ const gutil = require('gulp-util');
 const fs = require("fs");
 const browserify = require("browserify");
 const template = require('gulp-template');
+const del = require('del');
 const utils= require('./utils/utils');
 const buildCustomHtmlTemplatesExports= require('./buildCustomHtmlTemplates');
 const hookJSTemplateFile= 'gulp/tasks/utils/custom.js.tmpl';
@@ -99,6 +100,9 @@ function buildByBrowserify(userId) {
 }
 
 function buildCustomHookJsFile(userId, hookName, hookFeatureList){
+    if (hookFeatureList.length === 0){ //if no more features left on the hook we can delete the hook js file
+        return del([utils.getUserCustomDir(userId) + '/js/' + hookName + '.js'])
+    }
     let hookTemplate = '';
     for (let npmId of hookFeatureList){
         hookTemplate = hookTemplate + `<${npmId} parent-ctrl="$ctrl.parentCtrl"></${npmId}>`

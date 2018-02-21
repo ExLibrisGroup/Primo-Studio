@@ -5,7 +5,8 @@ class ConfigurationService{
     constructor(){
         this._config={"view":"NORTH",
             "url": "http://primo-demo.exlibrisgroup.com:1701",
-            "dirName": "MOCK"
+            "dirName": "MOCK",
+            installedFeatures: []
         };
     }
 

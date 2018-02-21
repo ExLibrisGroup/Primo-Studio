@@ -21,6 +21,7 @@ class PrmConfigurationForm{
         this.$http.get('/start',config).then(function(resp){
             if(resp.status === 200){
                 _this.config.dirName = resp.data.dirName;
+                _this.config.installedFeatures= resp.data.installedFeatures;
                 console.log('created new directory: '+ _this.config.dirName);
                 _this.iframeService.up = true;
             }

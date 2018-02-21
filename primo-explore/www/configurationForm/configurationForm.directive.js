@@ -29,6 +29,10 @@ class PrmConfigurationForm{
         });
     }
 
+    isUp(){
+        return this.iframeService.isUp();
+    }
+
 }
 PrmConfigurationForm.$inject= ['$http', 'iframeService', 'configurationService', '$cookies'];
 

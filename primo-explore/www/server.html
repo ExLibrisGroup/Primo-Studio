@@ -35,12 +35,15 @@
             </md-tab>
         </md-tabs>
 
-        <div  flex="60" ng-if="$ctrl.isUp()">
+        <div id="primo-explore-iframe-container" flex="60" ng-if="$ctrl.isUp()">
             <md-button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</md-button>
             <iframe id="primo-explore-iframe" style="min-width:100%;min-height:100%" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
             <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
         </div>
+        <div>
+          <prm-share></prm-share>
+        </div>
+
+
     </md-content>
 </div>
-
-

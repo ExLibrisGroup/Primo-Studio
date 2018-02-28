@@ -30,9 +30,9 @@ const config = require('../config');
 const _url = require("url");
 
 
-let proxy = httpProxy.createProxyServer({});
-gulp.task('serve', ['bundle-js'], function() {
-    let appName = 'primo-explore';
+let proxy = httpProxy.createProxyServer({});    
+gulp.task('serve', ['bundle-js', 'watch-app'], function() {
+  let appName = 'primo-explore';
     //1. serve with default settings
     /* var server = gls.static(); //equals to gls.static('public', 3000);
      server.start();*/

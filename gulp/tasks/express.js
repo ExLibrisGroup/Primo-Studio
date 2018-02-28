@@ -24,7 +24,7 @@ const rename= require('gulp-rename');
 const buildCustomJs= require('./buildCustomJs');
 const storage = require('node-persist');
 
-gulp.task('serve', ['bundle-js'], function() {
+gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     //1. serve with default settings
     /* var server = gls.static(); //equals to gls.static('public', 3000);
      server.start();*/

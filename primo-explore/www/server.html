@@ -1,46 +1,47 @@
 
-<div ng-cloak style="height: 100%">
-    <md-content layout="row" flex style="height: 100%">
-        <md-tabs md-dynamic-height md-border-bottom flex="40">
-            <md-tab label="Configuration">
-                <md-content class="md-padding">
-                    <prm-configuration-form></prm-configuration-form>
-                </md-content>
-            </md-tab>
-            <md-tab label="Theme" ng-disabled="!$ctrl.isUp()">
-                <md-content class="md-padding">
-                    <prm-color-theme></prm-color-theme>
-                </md-content>
-            </md-tab>
-            <md-tab label="Images" ng-disabled="!$ctrl.isUp()">
-                <md-content class="md-padding">
-                    <prm-edit-images></prm-edit-images>
-                </md-content>
-            </md-tab>
-            <!--<md-tab label="Templates">-->
-                <!--<md-content class="md-padding">-->
-                    <!--<h1 class="md-display-2">Templates</h1>-->
-                    <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->
-                <!--</md-content>-->
-            <!--</md-tab>-->
-            <md-tab label="Features" ng-disabled="!$ctrl.isUp()">
-                <md-content class="md-padding">
-                    <prm-features-list></prm-features-list>
-                </md-content>
-            </md-tab>
-            <md-tab label="Download Package" ng-disabled="!$ctrl.isUp()">
-                <md-content class="md-padding">
-                    <prm-download-package></prm-download-package>
-                </md-content>
-            </md-tab>
-        </md-tabs>
+<div class="app-wrapper">
+    <!-- <div> -->
+        <!-- <div md-dynamic-height md-border-bottom flex="40"> -->
+            <!-- <div label="Configuration"> -->
+                
+                    <prm-configuration-form ng-if="!$ctrl.isUp()"></prm-configuration-form>
+            <!-- </div> -->
+            <!-- <div label="Theme"> -->
+                
+                    <prm-color-theme ng-if="$ctrl.isUp()"></prm-color-theme>
+                <!-- </div>
+            </div> -->
+            <!-- <div label="Images" > -->
+                
+                    <prm-edit-images ng-if=""></prm-edit-images>
+                <!-- </div>
+            </div> -->
+            
+            <!-- <div label="Features" ng-if=""> -->
+                
+                    <prm-features-list ng-if=""></prm-features-list>
+                <!-- </div>
+            </div> -->
+            <!-- <div label="Download Package" ng-if=""> -->
+                
+                    <prm-download-package ng-if=""></prm-download-package>
+            <!-- </div> -->
 
-        <div  flex="60" ng-if="$ctrl.isUp()">
-            <md-button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</md-button>
+            <!--<md-tab label="Templates">-->
+            <!--<div class="md-padding">-->
+            <!--<h1 class="md-display-2">Templates</h1>-->
+            <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->
+            <!--</div>-->
+            <!--</md-tab>-->
+
+        <!-- </div> -->
+
+        <div ng-if="">
+            <button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</button>
             <iframe id="primo-explore-iframe" style="min-width:100%;min-height:100%" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
-            <md-button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</md-button>
+            <button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</button>
         </div>
-    </md-content>
+    <!-- </div> -->
 </div>
 
 

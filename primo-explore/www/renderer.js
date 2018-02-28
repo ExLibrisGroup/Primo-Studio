@@ -6,6 +6,7 @@ const ngCookies= require('angular-cookies');
 
 
 
+
 let app = angular.module('devenv', [material_module, ngCookies])
 app.config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode({
@@ -34,6 +35,9 @@ app.component(featuresList.name, featuresList.config);
 const downloadPackage= require('./downloadPackage/downloadPackage.directive');
 app.component(downloadPackage.name, downloadPackage.config);
 
+const share= require('./share/share.directive');
+app.component(share.name, share.config);
+
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');
@@ -47,3 +51,6 @@ app.service(featuesService.name, featuesService.service);
 
 const fileUploaderService = require('./utils/fileUploader.service');
 app.service(fileUploaderService.name, fileUploaderService.service);
+
+const shareService = require('./utils/share.service');
+app.service(shareService.name, shareService.service);

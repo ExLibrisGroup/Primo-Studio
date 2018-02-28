@@ -1,0 +1,152 @@
+/* Define the "system" font family */
+
+@font-face {
+    font-family: system;
+    font-style: normal;
+    font-weight: 300;
+    src: local(".SFNSText-Light"), 
+    local(".HelveticaNeueDeskInterface-Light"), 
+    local(".LucidaGrandeUI"),
+    local("Ubuntu Light"),
+    local("Roboto-Light"),
+    local("DroidSans"),
+    local("Segoe UI");
+}
+
+html,
+body {
+    height: 100%;
+    background: #f5f5f5
+}
+
+body {
+    margin: 0;
+    font-family: "system";
+}
+
+.app-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h1 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+h1 + p {
+    margin-bottom: 2rem;
+}
+
+p {
+    margin: .5rem 0;
+}
+
+button, input {
+    font-family: inherit;
+}
+
+button {
+    font-size: 1rem;
+    font-weight: 600;
+        background: #eee;
+        border: none;
+        padding: .65rem .75rem;
+        border-radius: 3px;
+        box-shadow: 0 0px 0px 1px rgba(0, 0, 0, .1),
+        0 2px 4px 0px rgba(0, 0, 0, .2);
+}
+
+input[type="text"] {
+    padding: .45rem 0.55rem;
+        padding-bottom: 4px;
+        border-width: 0;
+        border-bottom-width: 1px;
+        border-color: #bbb;
+        padding-left: 0;
+        background: transparent
+}
+input[type="text"]:active,
+input[type="text"]:focus {
+    background: white;
+}
+
+input[type="color"] {
+    border-radius: 100%;
+    height: 50px;
+    width: 50px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+     border: none;
+     border-radius: 100%;
+}
+
+.inner-wrapper {
+    padding: 2rem;
+}
+
+.content {
+    margin-bottom: 2rem
+}
+.content-row {
+    margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+}
+
+.input-wrapper {
+    display: flex;    
+    align-items: center;
+}
+
+.input-wrapper label {
+    flex: 1 0 0;
+    font-weight: 600;
+}
+
+.input-wrapper input[type="text"] {
+    flex: 2 1 auto;
+}
+
+prm-configuration-form {
+    position: absolute;
+    width: 600px;
+    height: 360px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 10px -2px rgba(0, 0, 0, .2);
+}
+
+prm-configuration-form .content {
+    /* display: flex; */
+}
+
+prm-color-theme label {
+    margin-right: 1rem
+}
+
+prm-color-theme input[type="color"] {
+}
+
+prm-color-theme input[type="text"]{
+        flex: none !important;
+        width: 60px;
+        text-align: center;
+    margin-right: 1rem
+        
+}
+
+/* prm-configuration-form{ */

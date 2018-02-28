@@ -1,4 +1,4 @@
-const material_module = require('angular-material');
+// const material_module = require('angular-material');
 const angular = require('angular');
 const ngCookies= require('angular-cookies');
 
@@ -6,7 +6,7 @@ const ngCookies= require('angular-cookies');
 
 
 
-let app = angular.module('devenv', [material_module, ngCookies])
+let app = angular.module('devenv', [ngCookies]) //material_module
 app.config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode({
         enabled: true,

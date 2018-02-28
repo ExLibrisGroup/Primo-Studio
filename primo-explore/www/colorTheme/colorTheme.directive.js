@@ -9,11 +9,12 @@ class PrmColorTheme{
         this.colors = {
             "primary": "#53738C",
             "secondary" : "#A9CDD6",
-            "backgroundColor" : "white",
+            // "backgroundColor" : "#ffffff",
+            "background": "#ffffff",
             "links": "#5C92BD",
-            "warning": "tomato",
+            "warning": "#ff6347",
             "positive": "#0f7d00",
-            "negative": "gray",
+            "negative": "#808080",
             "notice": "#e08303"
         };
     }

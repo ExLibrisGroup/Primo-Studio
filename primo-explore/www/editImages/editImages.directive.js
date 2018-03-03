@@ -6,10 +6,18 @@ class PrmEditImages{
         this.fileUploaderService = fileUploaderService;
         this.iframeService = iframeService;
         this.images={};
+        this.logoFileLabel = 'Choose logo file';
+        this.faviconFileLabel = 'Choose favicon';
+        this.uploadDisabled = true;
     }
 
     setImage(name, files){
+        var self = this;
         this.images[name]= files[0];
+        angular.element(document.querySelector('#label-for-' + name + '')).text(files[0].name).addClass('is-touched')
+        if(files.length > 0) {
+            angular.element(document.querySelector('#button-upload')).attr('disabled', false)
+        }
     }
 
     uploadImages(){

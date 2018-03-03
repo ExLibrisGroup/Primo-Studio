@@ -9,6 +9,8 @@ class FeaturesList{
 
         this.features = [];
         this.featuresService.fetchFeaturesData().then((data)=>{
+            console.log(data);
+            
             this.features = data;
         })
     }

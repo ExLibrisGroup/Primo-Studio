@@ -1,29 +1,36 @@
-<div class="inner-wrapper">
-    <h1>Configuration</h1>
-    <p>Enter Primo server and environment that you would like to apply the customization to.</p>
-    <!-- <div> -->
-
-    <!-- <div> -->
-    <div class="content">
-
-        <div class="content-row input-wrapper">
-            <label for="primo-url">Primo URL</label>
-            <input id="primo-url" ng-disabled="$ctrl.isUp()" type="text" ng-model="$ctrl.config.url">
-        </div>
+<div class="form inner-wrapper" ng-if="!$ctrl.isUp()">
+        <header>
+            <h1>Configuration</h1>
+            <p>Enter Primo server and environment that you would like to apply the customization to.</p>
+        </header>
+        <section class="content">
+            
+            <div class="content-row input-wrapper">
+                <label for="primo-url">Primo URL</label>
+                <input id="primo-url" type="text" ng-model="$ctrl.config.url">
+            </div>
+            
+            <div class="content-row input-wrapper">
+                <label for="primo-view">Primo View</label>
+                <input id="primo-view"  type="text" ng-model="$ctrl.config.view" placeholder="Primo View Identifier (vid)">
+            </div>
+            
+        </section>
+        <footer>
+            <button  class="accent" ng-click="$ctrl.start()">
+                    <i class="icon-play_arrow"></i>
+                    <span>Start server with above details</span>                
+            </button>
+        </footer>
         
-        <div class="content-row input-wrapper">
-            <label for="primo-view">Primo View</label>
-            <input id="primo-view" ng-disabled="$ctrl.isUp()" type="text" ng-model="$ctrl.config.view" placeholder="Primo View Identifier (vid)">
-        </div>
-        
-    </div>
-    <div>
-        <button ng-if="!$ctrl.isUp()" ng-click="$ctrl.start()">Start server with above details</button>
-        <p ng-if="$ctrl.isUp()">Server is running.</p>
-        <button ng-if="$ctrl.isUp()" ng-click="$ctrl.stop()">Stop server</button>
-    </div>
-
-
-    <!-- </div> -->
-
 </div>
+
+<div class="status inner-wrapper" ng-if="$ctrl.isUp()">
+    <span class="server-on"></span>
+    <span>Server is running.</span>
+    <button  ng-click="$ctrl.stop()">
+        <i class="icon-stop"></i>
+        <span>Stop server</span>
+    </button>
+</div>
+    

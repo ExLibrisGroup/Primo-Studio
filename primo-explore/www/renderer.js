@@ -1,19 +1,15 @@
-// const material_module = require('angular-material');
 const angular = require('angular');
 const ngCookies= require('angular-cookies');
+const angularAnimate = require('angular-animate');
 
-
-
-
-
-let app = angular.module('devenv', [ngCookies]) //material_module
+/*-------------- bootstrap app --------------*/
+let app = angular.module('devenv', [ngCookies, 'ngAnimate'])
 app.config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode({
         enabled: true,
         requireBase: false
     })
 }])
-
 
 /*----------------directives---------------*/
 const serverComponent = require('./appserver');

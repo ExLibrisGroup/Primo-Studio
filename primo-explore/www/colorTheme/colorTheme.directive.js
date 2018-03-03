@@ -9,8 +9,8 @@ class PrmColorTheme{
         this.colors = {
             "primary": "#53738C",
             "secondary" : "#A9CDD6",
-            // "backgroundColor" : "#ffffff",
-            "background": "#ffffff",
+            "backgroundColor" : "#ffffff",
+            // "background": "#ffffff",
             "links": "#5C92BD",
             "warning": "#ff6347",
             "positive": "#0f7d00",

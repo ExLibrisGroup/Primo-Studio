@@ -1,0 +1,16 @@
+prm-color-theme {
+    padding: 2rem;
+    display: block;
+    label {
+        margin-right: 1rem
+    }
+    input[type="color"] {
+        
+    }
+    input[type="text"] {
+        flex: none !important;
+        width: 90px;
+        text-align: center;
+        margin-right: 1rem
+    }
+}

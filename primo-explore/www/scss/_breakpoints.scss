@@ -1,0 +1,21 @@
+// Media screen breakpoints
+// $XSmall: '(max-width: 599px)';
+// $Small: '(min-width: 600px) and (max-width: 959px)';
+// $Medium: '(min-width: 960px) and (max-width: 1279px)';
+// $Large: '(min-width: 1280px) and (max-width: 1919px)';
+// $XLarge: '(min-width: 1920px)';
+
+$xs: ( max:  599px );
+$sm: ( min:  600px );
+$md: ( min:  960px );
+$lg: ( min: 1280px );
+$sm-only: ( min: map-get($sm, min), max: map-get($md, min) - 1 );
+$md-only: ( min: map-get($md, min), max: map-get($lg, min) - 1 );
+
+@mixin breakpoint($map) {
+  $query: "";
+  @if map-has-key($map, min) { $query: append($query, "(min-width: #{map-get($map, min)})") }
+  @if map-has-key($map, min) and map-has-key($map, max) { $query: append($query, "and") }
+  @if map-has-key($map, max) { $query: append($query, "(max-width: #{map-get($map, max)})") }
+  @media screen and #{$query} { @content; }
+}

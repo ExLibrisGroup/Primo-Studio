@@ -1,0 +1,44 @@
+
+// @font-face {
+//     font-family: system;
+//     font-style: normal;
+//     font-weight: 300;
+//     src: local(".SFNSText-Light"), 
+//     local(".HelveticaNeueDeskInterface-Light"), 
+//     local(".LucidaGrandeUI"),
+//     local("Ubuntu Light"),
+//     local("Roboto-Light"),
+//     local("DroidSans"),
+//     local("Segoe UI");
+// }
+
+body {
+    // font-family: "system";
+    font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"
+}
+
+
+h1 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+h1,h2, h3 {
+    font-weight: 600;
+}
+
+h1 + p {
+    margin-bottom: 2rem;
+}
+
+p {
+    margin: .5rem 0;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.italics {
+    font-style: italic
+}

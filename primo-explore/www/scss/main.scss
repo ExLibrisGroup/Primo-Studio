@@ -1,3 +1,14 @@
-h1{
-  color: green !important;
-}
+@import './variables';
+@import './reset';
+@import './breakpoints';
+@import './base';
+@import './icons';
+@import './typography';
+@import './inputs';
+@import './animations';
+@import './layout';
+
+@import '../configurationForm/configuration-form';
+@import '../colorTheme/color-theme';
+@import '../editImages/edit-images';
+@import '../featuresList/features-list';

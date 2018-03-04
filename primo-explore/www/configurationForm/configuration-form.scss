@@ -1,0 +1,142 @@
+prm-configuration-form {
+    width: $config-dialog-width;
+    height: $config-dialog-height;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 4;
+    border-radius: 10px;
+    transition: transform .6s $ease-in-out-quint, width .4s $ease-in-out-quint, height .4s $ease-in-out-quint;
+    transform: translate(calc(50vw - #{$config-dialog-width/2}), calc(-50vh + #{$config-dialog-height/2}));
+    
+    &:before {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: white;
+        z-index: -1;
+        border-radius: 10px;
+        transition: opacity .4s ease;
+        box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1), 0 3px 8px rgba(0, 0, 0, 0.1)
+    }
+    &:after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background: $background;
+        z-index: -1;
+        opacity: 0;
+        transition: opacity .4s ease;
+        box-shadow: 0 -1px  0 0px $background-border 
+    }
+    header {
+        padding: 2rem 2rem 0 2rem;
+    }
+    .content {
+        padding: 0 2rem 2rem 2rem;
+    }
+    footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        button {
+            height: 100%;
+            width: 100%;
+            justify-content: center;
+            border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        }
+    }
+    .form {
+        &.ng-enter {
+            opacity: 0;
+            transition: opacity .3s ease;
+            &.ng-enter-active {
+                opacity: 1;
+            }
+        }
+        &.ng-leave {
+            opacity: 1;
+            transition: opacity .3s ease;
+            &.ng-leave-active {
+                opacity: 0;
+            }
+        }
+    }
+
+    .status {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        justify-content: center;
+        width: 100%;
+        &.ng-enter {
+            opacity: 0;
+            transition: opacity .3s ease;
+            &.ng-enter-active {
+                opacity: 1;
+            }
+        }
+        &.ng-leave {
+            opacity: 1;
+            transition: opacity .3s ease;
+            &.ng-leave-active {
+                opacity: 0;
+            }
+        }
+     
+        > span {
+            margin-right: .5rem
+        }
+    }
+
+
+    &.is-running {
+        height: $server-status-height;
+        width: $sidebar-width;
+        transform: translate(0,0);
+
+        @include breakpoint($lg) {
+            width: $sidebar-width-wide
+        }
+
+        &:before {
+            opacity: 0;
+        }
+        &:after {
+            opacity: 1;
+            transition-delay: .3s
+        }
+    }
+
+    &.is-floating {
+        transform: translate(1rem, -1rem);
+        width: 340px;
+        height: 70px;
+        box-shadow: 0 3px 15px -1px rgba(0, 0, 0, 0.2);
+        transition: transform .4s $ease-out-quint,
+                    width .6s $ease-out-quint,
+                    height .6s $ease-out-quint;
+    }
+    
+    .inner-wrapper {
+        overflow: hidden;        
+        height: 100%;
+        box-sizing: border-box;
+    }
+}

@@ -1,0 +1,266 @@
+
+html,
+body {
+    height: 100%;
+    background: $background;
+    overflow: hidden;
+}
+
+body {
+    margin: 0
+}
+
+.app-wrapper, .app-init {
+    height: 100%;
+    display: flex;    
+}
+
+.app-wrapper {
+    align-items: stretch;
+    justify-content: center;
+    &:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1;
+        opacity: .5;
+        background-image: url(#{$pattern-dotted});
+    }  
+}
+.app-sidenav {
+    position: relative;
+    width: $sidebar-width;
+    box-shadow: -2px 0 10px 0 rgba(0,0,0,.3);
+    z-index: 3;
+    background-color: $background;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    transition: width .4s $ease-in-out-quint;
+    
+    @include breakpoint($lg) {
+        width: $sidebar-width-wide
+    }
+    
+    &.ng-enter {
+        transform: translateX(-100%); 
+        transition: transform .5s $ease-out-quint;
+        &.ng-enter-active {
+            transform: translateX(0); 
+        }
+    }
+
+    &.ng-leave {
+        transform: translateX(0); 
+        transition: transform .5s $ease-in-out-quint;
+        &.ng-leave-active {
+            transform: translateX(-100%); 
+        }
+    }
+
+    &.is-collapsed {
+        width: 61px;
+        transition-duration: 0s;      
+
+        .menu-button {
+            margin-left: -.5rem;
+        }
+    }
+
+    &.is-collapsed-remove.is-collapsed-remove-active {
+        transition: none;
+    }
+
+    .menu-button {
+        background: none;
+        box-shadow: none;
+        margin-top: -1rem;
+        margin-bottom: -1rem;
+        [class^="icon-"] {
+            margin: 0;
+            transition: transform .5s $ease-in-out-quint;
+            &.is-rotated {
+               transform: rotate(180deg)
+            }
+        }
+        
+    }
+
+    .sidenav-title {
+        height: 62px;        
+        padding: 1rem;
+        background-color: darken($background, 5%);
+        box-shadow: inset 0 -1px $background-border ;
+        display: flex;
+        align-items: center;
+        overflow: hidden;
+        box-sizing: border-box;        
+        span {
+            text-transform: uppercase;
+            letter-spacing: 0.15rem;
+            font-weight: 700;
+            font-size: .85rem;
+            opacity: .7;  
+            white-space: nowrap;
+        }
+        img {
+            width: 65px;
+            margin-right: 1rem;
+        }
+    }
+
+    // &.is-collapsed {
+    //     .sidenav-title {
+    //         width: 60px;
+    //     }
+    // }
+    .sidenav-main {
+        display: flex;
+        height: 100%;
+    }
+    .sidenav-nav {
+        background-color: darken($background, 5%);
+        border-right: 1px solid $background-border 
+    }
+    .sidenav-content {
+        margin-bottom: $server-status-height;
+        overflow: auto;
+        width: 100%;
+        display: block;
+    }
+
+    .sidenav-panel {
+        padding: 1.5rem;
+        padding-left: 2rem;
+        box-sizing: border-box;
+        height: 100%;
+        width: 100%;
+        display: block;
+        h2 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            margin-top: -.5rem;
+            color: $accent;
+
+            + p {
+                margin-top: 0;
+                margin-bottom: 1.5rem;
+            }
+
+            @include breakpoint($lg){
+                display: none;
+            }
+        }        
+    }
+
+    ul {
+        list-style: none;
+    }
+    li {
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        box-sizing: border-box;
+        border-bottom: 1px solid $background-border;
+
+        &.is-selected {
+            color: $accent;
+            background-color: $background;
+            box-shadow: 5px 0 0 0 $background, inset 5px 0 0 $accent, 0 -3px 10px -2px rgba(0,0,0,0.1), 0 3px 10px -2px rgba(0,0,0,0.1);
+        }
+
+        .label {
+            font-size: 1rem;
+            margin-left: 1rem;
+            font-size: 1rem;            
+            display: none;
+            font-weight: 600;
+        }
+
+        @include breakpoint($lg){
+            width: auto;
+            justify-content: flex-start;
+            font-size: 1.5rem;
+            padding-left: 1rem;
+            padding-right: 1rem;           
+
+            .label {        
+                display: inline-flex;                        
+            }
+        }
+    }
+    &.is-collapsed {  
+        li {   
+            &.is-selected {
+                box-shadow: inset 5px 0 0 $accent, 0 -3px 10px -2px rgba(0,0,0,0.1), 0 3px 10px -2px rgba(0,0,0,0.1);
+            }
+            @include breakpoint($lg){
+                width: 60px;
+                justify-content: center;
+                font-size: 2rem;
+                padding: 0;           
+
+                .label {        
+                    display: none;                        
+                }
+            }
+        }
+
+        
+    }
+}
+
+.app-stage {
+    flex: 1;
+    align-items: stretch;
+    position: relative; 
+    &.ng-leave {
+        opacity: 1;
+        transition: opacity .5s ease;
+        &.ng-leave-active {
+            opacity: 0;
+        }
+    }   
+}
+
+.app-iframe {
+    border: none;
+    height: 100%;
+    width: 100%;
+    z-index: 2;
+    position: relative;
+}
+
+.content {
+    margin-bottom: 2rem
+}
+.content-row {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+
+}
+
+.content-row-column {
+    @extend .content-row;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.input-wrapper {
+    display: flex;    
+    align-items: center;
+    label {
+        flex: 1 0 0;
+        font-weight: 600;
+    }
+    input[type="text"] {
+        flex: 2 1 auto;
+    }
+}

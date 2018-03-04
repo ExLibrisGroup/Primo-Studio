@@ -29,6 +29,11 @@ class PrmConfigurationForm{
         });
     }
 
+    stop(){
+        var _this = this;
+        _this.iframeService.up = false;
+    }
+
     isUp(){
         return this.iframeService.isUp();
     }

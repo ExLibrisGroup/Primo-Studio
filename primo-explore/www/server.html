@@ -1,47 +1,35 @@
-
 <div class="app-wrapper">
-    <!-- <div> -->
-        <!-- <div md-dynamic-height md-border-bottom flex="40"> -->
-            <!-- <div label="Configuration"> -->
-                
-                    <prm-configuration-form ng-if="!$ctrl.isUp()"></prm-configuration-form>
-            <!-- </div> -->
-            <!-- <div label="Theme"> -->
-                
-                    <prm-color-theme ng-if="$ctrl.isUp()"></prm-color-theme>
-                <!-- </div>
-            </div> -->
-            <!-- <div label="Images" > -->
-                
-                    <prm-edit-images ng-if=""></prm-edit-images>
-                <!-- </div>
-            </div> -->
-            
-            <!-- <div label="Features" ng-if=""> -->
-                
-                    <prm-features-list ng-if=""></prm-features-list>
-                <!-- </div>
-            </div> -->
-            <!-- <div label="Download Package" ng-if=""> -->
-                
-                    <prm-download-package ng-if=""></prm-download-package>
-            <!-- </div> -->
 
-            <!--<md-tab label="Templates">-->
-            <!--<div class="md-padding">-->
-            <!--<h1 class="md-display-2">Templates</h1>-->
-            <!--<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>-->
-            <!--</div>-->
-            <!--</md-tab>-->
+    <prm-configuration-form ng-class="{'is-running': $ctrl.isUp(), 'is-floating' : $ctrl.isUp() && $ctrl.sidenavCollapsed}"></prm-configuration-form>
 
-        <!-- </div> -->
-
-        <div ng-if="">
-            <button href="{{::$ctrl.getIframeUrl()}}" target="_blank">Open in full view</button>
-            <iframe id="primo-explore-iframe" style="min-width:100%;min-height:100%" ng-if="$ctrl.isUp()" src="{{::$ctrl.getIframeUrl()}}"></iframe>
-            <button ng-click="$ctrl.restart()" ng-if="$ctrl.isUp()">ReStart server(wait 10 seconds after changes)</button>
+    <aside class="app-sidenav" ng-if="$ctrl.isUp()" ng-class="{'is-collapsed': $ctrl.sidenavCollapsed}">
+        <div class="sidenav-title">
+            <img src="images/Exlibris_ProQuest-logo.png" alt="" ng-if="!$ctrl.sidenavCollapsed" >
+            <span ng-if="!$ctrl.sidenavCollapsed" >Pimp My Primo</span>
+            <span class="flex"></span>
+            <button class="menu-button" ng-click="$ctrl.toggleSidenav()">
+                <i class="icon-chevrons-left" ng-class="{'is-rotated':$ctrl.sidenavCollapsed}"></i>
+            </button>
         </div>
-    <!-- </div> -->
+        <div class="sidenav-main">
+            <div class="sidenav-nav">
+                <ul>
+                    <li ng-repeat="tab in $ctrl.tabs" title="{{tab.name}}" ng-click="$ctrl.selectTab(tab.name)" ng-class="{'is-selected': tab.name == $ctrl.selectedTab}">
+                        <i class="icon-{{tab.icon}}"></i>
+                        <span class="label">{{tab.name}}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="sidenav-content fade-in-out-animation" ng-if="!$ctrl.sidenavCollapsed">
+                <prm-color-theme ng-if="$ctrl.selectedTab == 'Theme'" class="sidenav-panel"></prm-color-theme>
+                <prm-edit-images ng-if="$ctrl.selectedTab == 'Images'" class="sidenav-panel"></prm-edit-images>
+                <prm-features-list ng-if="$ctrl.selectedTab == 'Addons'" class="sidenav-panel"></prm-features-list>
+                <prm-download-package ng-if="$ctrl.selectedTab == 'Download'" class="sidenav-panel"></prm-download-package>
+            </div>
+        </div>
+    </aside>
+    <main class="app-stage" ng-if="$ctrl.isUp()">
+        <iframe id="primo-explore-iframe" class="app-iframe" src="{{::$ctrl.getIframeUrl()}}"></iframe>
+    </main>
+
 </div>
-
-

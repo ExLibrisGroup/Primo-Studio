@@ -1,15 +1,21 @@
 const template = require('lodash/template');
 
-
-
-
-
 class Server {
     constructor($http, configurationService, iframeService) {
         console.log('constructor running');
+        var self = this;
         this.$http = $http;
         this.configurationService = configurationService;
         this.iframeService = iframeService;
+        this.tabs = [
+            { name: 'Theme', icon: 'palette' },
+            { name: 'Images', icon: 'image' },
+            { name: 'Addons', icon: 'gift' },
+            { name: 'Download', icon: 'cloud_download' }
+        ]
+        this.selectedTab = 'Theme';
+        this.sidenavCollapsed = false;
+        this.sidenavAnimating = false;
 
     }
 
@@ -33,6 +39,21 @@ class Server {
                 this.iframeService.refreshNuiIFrame();
             }
         });
+    }
+
+    selectTab(tab){
+        this.selectedTab = tab
+        if (this.sidenavCollapsed) {
+            this.sidenavCollapsed = false;
+        } 
+    }
+
+    toggleSidenav(){
+        if (this.sidenavCollapsed) {
+            this.sidenavCollapsed = false;                  
+        } else {
+            this.sidenavCollapsed = true;            
+        }
     }
 }
 Server.$inject= ['$http', 'configurationService', 'iframeService'];

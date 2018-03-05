@@ -1,0 +1,23 @@
+// colors
+$accent: #469abb;
+$accent-contrast: white;
+$accent-border: darken($accent, 10%);
+$background: #f5f5f5;
+$background-border: darken($background, 10%);
+$positive: #50922d;
+$positive-brighter: #74a70b;
+
+// dimentions
+$sidebar-width: 400px;
+$sidebar-width-wide: 480px;
+$config-dialog-height:360px;
+$config-dialog-width:600px;
+$server-status-height:80px;
+
+// easings
+$ease-in-out-quint: cubic-bezier(0.86, 0, 0.07, 1);
+$ease-out-quint: cubic-bezier(0.23, 1, 0.32, 1);
+
+// patterns
+$pattern-dotted: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAJUlEQVQYV2NkYGAwZoCAs1AaTDHik0BWCGeDdCADuLFES8B1AwBREgQHBcQKVAAAAABJRU5ErkJggg==';
+

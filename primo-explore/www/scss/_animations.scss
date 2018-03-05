@@ -1,0 +1,51 @@
+.server-on {
+    display: inline-flex;
+    &:before, &:after {
+        border-radius: 50%;
+    }
+    &:before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        background-color: $positive
+    }
+    &:after {
+        content: '';
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        background-color: $positive-brighter;
+        opacity: 0;
+        animation: pulsate 2s 1s $ease-out-quint infinite;
+    }
+}
+
+@keyframes pulsate {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+.fade-in-out-animation {
+    
+    &.ng-enter {
+       opacity: 0;
+       transition: opacity .3s ease;
+        &.ng-enter-active {
+            opacity: 1;
+        }
+    }
+
+    &.ng-leave {
+        opacity: 1;
+        transition: opacity .15s ease;
+        &.ng-leave-active {
+            opacity: 0;
+        }
+    }
+}

@@ -1,20 +1,37 @@
-<h1 class="md-display-2">Images</h1>
-<md-card>
-    <md-card-title>
-        <md-card-title-text>
-            <span class="md-headline">Choose images</span>
-        </md-card-title-text>
-    </md-card-title>
-    <md-card-content>
-        <div>
-            <span layout="row">Logo image</span>
-            <input type="file" name="library-logo" onchange="console.log('file selected'); angular.element(this).scope().$ctrl.setImage('library-logo', this.files);" accept="image/png"/>
-        </div>
-        <div>
-            <span layout="row">Library favicon</span>
-            <input type="file" name="favicon" onchange="console.log('file selected'); angular.element(this).scope().$ctrl.setImage('favicon', this.files);" accept=".ico"/>
-        </div>
-    </md-card-content>
+<h2>Images</h2>
+<p class="italics">Upload image files to replace Primo's logo and favicon</p>
 
-    <md-button ng-click="$ctrl.uploadImages()">Upload images</md-button>
-</md-card>
+<div class="content">
+
+        <div class="content-row-column">
+                <span class="top-label">Library Logo:</span>
+                <input  type="file" 
+                        name="library-logo"
+                        id="library-logo" 
+                        class="inputfile"
+                        onchange="angular.element(this).scope().$ctrl.setImage('library-logo', this.files);" accept="image/png"/>
+                <label for="library-logo" id="label-for-library-logo">
+                    <span>{{$ctrl.logoFileLabel}}</span>
+                </label>
+        </div>  
+        <div class="content-row-column">
+                <span class="top-label">Library Favicon:</span>
+                <input  type="file" 
+                        name="favicon"
+                        id="favicon" 
+                        class="inputfile"
+                        onchange="angular.element(this).scope().$ctrl.setImage('favicon', this.files);" accept=".ico"/>
+                <label for="favicon" id="label-for-favicon">
+                    <span>{{$ctrl.faviconFileLabel}}</span>
+                </label>
+            </div>  
+
+    <button id="button-upload" 
+            class="accent" 
+            ng-click="$ctrl.uploadImages()" 
+            ng-disabled="$ctrl.uploadDisabled">
+            <i class="icon-cloud_upload"></i>
+            <span>Upload images</span>
+    </button>
+        
+</div>

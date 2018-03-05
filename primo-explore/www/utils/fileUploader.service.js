@@ -9,7 +9,9 @@ class FileUploaderService{
     uploadFiles(uploadUrl, filesMap){
         let fd = new FormData();
         for (let key in filesMap){
-            fd.append(key, filesMap[key]);
+            for (let file of filesMap[key]){
+                fd.append(key, file);
+            }
         }
         return this.$http.post(uploadUrl, fd, {
             withCredentials: true,

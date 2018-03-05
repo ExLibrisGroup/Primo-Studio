@@ -32,7 +32,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     //2. serve at custom port
 
     storage.initSync({
-       dir: 'userManifestStorage/'
+        dir: 'userManifestStorage/'
     });
 
     if (gulp.tasks.runAppStore) {
@@ -153,9 +153,10 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     })
 
     let imagesUpload= upload.fields([
-            {name: 'library-logo', maxCount:1},
-            {name: 'favicon', maxCount:1}
-        ]);
+        {name: 'library-logo', maxCount:1},
+        {name: 'favicon', maxCount:1},
+        {name: 'resource-icons' , maxCount:10}
+    ]);
     appS.post('/images', imagesUpload, (req, res)=>{
         let userId= utils.getUserId(req);
         let baseDir = utils.getUserCustomDir(userId);
@@ -163,13 +164,20 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         console.log(data);
         let fileWritePromises=[];
         for (let key in data){
-            let fileObject = data[key][0];
-            let fileName= fileObject.fieldname + '.' + fileObject.originalname.split('.')[1];
-            let filePath= baseDir + '/img/' + fileName;
-            console.log(filePath);
-            fileWritePromises.push(
-                fs.writeFileAsync(filePath, Buffer.from(fileObject.buffer))
-            )
+            for (let fileObject of data[key]){
+                let fileName='';
+                if (key === 'resource-icons'){
+                    fileName = fileObject.originalname;
+                }
+                else{
+                    fileName= fileObject.fieldname + '.' + fileObject.originalname.split('.')[1];
+                }
+                let filePath= baseDir + '/img/' + fileName;
+                console.log(filePath);
+                fileWritePromises.push(
+                    fs.writeFileAsync(filePath, Buffer.from(fileObject.buffer))
+                )
+            }
         }
         Promise.all(fileWritePromises).then(()=>{
             let response = {status:'200'};
@@ -222,19 +230,19 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             type: 'Directory'
         });
         let p1 = rimrafAsync('../../tmp')
-                .then(
-                    () => {
-                let zipStream = readStream
-                    .pipe(unzip.Parse())
-                    .pipe(writeStream)
-                return streamToPromise(zipStream)
-            });
+            .then(
+                () => {
+                    let zipStream = readStream
+                        .pipe(unzip.Parse())
+                        .pipe(writeStream)
+                    return streamToPromise(zipStream)
+                });
         //let p2 = rimrafAsync("primo-explore-devenv/primo-explore/custom/" + n);
         Promise.join(p1).then(() => {
             return fs.rename("./tmp/VIEW_CODE", "primo-explore/custom/" + userId, ()=>{
                 buildCustomJs.customJs(userId);
             });
-    })
+        })
 
         storage.getItem(userId).then((userFeaturesManifest)=>{
             let userInstalledFeaturesList = [];

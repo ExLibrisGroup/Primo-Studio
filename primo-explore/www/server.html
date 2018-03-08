@@ -5,7 +5,7 @@
     <aside class="app-sidenav" ng-if="$ctrl.isUp()" ng-class="{'is-collapsed': $ctrl.sidenavCollapsed}">
         <div class="sidenav-title">
             <img src="images/Exlibris_ProQuest-logo.png" alt="" ng-if="!$ctrl.sidenavCollapsed" >
-            <span ng-if="!$ctrl.sidenavCollapsed" >Pimp My Primo</span>
+            <span ng-if="!$ctrl.sidenavCollapsed" >{{$ctrl.appTitle}}</span>
             <span class="flex"></span>
             <button class="menu-button" ng-click="$ctrl.toggleSidenav()">
                 <i class="icon-chevrons-left" ng-class="{'is-rotated':$ctrl.sidenavCollapsed}"></i>

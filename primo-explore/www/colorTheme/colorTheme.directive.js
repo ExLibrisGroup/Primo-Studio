@@ -2,48 +2,26 @@
  * Created by shoulm on 06/02/2018.
  */
 class PrmColorTheme{
-    constructor($http, iframeService, configurationService){
-        this.$http = $http;
+    constructor(colorThemeService, iframeService){
+        this.colorThemeService= colorThemeService;
         this.iframeService = iframeService;
-        this.configurationService = configurationService;
-        this.colors = {
-            "primary": "#53738C",
-            "secondary" : "#A9CDD6",
-            "backgroundColor" : "#ffffff",
-            "links": "#5C92BD",
-            "warning": "#ff6347",
-            "positive": "#0f7d00",
-            "negative": "#808080",
-            "notice": "#e08303"
-        };
     }
 
-    getColors(){
-        return this.colors;
-    }
-
-    get config(){
-        return this.configurationService.config;
+    get colors(){
+        return this.colorThemeService.colors;
     }
 
     createTheme(){
-        var _this = this;
-        var config={data: {
-            colors: this.colors,
-            conf: this.config
-        }
-        };
-        this.$http.post('/colors',config).then((resp)=>{
+        this.colorThemeService.createTheme().then((resp)=>{
             if(resp.status === 200){
                 console.log('theme created');
                 this.iframeService.refreshNuiIFrame();
             }
-
         });
     }
 }
 
-PrmColorTheme.$inject= ['$http', 'iframeService', 'configurationService'];
+PrmColorTheme.$inject= ['colorThemeService', 'iframeService'];
 
 module.exports = {
     name: 'prmColorTheme',

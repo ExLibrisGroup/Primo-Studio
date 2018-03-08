@@ -19,6 +19,10 @@ class Server {
 
     }
 
+    get appTitle(){
+        return '<prm-customizer/>';
+    }
+
     get config(){
         return this.configurationService.config;
     }

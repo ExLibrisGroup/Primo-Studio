@@ -128,6 +128,19 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         // gulp.start('setup_watchers');
     })
 
+    appS.get('/colors', function(req, res){
+        var userId= utils.getUserId(req);
+        var baseDir = utils.getUserCustomDir(userId);
+        fs.readFile(baseDir+'/colors.json', (err, data)=>{
+            if(err){
+                utils.sendErrorResponse(res, err);
+            }
+            else{
+                res.send(data);
+            }
+        });
+    });
+
     appS.post('/colors', function (req, res) {
         var colors = req.body.data.colors;
         var conf = req.body.data.conf;

@@ -20,8 +20,7 @@ function promiseSerial(funcs, param) {
 
 function sendErrorResponse(res, err){
     console.log(err.message);
-    var response = {status:'500'};
-    res.send(response);
+    res.status(500).send(err);
 }
 
 function parseCookies (request) {

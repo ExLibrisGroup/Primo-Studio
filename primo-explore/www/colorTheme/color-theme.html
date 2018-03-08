@@ -4,13 +4,13 @@
 </p>
 <div class="content">
 
-    <div class="content-row input-wrapper" ng-repeat="(key,value) in $ctrl.getColors()">
+    <div class="content-row input-wrapper" ng-repeat="(key,value) in $ctrl.colors">
         <label for="{{key}}">
             <span ng-if="key !== 'backgroundColor'">{{key}}</span>
             <span ng-if="key == 'backgroundColor'">background</span>
         </label>
         <input id="{{key}}" type="text" ng-model="$ctrl.colors[key]">
-        <input type="color" onchange="clickColor(0, -1, -1, 5)" ng-model="$ctrl.colors[key]">
+        <input type="color" ng-model="$ctrl.colors[key]">
 
     </div>
 

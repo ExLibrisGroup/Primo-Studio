@@ -44,3 +44,6 @@ app.service(featuesService.name, featuesService.service);
 
 const fileUploaderService = require('./utils/fileUploader.service');
 app.service(fileUploaderService.name, fileUploaderService.service);
+
+const colorThemeService = require('./colorTheme/colorTheme.service');
+app.service(colorThemeService.name, colorThemeService.service);

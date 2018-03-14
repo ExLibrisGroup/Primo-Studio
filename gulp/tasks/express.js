@@ -23,8 +23,16 @@ const npmi= require('npmi');
 const rename= require('gulp-rename');
 const buildCustomJs= require('./buildCustomJs');
 const storage = require('node-persist');
+const httpProxy= require('http-proxy');
+const http = require('http');
+const primoProxy = require('../primoProxy');
+const config = require('../config');
+const _url = require("url");
+
+let proxy = httpProxy.createProxyServer({});
 
 gulp.task('serve', ['bundle-js', 'watch-app'], function() {
+    let appName = 'primo-explore';
     //1. serve with default settings
     /* var server = gls.static(); //equals to gls.static('public', 3000);
      server.start();*/
@@ -225,9 +233,9 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         }
         var confObj = {"view":req.query.view,
             "url": req.query.url};
-        // var d = new Date();
-        // var n = d.getTime();
-        var userId= utils.getUserId(req);
+        let userId= utils.getUserId(req);
+        userId = userId && userId !== '' ? userId :  utils.createNewUserId();
+        console.log('started with user ID: ' + userId);
 
 
         configG.setView(userId);
@@ -274,25 +282,135 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
     })
 
+
+
+
+    appS.all('*',function(req, res, next){
+        let cookies = utils.parseCookies(req);
+        let urlForProxy = cookies['urlForProxy'];
+        let viewForProxy = cookies['viewForProxy'];
+        let confPath = config.getVe() ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
+        let confAsJsPath = '/primo-explore/config_';
+
+        let fixConfiguration = function (res, res1, isConfByFile) {
+            let dirForProxy = utils.getUserId(req);
+            let body = '';
+
+            res1.setEncoding('utf8');
+
+            res1.on("data", function (chunk) {
+                body = body + chunk;
+            });
+
+            res1.on("end", function () {
+
+                let vid = dirForProxy || config.view() || '';
+                let customizationProxy = primoProxy.getCustimazationObject(vid, appName);
+
+
+                if (isConfByFile) {
+                    res.end('');
+
+                } else {
+
+                    let jsonBody = JSON.parse(body);
+                    let newBodyObject = jsonBody;
+
+                    newBodyObject.customization = customizationProxy;
+                    let newBody = JSON.stringify(newBodyObject);
+
+                    res.body = newBody;
+
+                    /*console.log('newBody: ' newBody);*/
+                    res.end(newBody);
+                }
+
+            });
+        };
+        if (req.url.startsWith(confAsJsPath) || req.url.startsWith(confPath)) {
+            let isConfByFile = false;
+            if (req.url.startsWith(confAsJsPath)) {
+                isConfByFile = true;
+            }
+            let proxyUrl = urlForProxy || config.PROXY_SERVER;
+            let base = proxyUrl.replace('http:\/\/', '').replace('https:\/\/', '');
+            let method = proxyUrl.split('://')[0];
+            let parts = base.split(':');
+            let hostname = parts[0];
+            let port = parts[1];
+
+
+            let options = {
+                hostname: hostname,
+                port: port,
+                path: req.url,
+                method: 'GET',
+                headers: {
+                    'X-From-ExL-API-Gateway': '1'
+                }
+            };
+            let requestObject = http;
+            if (method === 'https') {
+                requestObject = https;
+            }
+            let req2 = requestObject.request(options, (res1) => {
+                fixConfiguration(res, res1, isConfByFile);
+            });
+
+            req2.on('error', (e) => {
+                _next(req, res, urlForProxy, viewForProxy);
+            });
+
+            req2.write('');
+            req2.end();
+
+        }
+        else {
+            _next(req, res, urlForProxy, viewForProxy);
+        }
+    })
     appS.listen(8004, function () {
         console.log('Example app listening on port 8004!')
-    })
+    });
     /*server.start();*/
+    function _next(req,res,targetUrl,vid){
 
 
-    /*    server.get('/app', function (req, res) {
-     console.log('22222');
-     res.send('Hello World!')
-     })*/
-    /*//3. serve multi folders
-     var server = gls.static(['dist', '.tmp']);
-     server.start();*/
+        console.log('vid=' + vid);
+        console.log('url=' + targetUrl);
+        let path = _url.parse(req.url).pathname;
 
-    //use gulp.watch to trigger server actions(notify, start or stop)
-    /*gulp.watch(['primo-explore/app/!**!/!*','primo-explore/www/!**!/!*.css', 'primo-explore/www/!**!/!*.css'], function (file) {
-     console.log('11111');
-     server.notify.apply(server, [file]);
-     });*/
+
+        let proxyUrl = targetUrl || config.PROXY_SERVER;
+        let fixedurl = proxyUrl+req.url;
+        let base = proxyUrl.replace('http:\/\/','').replace('https:\/\/','');
+        let method = proxyUrl.split('://')[0];
+        let parts = base.split(':');
+        let hostname = parts[0];
+        let port = parts[1];
+
+        console.log('this is the current path: ' + path);
+        if(path.indexOf('/primo-explore/custom') > -1) {
+            console.log('req url=' + _url.parse(req.url));
+            let filePath= process.cwd() + path;
+            console.log(filePath);
+            let filestream= fs.createReadStream(filePath);
+            filestream.pipe(res);
+            return;
+        }
+
+        //fixes bug where bodyParser interferes with post requests
+        req.removeAllListeners('data');
+        req.removeAllListeners('end');
+        process.nextTick(function () {
+            if(req.body) {
+                req.emit('data', JSON.stringify(req.body));
+            }
+            req.emit('end');
+        });
+
+        proxy.web(req, res, { target: targetUrl });
+    }
 });
 
 gulp.task('custom', function() {
@@ -306,11 +424,6 @@ gulp.task('custom', function() {
     });
     gulp.watch('primo-explore/app/server.js', server.start);
 });
-
-
-
-
-
 
 
 function buildByBrowserify() {

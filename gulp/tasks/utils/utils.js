@@ -1,11 +1,16 @@
 const shorthash= require('shorthash');
 
+
+function createNewUserId(){
+     var d = new Date();
+     var n = d.getTime();
+     console.log('created new user id: ' + shorthash.unique(n.toString()));
+     return shorthash.unique(n.toString());
+}
+
 function getUserId(req){
-    var ip= req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-    var userAgent= req.headers['user-agent'] || '';
-    var userId= ip + userAgent;
-    // userId= userId.replace(/[^\d\w]/g, ''); //sanitize user id since it is user as a folder name
-    return shorthash.unique(userId);
+    let cookies= parseCookies(req);
+    return cookies['dirName'];
 }
 
 function getUserCustomDir(userId){
@@ -62,6 +67,7 @@ function getUserInstalledFeaturesList(userFeaturesManifest){
 
 module.exports={
     promiseSerial: promiseSerial,
+    createNewUserId: createNewUserId,
     getUserId: getUserId,
     getUserCustomDir: getUserCustomDir,
     sendErrorResponse: sendErrorResponse,

@@ -2,11 +2,12 @@
  * Created by shoulm on 07/02/2018.
  */
 class PrmConfigurationForm{
-    constructor($http, iframeService, configurationService, $cookies){
-        this.$http = $http;
+    constructor(iframeService, configurationService){
         this.iframeService = iframeService;
         this.configurationService = configurationService;
-        this.$cookies= $cookies;
+        if (this.config.url && this.configurationService.config.view){
+            this.start();
+        }
     }
 
     get config(){
@@ -14,18 +15,8 @@ class PrmConfigurationForm{
     }
 
     start(){
-        var _this = this;
-        var config={params: this.config};
-        this.$cookies.put('urlForProxy', this.config.url);
-        this.$cookies.put('viewForProxy', this.config.view);
-        this.$http.get('/start',config).then(function(resp){
-            if(resp.status === 200){
-                _this.config.dirName = resp.data.dirName;
-                _this.config.installedFeatures= resp.data.installedFeatures;
-                console.log('created new directory: '+ _this.config.dirName);
-                _this.iframeService.up = true;
-            }
-
+        this.configurationService.start().then(()=>{
+            this.iframeService.up = true;
         });
     }
 
@@ -39,7 +30,7 @@ class PrmConfigurationForm{
     }
 
 }
-PrmConfigurationForm.$inject= ['$http', 'iframeService', 'configurationService', '$cookies'];
+PrmConfigurationForm.$inject= ['iframeService', 'configurationService'];
 
 module.exports = {
     name: 'prmConfigurationForm',

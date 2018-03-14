@@ -28,8 +28,12 @@ const http = require('http');
 const primoProxy = require('../primoProxy');
 const config = require('../config');
 const _url = require("url");
+const https = require('https');
 
-let proxy = httpProxy.createProxyServer({});
+let proxy = httpProxy.createProxyServer({changeOrigin: true});
+proxy.on('error', function (err, req, res) {
+    utils.sendErrorResponse(res, err);
+});
 
 gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     let appName = 'primo-explore';
@@ -399,7 +403,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             return;
         }
 
-        //fixes bug where bodyParser interferes with post requests
+        //fixes bug where bodyParser interferes with post requests in http proxy
         req.removeAllListeners('data');
         req.removeAllListeners('end');
         process.nextTick(function () {
@@ -408,7 +412,6 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             }
             req.emit('end');
         });
-
         proxy.web(req, res, { target: targetUrl });
     }
 });

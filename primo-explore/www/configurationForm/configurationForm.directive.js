@@ -2,10 +2,10 @@
  * Created by shoulm on 07/02/2018.
  */
 class PrmConfigurationForm{
-    constructor(iframeService, configurationService){
+    constructor(iframeService, configurationService, $location){
         this.iframeService = iframeService;
         this.configurationService = configurationService;
-        if (this.config.url && this.configurationService.config.view){
+        if ($location.search()['url'] && $location.search()['vid']){
             this.start();
         }
     }
@@ -30,7 +30,7 @@ class PrmConfigurationForm{
     }
 
 }
-PrmConfigurationForm.$inject= ['iframeService', 'configurationService'];
+PrmConfigurationForm.$inject= ['iframeService', 'configurationService', '$location'];
 
 module.exports = {
     name: 'prmConfigurationForm',

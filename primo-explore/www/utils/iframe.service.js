@@ -25,7 +25,7 @@ class IframeService{
         if (!this.nuiIframeElement){
             return;
         }
-        this.nuiIframeElement.src = this.nuiIframeElement.src;
+        this.nuiIframeElement.contentWindow.location.reload();
     }
 
     getIframeUrl(){

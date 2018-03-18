@@ -294,9 +294,9 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         let urlForProxy = cookies['urlForProxy'];
         let viewForProxy = cookies['viewForProxy'];
         let ve = cookies['ve'];
-        let confPath = ve ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
+        let confPath = (ve === 'true') ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
         let confAsJsPath = '/primo-explore/config_';
-        let appPrefix = ve ? 'discovery' : 'primo-explore';
+        let appPrefix = (ve === 'true') ? 'discovery' : 'primo-explore';
         let fixConfiguration = function (res, res1, isConfByFile) {
             let dirForProxy = utils.getUserId(req);
             let body = '';
@@ -312,12 +312,10 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 let vid = dirForProxy || config.view() || '';
                 let customizationProxy = primoProxy.getCustimazationObject(vid, appName);
 
-
                 if (isConfByFile) {
                     res.end('');
 
                 } else {
-
                     let jsonBody = JSON.parse(body);
                     let newBodyObject = jsonBody;
 

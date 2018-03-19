@@ -8,11 +8,13 @@ class ConfigurationService{
         this.$cookies = $cookies;
         let queryParams= $location.search();
         let url= queryParams['url'] || 'http://primo-demo.exlibrisgroup.com:1701';
-        let view= queryParams['vid'] || 'NORTH'
+        let view= queryParams['vid'] || 'NORTH';
+        let isVe = queryParams['ve'] || false;
         let dirName = queryParams['dirName'];
         this._config={'view': view,
             'url': url,
             'dirName': dirName,
+            've': isVe,
             installedFeatures: []
         };
     }
@@ -22,6 +24,7 @@ class ConfigurationService{
         var config={params: this.config};
         this.$cookies.put('urlForProxy', this.config.url);
         this.$cookies.put('viewForProxy', this.config.view);
+        this.$cookies.put('ve', this.config.ve);
         this.$cookies.put('dirName', this.config.dirName);
         return this.$http.get('/start',config).then(function(resp){
             if(resp.status === 200){

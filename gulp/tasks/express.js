@@ -197,12 +197,12 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 else{
                     fileName= fileObject.fieldname + '.' + fileObject.originalname.split('.')[1];
                 }
-                let filePath= baseDir + '/img/' + fileName;
-                console.log(filePath);
-                fileWritePromises.push(
-                    fs.writeFileAsync(filePath, Buffer.from(fileObject.buffer))
-                )
-            }
+            let filePath= baseDir + '/img/' + fileName;
+            console.log(filePath);
+            fileWritePromises.push(
+                fs.writeFileAsync(filePath, Buffer.from(fileObject.buffer))
+            )
+        }
         }
         Promise.all(fileWritePromises).then(()=>{
             let response = {status:'200'};
@@ -293,9 +293,10 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         let cookies = utils.parseCookies(req);
         let urlForProxy = cookies['urlForProxy'];
         let viewForProxy = cookies['viewForProxy'];
-        let confPath = config.getVe() ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
-        let confAsJsPath = '/primo-explore/config_';
-
+        let ve = cookies['ve'];
+        let confPath = (ve === 'true') ? '/primaws/rest/pub/configuration' : '/primo_library/libweb/webservices/rest/v1/configuration';
+        let confAsJsPath = (ve === 'true') ? '/discovery/config_' : '/primo-explore/config_';
+        let appPrefix = (ve === 'true') ? 'discovery' : 'primo-explore';
         let fixConfiguration = function (res, res1, isConfByFile) {
             let dirForProxy = utils.getUserId(req);
             let body = '';
@@ -311,12 +312,10 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 let vid = dirForProxy || config.view() || '';
                 let customizationProxy = primoProxy.getCustimazationObject(vid, appName);
 
-
                 if (isConfByFile) {
                     res.end('');
 
                 } else {
-
                     let jsonBody = JSON.parse(body);
                     let newBodyObject = jsonBody;
 
@@ -370,14 +369,14 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
         }
         else {
-            _next(req, res, urlForProxy, viewForProxy);
+            _next(req, res, urlForProxy, viewForProxy,appPrefix);
         }
     })
     appS.listen(8004, function () {
         console.log('Example app listening on port 8004!')
     });
     /*server.start();*/
-    function _next(req,res,targetUrl,vid){
+    function _next(req,res,targetUrl,vid,appPrefix){
 
 
         console.log('vid=' + vid);
@@ -394,9 +393,10 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         let port = parts[1];
 
         console.log('this is the current path: ' + path);
-        if(path.indexOf('/primo-explore/custom') > -1) {
+        if(path.indexOf('/'+appPrefix+'/custom') > -1) {
             console.log('req url=' + _url.parse(req.url));
-            let filePath= process.cwd() + path;
+            let fixedPath = path.replace('/discovery/', '/primo-explore/');
+            let filePath= process.cwd() + fixedPath;
             console.log(filePath);
             let filestream= fs.createReadStream(filePath);
             filestream.pipe(res);

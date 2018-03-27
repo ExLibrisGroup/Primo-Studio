@@ -5,6 +5,8 @@ class PrmColorTheme{
     constructor(colorThemeService, iframeService){
         this.colorThemeService= colorThemeService;
         this.iframeService = iframeService;
+
+        this.inProgress= false;
     }
 
     get colors(){
@@ -12,11 +14,16 @@ class PrmColorTheme{
     }
 
     createTheme(){
+        this.inProgress = true;
         this.colorThemeService.createTheme().then((resp)=>{
             if(resp.status === 200){
                 console.log('theme created');
                 this.iframeService.refreshNuiIFrame();
             }
+        }, (err)=> {
+            console.log(err);
+        }).finally(()=>{
+            this.inProgress = false;
         });
     }
 }

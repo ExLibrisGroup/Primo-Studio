@@ -15,10 +15,17 @@ button {
         display: flex;
         align-items: center;
 
-        i[class^="icon-"] {
+        i[class^="icon-"]{
             font-size: 1.5rem;
             margin-right: .5rem;
         }
+
+        prm-busy-spinner{
+            height: 1.5rem;
+            width: 1.5rem;
+            margin-right: .5rem;
+        }
+
 
         &.accent:not([disabled]) {
             background: $accent;

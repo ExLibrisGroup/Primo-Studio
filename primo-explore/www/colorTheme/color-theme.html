@@ -16,7 +16,8 @@
 
 </div>
 
-<button ng-click="$ctrl.createTheme()">
-    <i class="icon-refresh"></i>
+<button ng-click="$ctrl.createTheme()" ng-disabled="$ctrl.inProgress">
+    <i ng-if="!$ctrl.inProgress" class="icon-refresh"></i>
+    <prm-busy-spinner ng-if="$ctrl.inProgress"></prm-busy-spinner>
     Update Theme
 </button>

@@ -31,6 +31,8 @@ app.component(featuresList.name, featuresList.config);
 const downloadPackage= require('./downloadPackage/downloadPackage.directive');
 app.component(downloadPackage.name, downloadPackage.config);
 
+const busySpinner= require('./busySpinner/busySpinner.directive');
+app.component(busySpinner.name, busySpinner.config);
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');

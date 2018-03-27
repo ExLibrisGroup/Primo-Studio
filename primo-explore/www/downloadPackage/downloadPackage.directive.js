@@ -11,8 +11,12 @@ class PrmDownloadPackage{
             let a = document.createElement('a');
             a.href = url;
             a.download = 'package.zip';
-            a.target = '_blank';
+            document.body.appendChild(a);
             a.click();
+            setTimeout(function(){
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }, 100);
         });
     }
 }

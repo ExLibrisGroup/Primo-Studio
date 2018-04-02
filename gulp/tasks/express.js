@@ -29,6 +29,8 @@ const primoProxy = require('../primoProxy');
 const config = require('../config');
 const _url = require("url");
 const https = require('https');
+const streamifier = require('streamifier');
+const ncp = require('ncp').ncp;
 
 let proxy = httpProxy.createProxyServer({changeOrigin: true});
 proxy.on('error', function (err, req, res) {
@@ -70,7 +72,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         storage.getItem(userId).then((userManifest)=>{
             let npmId= req.query.id;
             let hookName= req.query.hook;
-            npmi({path: 'primo-explore/custom/' + userId, name: req.query.id}, (err, result)=>{
+            npmi({path: 'primo-explore/custom/' + userId, name: npmId}, (err, result)=>{
                 if (err){
                     console.log('failed to install feature:');
                     utils.sendErrorResponse(res, err);
@@ -78,7 +80,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 else{
                     let hookFeatureList= userManifest[hookName]? userManifest[hookName] : [];
                     hookFeatureList.push(npmId);
-                    buildCustomJs.buildCustomHookJsFile(userId, hookName, hookFeatureList).then(()=>{
+                    buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList).then(()=>{
                         buildCustomJs.customJs(userId).then(()=>{
                             userManifest[hookName] = hookFeatureList;
                             storage.setItem(userId, userManifest);
@@ -110,7 +112,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             }
             else{
                 hookFeatureList.splice(index, 1); // remove the feature from the installed feature list
-                buildCustomJs.buildCustomHookJsFile(userId, hookName, hookFeatureList).then(()=>{
+                buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList).then(()=>{
                     buildCustomJs.customJs(userId).then(()=>{
                         userManifest[hookName] = hookFeatureList;
                         storage.setItem(userId, userManifest);
@@ -213,20 +215,156 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     appS.get('/package', (req, res)=>{
         let userId= utils.getUserId(req);
         let vid= req.cookies['viewForProxy'];
-        let readableStream = gulp.src(['./primo-explore/custom/'+userId,'./primo-explore/custom/'+userId+'/html/**','./primo-explore/custom/'+userId+'/img/**','./primo-explore/custom/'+userId+'/css/custom1.css','./primo-explore/custom/'+userId+'/js/custom.js'], {base: './primo-explore/custom'})
-            .pipe(rename((file)=>{
-                file.basename= file.basename.replace(userId, vid);
-                file.dirname = file.dirname.replace(userId, vid);
-            }))
-            .pipe(zip(vid+'.zip', {buffer: true}));
-        let buffer;
-        readableStream.on('data', (data)=>{
-            buffer= data;
+        storage.getItem(userId).then((userManifest)=>{
+            fs.writeFileSync('./primo-explore/custom/'+userId + '/features.json', JSON.stringify(userManifest));
+            let readableStream = gulp.src(['./primo-explore/custom/'+userId,'./primo-explore/custom/'+userId+'/html/**',
+                './primo-explore/custom/'+userId+'/img/**','./primo-explore/custom/'+userId+'/css/custom1.css',
+                './primo-explore/custom/'+userId+'/js/custom.js', './primo-explore/custom/'+userId + '/features.json',
+                './primo-explore/custom/'+userId + '/colors.json'], {base: './primo-explore/custom'})
+                .pipe(rename((file)=>{
+                    file.basename= file.basename.replace(userId, vid);
+                    file.dirname = file.dirname.replace(userId, vid);
+                }))
+                .pipe(zip(vid+'.zip', {buffer: true}));
+            let buffer;
+            readableStream.on('data', (data)=>{
+                buffer= data;
+            });
+            readableStream.on('end',()=>{
+                res.type('zip');
+                res.end(buffer._contents, 'binary');
+            });
         });
-        readableStream.on('end',()=>{
-            res.type('zip');
-            res.end(buffer._contents, 'binary');
+    });
+
+
+    let packageUpload= upload.fields([
+        {name: 'package', maxCount:1}
+    ]);
+    appS.post('/package', packageUpload,  (req, res)=>{
+        console.log('started package post!');
+        let userId= utils.getUserId(req);
+        let fileObject = req.files.package[0];
+        let packagePath = './primo-explore/uploadedPackages/' + userId;
+        let writeStream = fstream.Writer({
+            path: packagePath,
+            type: 'Directory'
         });
+        let readStream = streamifier.createReadStream(Buffer.from(fileObject.buffer));
+        let zipStream = readStream
+            .pipe(unzip.Parse())
+            .pipe(writeStream)
+        let promise=  streamToPromise(zipStream).then(()=>{
+            console.log('unziped package');
+            let directories = utils.getDirectories(packagePath);
+            if (directories.length !== 1){
+                utils.sendErrorResponse(res, 'malformed package structure');
+                return console.error('malformed package');
+            }
+            let dirName= /[^\\]*$/.exec(directories[0])[0];
+            fs.readFile(packagePath + '/' + dirName + '/features.json', 'utf8', (err, data)=>{
+                if (err){
+                    console.log('error reading file features.json: ' + err);
+                }
+                let userManifest=data? JSON.parse(data) : {};
+                console.log(userManifest);
+                fs.renameSync(packagePath + '/' + dirName + '/js/custom.js', packagePath + '/' + dirName + '/js/customUploadedPackage.js');
+                fs.readFile(packagePath + '/' + dirName + '/js/customUploadedPackage.js', 'utf8', (err,data)=> {
+                    data = utils.unwrapJs(data); //during concatenation we wrap code with function so we need to unwrap before we concatenate
+
+                    //remove all code generated by custom.js.tmpl
+                    data = data.replace(/\/\/Auto generated code by primo app store DO NOT DELETE!!! -START-[\S\s]*?\/\/Auto generated code by primo app store DO NOT DELETE!!! -END-/g, '');
+
+                    //we rename components placed directly on hooks. We do this so that we can place several features on one hook without conflicts
+                    let manuallyAddedComponentsManifest = {};
+                    data = utils.fixManuallyAddedComponents(data ,manuallyAddedComponentsManifest);
+
+                    let customModuleDefinitionLineRegex = /[^\n\r]*app[\s]*?=[\s]*?angular.module\([\S\s]*?\);?/;
+                    let customModuleDefinitionLine = data.match(customModuleDefinitionLineRegex);
+                    data = data.replace(customModuleDefinitionLineRegex, ''); //delete the module line from the js since we are moving it to custom.module.js
+                    let customModuleFileWritePromise = new Promise((resolve,reject)=>{
+                        if (customModuleDefinitionLine){
+                            fs.writeFile(packagePath + '/' + dirName + '/js/custom.module.js', customModuleDefinitionLine[0], 'utf8',(err)=> {
+                                if(err){
+                                    reject();
+                                    return console.error('failed to create custom.module.js: ' + err);
+                                }
+                                else{
+                                    resolve();
+                                }
+                            })
+                        }
+                        else{
+                            resolve();
+                        }
+                    });
+
+
+                    let hookPromiseArr = [];
+                    for (let hook in userManifest) {
+                        let npmInstallPromiseArr= [];
+                        let hookFeaturesList = userManifest[hook];
+                        if (hookFeaturesList.length > 0) {
+                            hookPromiseArr.push(new Promise((resolve, reject) => {
+                                for (let feature of hookFeaturesList) {
+                                    data = data.replace(utils.dashSeparatedToCamelCase(feature), 'toRemove' + new Date().getTime());
+                                    npmInstallPromiseArr.push(utils.npmInstallWithPromise(packagePath + '/' + dirName, feature));
+                                }
+                                Promise.all(npmInstallPromiseArr).then(() => {
+                                    let manuallyAddedComponentsForHook = manuallyAddedComponentsManifest[hook] || [];
+                                    userManifest[hook] = hookFeaturesList.concat(manuallyAddedComponentsForHook);
+                                    buildCustomJs.buildCustomHookJsFile(packagePath + '/' + dirName, hook, userManifest[hook]).then(() => {
+                                        resolve();
+                                    }, (err) => {
+                                        reject(err);
+                                        utils.sendErrorResponse(res, err);
+                                        return console.error('failed to build hook js file for: ' + hook)
+                                    });
+                                }, (err) => {
+                                    reject(err);
+                                    utils.sendErrorResponse(res, err);
+                                    return console.error('failed to npm install feature for hook: ' + hook);
+                                });
+                            }));
+                        }
+                    }
+
+                    fs.writeFile(packagePath + '/' + dirName + '/js/customUploadedPackage.js', data, 'utf8',(err)=> {
+                        if (err){
+                            return console.log(err);
+                        }
+                        Promise.all(hookPromiseArr.concat(customModuleFileWritePromise)).then(()=>{
+                            new Promise((resolve, reject)=>{
+                                ncp(packagePath + '/' + dirName, utils.getUserCustomDir(userId), function (err) {
+                                    if (err) {
+                                        reject(err);
+                                    }
+                                    else{
+                                        resolve();
+                                    }
+                                });
+                            }).then(()=>{
+                                storage.setItem(userId, userManifest);
+                                console.log('uploaded package successfully!');
+                                let response = {status:'200'};
+                                res.send(response);
+                            }, (err)=>{
+                                utils.sendErrorResponse(res, 'internal error');
+                                return console.error('failed to copy uploaded package: ' + err);
+                            }).finally(()=>{
+                                // rimrafAsync(packagePath); //delete uploaded package once copy is finished
+                            });
+                        }, (err)=>{
+                            rimrafAsync(packagePath); //delete uploaded package
+                            utils.sendErrorResponse(res, 'internal error');
+                            return console.error('failed to upload package');
+                        });
+                    });
+                });
+
+            });
+        });
+
     });
 
 

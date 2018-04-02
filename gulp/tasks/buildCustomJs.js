@@ -99,9 +99,9 @@ function buildByBrowserify(userId) {
 
 }
 
-function buildCustomHookJsFile(userId, hookName, hookFeatureList){
+function buildCustomHookJsFile(customDir, hookName, hookFeatureList){
     if (hookFeatureList.length === 0){ //if no more features left on the hook we can delete the hook js file
-        return del([utils.getUserCustomDir(userId) + '/js/' + hookName + '.js'])
+        return del([customDir + '/js/' + hookName + '.js'])
     }
     let hookTemplate = '';
     for (let npmId of hookFeatureList){
@@ -116,7 +116,7 @@ function buildCustomHookJsFile(userId, hookName, hookFeatureList){
         let stream= gulp.src(hookJSTemplateFile)
             .pipe(template(templateParameters))
             .pipe(rename(hookName + '.js'))
-            .pipe(gulp.dest(utils.getUserCustomDir(userId) + '/js/'));
+            .pipe(gulp.dest(customDir + '/js/'));
         stream.on('end', resolve);
         stream.on( 'error', reject);
     });

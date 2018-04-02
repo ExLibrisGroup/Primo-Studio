@@ -1,4 +1,7 @@
 const shorthash= require('shorthash');
+const { lstatSync, readdirSync } = require('fs');
+const { join } = require('path');
+const npmi= require('npmi');
 
 
 function createNewUserId(){
@@ -40,6 +43,11 @@ function parseCookies (request) {
     return list;
 }
 
+const isDirectory = source => lstatSync(source).isDirectory()
+
+const getDirectories = source =>
+    readdirSync(source).map(name => join(source, name)).filter(isDirectory);
+
 function getRequestBody(request){
     return new Promise((resolve, reject)=>{
         let body = [];
@@ -65,6 +73,66 @@ function getUserInstalledFeaturesList(userFeaturesManifest){
     return installedFeaturesList;
 }
 
+function dashSeparatedToCamelCase(input) {
+    return input.toLowerCase().replace(/-(.)/g, function(match, group1) {
+        return group1.toUpperCase();
+    });
+}
+
+function camelCaseToDashSeparated(input){
+    return input.replace(/\W+/g, '-')
+        .replace(/([a-z\d])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+function unwrapJs(content){
+    let startRegExp = /^\(function\(\){\n"use strict";\n/;
+    let endRegExp = /}\)\(\);$/;
+    content = content.replace(startRegExp, '');
+    content = content.replace(endRegExp, '');
+    return content;
+
+}
+
+function npmInstallWithPromise(installPath, npmId){
+    return new Promise((resolve, reject)=>{
+        npmi({path: installPath, name: npmId}, (err, result)=>{
+            if (err){
+                reject(err);
+            }
+            else{
+                resolve(result);
+            }
+        })
+    });
+}
+
+function nextChar(c) {
+    return String.fromCharCode(c.charCodeAt(0) + 1);
+}
+
+function fixManuallyAddedComponents(content, userManifest){
+    let componentRegex = /app.component\([\s]*?['|"](prm.*?After)['|"][\s\S]*?controller[\s]*?:[\s]*?['|"](.*)['|"]/g;
+    let match;
+    let addedString = 'AppStoreGenerated';
+    do {
+        match = componentRegex.exec(content);
+        if (match) {
+            let componentName = match[1];
+            let hookName = camelCaseToDashSeparated(componentName);
+            let controllerName = match[2];
+            let newComponentName = componentName + addedString;
+            let newControllerName = controllerName + addedString;
+            content = content.replace(componentName, newComponentName);
+            content = content.replace(controllerName, newControllerName);
+            if (!userManifest[hookName]){
+                userManifest[hookName] = [];
+            }
+            userManifest[hookName].push(camelCaseToDashSeparated(newComponentName));
+        }
+    } while (match);
+    return content;
+}
+
 module.exports={
     promiseSerial: promiseSerial,
     createNewUserId: createNewUserId,
@@ -73,5 +141,10 @@ module.exports={
     sendErrorResponse: sendErrorResponse,
     parseCookies: parseCookies,
     getRequestBody: getRequestBody,
-    getUserInstalledFeaturesList: getUserInstalledFeaturesList
+    getUserInstalledFeaturesList: getUserInstalledFeaturesList,
+    getDirectories: getDirectories,
+    dashSeparatedToCamelCase: dashSeparatedToCamelCase,
+    unwrapJs: unwrapJs,
+    npmInstallWithPromise: npmInstallWithPromise,
+    fixManuallyAddedComponents: fixManuallyAddedComponents
 }

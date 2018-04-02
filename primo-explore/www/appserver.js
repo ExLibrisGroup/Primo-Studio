@@ -11,7 +11,8 @@ class Server {
             { name: 'Theme', icon: 'palette' },
             { name: 'Images', icon: 'image' },
             { name: 'Addons', icon: 'gift' },
-            { name: 'Download', icon: 'cloud_download' }
+            { name: 'Download', icon: 'cloud_download' },
+            {name: 'UploadPackage', icon: 'cloud_upload' }
         ]
         this.selectedTab = 'Theme';
         this.sidenavCollapsed = false;

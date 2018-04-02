@@ -34,6 +34,9 @@ app.component(downloadPackage.name, downloadPackage.config);
 const busySpinner= require('./busySpinner/busySpinner.directive');
 app.component(busySpinner.name, busySpinner.config);
 
+const uploadPackage= require('./uploadPackage/uploadPackage.directive');
+app.component(uploadPackage.name, uploadPackage.config);
+
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');
 app.service(iframeService.name, iframeService.service);

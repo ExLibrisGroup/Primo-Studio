@@ -267,7 +267,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                     console.log('error reading file features.json: ' + err);
                 }
                 let userManifest=data? JSON.parse(data) : {};
-                console.log(userManifest);
+                console.log('user manifest read from features.json: ' + JSON.stringify(userManifest));
                 fs.renameSync(packagePath + '/' + dirName + '/js/custom.js', packagePath + '/' + dirName + '/js/customUploadedPackage.js');
                 fs.readFile(packagePath + '/' + dirName + '/js/customUploadedPackage.js', 'utf8', (err,data)=> {
                     data = utils.unwrapJs(data); //during concatenation we wrap code with function so we need to unwrap before we concatenate
@@ -278,6 +278,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                     //we rename components placed directly on hooks. We do this so that we can place several features on one hook without conflicts
                     let manuallyAddedComponentsManifest = {};
                     data = utils.fixManuallyAddedComponents(data ,manuallyAddedComponentsManifest);
+                    console.log('manually added components: ' + JSON.stringify(manuallyAddedComponentsManifest));
 
                     let customModuleDefinitionLineRegex = /[^\n\r]*app[\s]*?=[\s]*?angular.module\([\S\s]*?\);?/;
                     let customModuleDefinitionLine = data.match(customModuleDefinitionLineRegex);
@@ -299,21 +300,24 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                         }
                     });
 
+                    userManifest = utils.combineObjectsWithArrayValues(userManifest, manuallyAddedComponentsManifest); //combine both manifests
 
                     let hookPromiseArr = [];
                     for (let hook in userManifest) {
                         let npmInstallPromiseArr= [];
                         let hookFeaturesList = userManifest[hook];
+                        let manuallyAddedComponentsForHook = manuallyAddedComponentsManifest[hook] || [];
                         if (hookFeaturesList.length > 0) {
                             hookPromiseArr.push(new Promise((resolve, reject) => {
                                 for (let feature of hookFeaturesList) {
-                                    data = data.replace(utils.dashSeparatedToCamelCase(feature), 'toRemove' + new Date().getTime());
-                                    npmInstallPromiseArr.push(utils.npmInstallWithPromise(packagePath + '/' + dirName, feature));
+                                    if(manuallyAddedComponentsForHook.indexOf(feature) === -1){ //only npm install feature if it was not added manually
+                                        data = data.replace(utils.dashSeparatedToCamelCase(feature), 'toRemove' + new Date().getTime());
+                                        npmInstallPromiseArr.push(utils.npmInstallWithPromise(packagePath + '/' + dirName, feature));
+                                    }
                                 }
                                 Promise.all(npmInstallPromiseArr).then(() => {
-                                    let manuallyAddedComponentsForHook = manuallyAddedComponentsManifest[hook] || [];
-                                    userManifest[hook] = hookFeaturesList.concat(manuallyAddedComponentsForHook);
-                                    buildCustomJs.buildCustomHookJsFile(packagePath + '/' + dirName, hook, userManifest[hook]).then(() => {
+
+                                    buildCustomJs.buildCustomHookJsFile(packagePath + '/' + dirName, hook, hookFeaturesList).then(() => {
                                         resolve();
                                     }, (err) => {
                                         reject(err);
@@ -329,6 +333,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                         }
                     }
 
+                    console.log('writing new data to customUploadedPackage.js');
                     fs.writeFile(packagePath + '/' + dirName + '/js/customUploadedPackage.js', data, 'utf8',(err)=> {
                         if (err){
                             return console.log(err);

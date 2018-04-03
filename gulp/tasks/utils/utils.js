@@ -111,26 +111,49 @@ function nextChar(c) {
 }
 
 function fixManuallyAddedComponents(content, userManifest){
-    let componentRegex = /app.component\([\s]*?['|"](prm.*?After)['|"][\s\S]*?controller[\s]*?:[\s]*?['|"](.*)['|"]/g;
+    let componentRegex = /app.component[\s]*?\([\s]*?['|"](prm.*?After)['|"]/g;
+    let controllerRegex = /controller[\s]*?:[\s]*?['|"](.*)['|"]/g;
     let match;
     let addedString = 'AppStoreGenerated';
+
+    //fix components
     do {
         match = componentRegex.exec(content);
         if (match) {
             let componentName = match[1];
             let hookName = camelCaseToDashSeparated(componentName);
-            let controllerName = match[2];
             let newComponentName = componentName + addedString;
-            let newControllerName = controllerName + addedString;
-            content = content.replace(componentName, newComponentName);
-            content = content.replace(controllerName, newControllerName);
+            content = content.replace(new RegExp(componentName, 'g'), newComponentName);
             if (!userManifest[hookName]){
                 userManifest[hookName] = [];
             }
             userManifest[hookName].push(camelCaseToDashSeparated(newComponentName));
         }
     } while (match);
+
+    //fix controllers
+    do {
+        match = controllerRegex.exec(content);
+        if (match) {
+            let controllerName = match[1];
+            let newControllerName = controllerName + addedString;
+            content = content.replace(new RegExp(controllerName, 'g'), newControllerName);
+        }
+    } while (match);
+
     return content;
+}
+
+function combineObjectsWithArrayValues(objA, objB) {
+    for (let key in objB) {
+        if(objA[key]){
+            objA[key] = objA[key].concat(objB[key]);
+        }
+        else{
+            objA[key] = objB[key];
+        }
+    }
+    return objA;
 }
 
 module.exports={
@@ -146,5 +169,6 @@ module.exports={
     dashSeparatedToCamelCase: dashSeparatedToCamelCase,
     unwrapJs: unwrapJs,
     npmInstallWithPromise: npmInstallWithPromise,
-    fixManuallyAddedComponents: fixManuallyAddedComponents
+    fixManuallyAddedComponents: fixManuallyAddedComponents,
+    combineObjectsWithArrayValues: combineObjectsWithArrayValues
 }

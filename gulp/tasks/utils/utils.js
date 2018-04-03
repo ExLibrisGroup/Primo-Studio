@@ -85,8 +85,8 @@ function camelCaseToDashSeparated(input){
 }
 
 function unwrapJs(content){
-    let startRegExp = /^\(function\(\){\n"use strict";\n/;
-    let endRegExp = /}\)\(\);$/;
+    let startRegExp = /\([\s]*?function[\s]*?\(\)[\s]*?{/;
+    let endRegExp = /}[\s]*?\)[\s]*?\([\s]*?\)[\s]*?;/;
     content = content.replace(startRegExp, '');
     content = content.replace(endRegExp, '');
     return content;

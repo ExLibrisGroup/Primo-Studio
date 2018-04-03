@@ -537,6 +537,9 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             let filePath= process.cwd() + fixedPath;
             console.log(filePath);
             let filestream= fs.createReadStream(filePath);
+            filestream.on('error', (err)=>{
+                utils.sendErrorResponse(res, err);
+            });
             filestream.pipe(res);
             return;
         }

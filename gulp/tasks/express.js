@@ -261,7 +261,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 utils.sendErrorResponse(res, 'malformed package structure');
                 return console.error('malformed package');
             }
-            let dirName= /[^\\]*$/.exec(directories[0])[0];
+            let dirName= /[^\\|/]*$/.exec(directories[0])[0];
             fs.readFile(packagePath + '/' + dirName + '/features.json', 'utf8', (err, data)=>{
                 if (err){
                     console.log('error reading file features.json: ' + err);

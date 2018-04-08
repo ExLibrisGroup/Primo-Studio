@@ -340,7 +340,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                         }
                         Promise.all(hookPromiseArr.concat(customModuleFileWritePromise)).then(()=>{
                             new Promise((resolve, reject)=>{
-                                ncp(packagePath + '/' + dirName, utils.getUserCustomDir(userId), function (err) {
+                                ncp(packagePath + '/' + dirName, utils.getUserCustomDir(userId), {filter: utils.uploadedPackageFileFilter}, function (err) {
                                     if (err) {
                                         reject(err);
                                     }

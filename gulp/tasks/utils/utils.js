@@ -111,7 +111,7 @@ function nextChar(c) {
 }
 
 function fixManuallyAddedComponents(content, userManifest){
-    let componentRegex = /app.component[\s]*?\([\s]*?['|"](prm.*?After)['|"]/g;
+    let componentRegex = /\.component[\s]*?\([\s]*?['|"](prm.*?After)['|"]/g;
     let controllerRegex = /controller[\s]*?:[\s]*?['|"](.*)['|"]/g;
     let match;
     let addedString = 'AppStoreGenerated';
@@ -140,7 +140,6 @@ function fixManuallyAddedComponents(content, userManifest){
             content = content.replace(new RegExp(controllerName, 'g'), newControllerName);
         }
     } while (match);
-
     return content;
 }
 
@@ -154,6 +153,23 @@ function combineObjectsWithArrayValues(objA, objB) {
         }
     }
     return objA;
+}
+
+function uploadedPackageFileFilter(fileName){
+    if(fileName.indexOf('.js') > -1){
+        let allowedJSFiles = /.*[/|\\]uploadedPackages[/\\].*?[/\\].*?[/\\]js[/\\](?:customUploadedPackage.js|custom.module.js|prm-.*?-after.js)/;
+        if (allowedJSFiles.test(fileName)){
+            console.log('returned true for file: ' + fileName);
+            return true;
+        }
+        else{
+            console.log('returned false for file: ' + fileName);
+            return false;
+        }
+    }
+    else{
+        return true;
+    }
 }
 
 module.exports={
@@ -170,5 +186,6 @@ module.exports={
     unwrapJs: unwrapJs,
     npmInstallWithPromise: npmInstallWithPromise,
     fixManuallyAddedComponents: fixManuallyAddedComponents,
-    combineObjectsWithArrayValues: combineObjectsWithArrayValues
+    combineObjectsWithArrayValues: combineObjectsWithArrayValues,
+    uploadedPackageFileFilter: uploadedPackageFileFilter
 }

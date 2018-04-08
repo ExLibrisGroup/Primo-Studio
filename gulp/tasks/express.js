@@ -56,8 +56,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     //var server = gls.static(['primo-explore/www','primo-explore/api'], 8888);
     const express = require('express');
     const appS = express();
-    appS.use( bodyParser.json() );
-    appS.use(bodyParser.urlencoded({extended: true}));
+    appS.use( bodyParser.json({limit: '10mb'}) );
+    appS.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
     appS.use(express.static('primo-explore/www'));
     appS.use(cookieParser());
 

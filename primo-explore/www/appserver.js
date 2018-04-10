@@ -21,7 +21,7 @@ class Server {
     }
 
     get appTitle(){
-        return '<prm-customizer/>';
+        return 'Primo Studio';
     }
 
     get config(){

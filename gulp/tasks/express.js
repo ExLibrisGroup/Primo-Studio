@@ -81,13 +81,18 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                     let hookFeatureList= userManifest[hookName]? userManifest[hookName] : [];
                     hookFeatureList.push(npmId);
                     buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList).then(()=>{
-                        buildCustomJs.customJs(userId).then(()=>{
+                        let appCssPromise = appCss(userId);
+                        let buildCustomJsPromise = buildCustomJs.customJs(userId).then(()=>{
                             userManifest[hookName] = hookFeatureList;
                             storage.setItem(userId, userManifest);
+                        }, (err)=>{
+                            console.log('failed to build custom js: ' + err);
+                        });
+                        Promise.all([appCssPromise, buildCustomJsPromise]).then(()=>{
                             var response = {status: '200'};
                             res.send(response);
                         }, (err)=>{
-                            console.log('failed to build custom js: ' + err);
+                            utils.sendErrorResponse(res, err);
                         });
                     }, (err)=>{
                         console.log('failed to build custom hook js file');
@@ -112,20 +117,26 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             }
             else{
                 hookFeatureList.splice(index, 1); // remove the feature from the installed feature list
-                buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList).then(()=>{
-                    buildCustomJs.customJs(userId).then(()=>{
+                let rimrafPromise = rimrafAsync(utils.getUserCustomDir(userId) + '/node_modules/' + npmId); //delete feature from node_module
+                let buildCustomHookJsFilePromise = buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList);
+                Promise.all([rimrafPromise, buildCustomHookJsFilePromise]).then(()=>{
+                    let appCssPromise = appCss(userId);
+                    let buildCustomJsPromise = buildCustomJs.customJs(userId).then(()=>{
                         userManifest[hookName] = hookFeatureList;
                         storage.setItem(userId, userManifest);
+                    }, (err)=>{
+                        console.log('failed to build custom js: ' + err);
+                    });
+                    Promise.all([appCssPromise, buildCustomJsPromise]).then(()=>{
                         var response = {status: '200'};
                         res.send(response);
                     }, (err)=>{
-                        console.log('failed to build custom js: ' + err);
+                        utils.sendErrorResponse(res, err);
                     });
                 }, (err)=>{
                     console.log('failed to build custom hook js file');
                     utils.sendErrorResponse(res, err);
                 });
-
             }
         });
     })

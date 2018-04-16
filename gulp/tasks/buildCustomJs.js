@@ -51,10 +51,10 @@ function buildByConcatination(userId) {
         let stream= gulp.src([
             (userId? userCustomDir + '/js/' + buildParams.customModuleFile : buildParams.customModulePath()),
             (userId? userCustomDir + '/js/*.js' : buildParams.mainPath()),
-            (userId? userCustomDir + '/node_modules/primo-explore*/js/*.js' : buildParams.customNpmJsPath()),
+            (userId? userCustomDir + '/node_modules/*/js/*.js' : buildParams.customNpmJsPath()),
             (userId? '!' + userCustomDir + '/js/' + buildParams.customFile : '!'+buildParams.customPath()),
-            (userId? '!' + userCustomDir + '/node_modules/primo-explore*/js/custom.module.js' : '!'+buildParams.customNpmJsModulePath()),
-            (userId? '!' + userCustomDir + '/node_modules/primo-explore*/js/custom.js' : '!'+buildParams.customNpmJsCustomPath())
+            (userId? '!' + userCustomDir + '/node_modules/*/js/custom.module.js' : '!'+buildParams.customNpmJsModulePath()),
+            (userId? '!' + userCustomDir + '/node_modules/*/js/custom.js' : '!'+buildParams.customNpmJsCustomPath())
         ])
             .pipe(concat(buildParams.customFile))
             .pipe(babel({

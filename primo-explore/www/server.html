@@ -14,7 +14,7 @@
         <div class="sidenav-main">
             <div class="sidenav-nav">
                 <ul>
-                    <li ng-repeat="tab in $ctrl.tabs" title="{{tab.name}}" ng-click="$ctrl.selectTab(tab.name)" ng-class="{'is-selected': tab.name == $ctrl.selectedTab}">
+                    <li ng-style="tab.name === 'UploadPackage'? {'display':'none'} : {}" ng-repeat="tab in $ctrl.tabs" title="{{tab.name}}" ng-click="$ctrl.selectTab(tab.name)" ng-class="{'is-selected': tab.name == $ctrl.selectedTab}">
                         <i class="icon-{{tab.icon}}"></i>
                         <span class="label">{{tab.name}}</span>
                     </li>

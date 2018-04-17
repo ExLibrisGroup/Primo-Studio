@@ -1,9 +1,12 @@
 const angular = require('angular');
 const ngCookies= require('angular-cookies');
 const angularAnimate = require('angular-animate');
+const angularFormly = require('angular-formly');
+const angularFormlyBootstrapTemplate = require('angular-formly-templates-bootstrap');
+const angularDialog = require('ng-dialog');
 
 
-let app = angular.module('devenv', [ngCookies, 'ngAnimate'])
+let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate, 'ngDialog'])
 app.config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode({
         enabled: true,
@@ -36,6 +39,9 @@ app.component(busySpinner.name, busySpinner.config);
 
 const uploadPackage= require('./uploadPackage/uploadPackage.directive');
 app.component(uploadPackage.name, uploadPackage.config);
+
+const featureConfigurationForm= require('./featureConfigurationForm/featureConfigurationForm.directive');
+app.component(featureConfigurationForm.name, featureConfigurationForm.config);
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');

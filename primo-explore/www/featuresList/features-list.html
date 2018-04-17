@@ -18,11 +18,17 @@
                     </a>
                 </small>
                 
-                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.addFeature(item.npmid, item.hook)">
-                    <i class="icon-add"></i> Add
+                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.addFeature(item.npmid, item.hook)"
+                        ng-disabled="$ctrl.inProgress[item.npmid]">
+                    <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-add"></i>
+                    <prm-busy-spinner ng-if="$ctrl.inProgress[item.npmid]"></prm-busy-spinner>
+                    Add
                 </button>
-                <button  class="is-small" ng-if="$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.removeFeature(item.npmid, item.hook)">
-                    <i class="icon-close"></i> Remove
+                <button  class="is-small" ng-if="$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.removeFeature(item.npmid, item.hook)"
+                         ng-disabled="$ctrl.inProgress[item.npmid]">
+                    <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-close"></i>
+                    <prm-busy-spinner ng-if="$ctrl.inProgress[item.npmid]"></prm-busy-spinner>
+                    Remove
                 </button>
             </div>
         </div>

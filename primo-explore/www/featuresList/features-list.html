@@ -18,7 +18,7 @@
                     </a>
                 </small>
                 
-                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.addFeature(item.npmid, item.hook)"
+                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.selectFeature(item)"
                         ng-disabled="$ctrl.inProgress[item.npmid]">
                     <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-add"></i>
                     <prm-busy-spinner ng-if="$ctrl.inProgress[item.npmid]"></prm-busy-spinner>

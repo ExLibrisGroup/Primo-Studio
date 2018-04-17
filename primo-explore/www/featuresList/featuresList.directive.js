@@ -3,10 +3,11 @@
  */
 class FeaturesList{
 
-    constructor(featuresService, iframeService, configurationService){
+    constructor(featuresService, iframeService, configurationService, ngDialog){
         this.featuresService= featuresService;
         this.iframeService= iframeService;
         this.configurationService= configurationService;
+        this.ngDialog = ngDialog;
 
         this.inProgress = {};
         this.features = [];
@@ -15,8 +16,30 @@ class FeaturesList{
         })
     }
 
+    selectFeature(item){
+        if(item.config){
+            let featureConfigFromSubmitCallback = this.addFeature.bind(this, item.npmid, item.hook);
+            let dialogOptions = this.ngDialog.open({
+                data: {featureConfigFromSubmitCallback: featureConfigFromSubmitCallback, config: item.config},
+                template: `
+                <prm-feature-configuration-form 
+                    form-fields-config="ngDialogData.config" on-submit="ngDialogData.featureConfigFromSubmitCallback">
+                </prm-feature-configuration-form>`,
+                plain: true
+            });
+            this.closeDialog = dialogOptions.close;
+        }
+        else{
+            this.addFeature(item.npmid, item.hook);
+        }
+    }
 
-    addFeature(npmid, hook){
+
+    addFeature(npmid, hook, featureConfigData){
+        if (this.closeDialog){ //close open config dialog
+            this.closeDialog();
+            this.closeDialog = undefined;
+        }
         this.inProgress[npmid] = true;
         this.featuresService.addFeature(npmid, hook).then((resp)=>{
             this.inProgress[npmid] = false;
@@ -46,7 +69,7 @@ class FeaturesList{
 
 }
 
-FeaturesList.$inject=['featuresService', 'iframeService', 'configurationService'];
+FeaturesList.$inject=['featuresService', 'iframeService', 'configurationService', 'ngDialog'];
 
 module.exports = {
     name: 'prmFeaturesList',

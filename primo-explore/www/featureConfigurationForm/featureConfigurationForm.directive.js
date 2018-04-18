@@ -1,43 +1,28 @@
 /**
  * Created by shoulm on 17/04/2018.
  */
+const _merge= require('lodash/merge');
+
 class FeatureConfigurationForm{
     constructor($timeout){
         this.$timeout = $timeout;
     }
 
     $onInit(){
-
-        // let formConf=
-        //     [
-        //         {
-        //             key: 'url',
-        //             type: 'input',
-        //             templateOptions: {
-        //                 type: 'text',
-        //                 label: 'URL',
-        //                 placeholder: 'Enter URL'
-        //             }
-        //         },
-        //         {
-        //             key: 'somthing',
-        //             type: 'input',
-        //             templateOptions: {
-        //                 type: 'text',
-        //                 label: 'Something',
-        //                 placeholder: 'Enter Something'
-        //             }
-        //         },
-        //     ];
         this.configItemCounter = this.formFieldsConfig.multiple - 1 | 0; //we subtract 1 because of the first config item which appears by default
         this.formsData = [{}];
+        let defaultFieldConf=
+            {
+                type: 'input',
+                templateOptions: {
+                    type: 'text',
+                }
+            };
         this.formConf = this.formFieldsConfig.form.map((field)=>{
-            field['type']= 'input';
-            field['templateOptions'] = {
-                type: 'text',
-                label: field['key']
-            }
-            return field;
+            let defaultField = angular.copy(defaultFieldConf);
+            defaultField.templateOptions['label'] = field['key'];
+            let fieldConf =  _merge(defaultField, field); //extend default conf with field conf
+            return fieldConf;
         });
         this.forms = [angular.copy(this.formConf)];
     }

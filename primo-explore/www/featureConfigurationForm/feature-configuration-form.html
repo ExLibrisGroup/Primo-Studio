@@ -1,4 +1,12 @@
-<formly-form ng-repeat="form in $ctrl.forms" model="$ctrl.formsData[$index]" fields="$ctrl.forms[$index]" style="padding: 10px">
-</formly-form>
-<button ng-if="$ctrl.configItemCounter" ng-click="$ctrl.addConfigItem()">Add Item</button>
-<button type="submit" class="btn btn-default" ng-click="$ctrl.submit($ctrl.forms)">Submit</button>
+<div class="feature-configuration-form">
+    <div class="form" ng-repeat="form in $ctrl.forms">
+        <formly-form  model="$ctrl.formsData[$index]" fields="$ctrl.forms[$index]" style="padding: 10px">
+        </formly-form>
+        <hr>
+    </div>
+    <button ng-if="$ctrl.configItemCounter" ng-click="$ctrl.addConfigItem()">
+        <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-add"></i>
+        Add Item
+    </button>
+    <button type="submit" class="submit-button" ng-click="$ctrl.submit($ctrl.forms)">Submit</button>
+</div>

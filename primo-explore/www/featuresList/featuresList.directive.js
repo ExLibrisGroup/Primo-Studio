@@ -41,7 +41,7 @@ class FeaturesList{
             this.closeDialog = undefined;
         }
         this.inProgress[npmid] = true;
-        this.featuresService.addFeature(npmid, hook).then((resp)=>{
+        this.featuresService.addFeature(npmid, hook, featureConfigData).then((resp)=>{
             this.inProgress[npmid] = false;
             this.iframeService.refreshNuiIFrame();
         }, (err)=>{

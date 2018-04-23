@@ -63,16 +63,17 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
 
 
-    appS.get('/feature', function (req, res) {
+    appS.post('/feature', function (req, res) {
         if(!process.cwd().includes("Primo-App-Store")) {
             process.chdir("Primo-App-Store");
         }
         let userId= utils.getUserId(req);
 
         storage.getItem(userId).then((userManifest)=>{
-            let npmId= req.query.id;
-            let hookName= req.query.hook;
-            npmi({path: 'primo-explore/custom/' + userId, name: npmId}, (err, result)=>{
+            let npmId= req.body.data.id;
+            let hookName= req.body.data.hook;
+            let featureConfig = req.body.data.featureConfig;
+            npmi({path: 'primo-explore/custom/' + userId, name: npmId, version:'latest', forceInstall: true}, (err, result)=>{
                 if (err){
                     console.log('failed to install feature:');
                     utils.sendErrorResponse(res, err);
@@ -80,7 +81,13 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 else{
                     let hookFeatureList= userManifest[hookName]? userManifest[hookName] : [];
                     hookFeatureList.push(npmId);
-                    buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList).then(()=>{
+                    let promiseArr= [];
+                    console.log('features config: ' + featureConfig);
+                    if (featureConfig){
+                        promiseArr.push(buildCustomJs.buildFeatureConfigJsFile(utils.getUserCustomDir(userId), npmId, featureConfig));
+                    }
+                    promiseArr.push(buildCustomJs.buildCustomHookJsFile(utils.getUserCustomDir(userId), hookName, hookFeatureList));
+                    Promise.all(promiseArr).then(()=>{
                         let appCssPromise = appCss(userId);
                         let buildCustomJsPromise = buildCustomJs.customJs(userId).then(()=>{
                             userManifest[hookName] = hookFeatureList;

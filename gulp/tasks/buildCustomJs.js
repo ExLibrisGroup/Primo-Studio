@@ -16,6 +16,7 @@ const del = require('del');
 const utils= require('./utils/utils');
 const buildCustomHtmlTemplatesExports= require('./buildCustomHtmlTemplates');
 const hookJSTemplateFile= 'gulp/tasks/utils/custom.js.tmpl';
+const featureConfigJSTemplateFile= 'gulp/tasks/utils/featureConfig.js.tmpl';
 
 // const componentRegex= /app\.component[\s\S]*?\(\s*['"](\w*?)['"][\s\S]*?template:[\s\S]*?([`'"])([\s\S]*?)\2[\s\S]*?\);/g
 
@@ -122,6 +123,22 @@ function buildCustomHookJsFile(customDir, hookName, hookFeatureList){
     });
 }
 
+function buildFeatureConfigJsFile(customDir, npmId, featureConfig){
+    console.log('building features config js file');
+    let templateParameters= {
+        npmIdCamelCase: utils.dashSeparatedToCamelCase(npmId),
+        featureConfig: JSON.stringify(featureConfig)
+    };
+    return new Promise((resolve, reject)=>{
+        let stream= gulp.src(featureConfigJSTemplateFile)
+            .pipe(template(templateParameters))
+            .pipe(rename('featureConfig.js'))
+            .pipe(gulp.dest(customDir + '/node_modules/' + npmId + '/js/'));
+        stream.on('end', resolve);
+        stream.on( 'error', reject);
+    });
+}
+
 function getFormattedHookName(hookName){
     let arr= hookName.split('-');
     arr.shift();
@@ -134,5 +151,6 @@ function getFormattedHookName(hookName){
 
 module.exports={
     customJs: customJs,
-    buildCustomHookJsFile: buildCustomHookJsFile
+    buildCustomHookJsFile: buildCustomHookJsFile,
+    buildFeatureConfigJsFile: buildFeatureConfigJsFile
 }

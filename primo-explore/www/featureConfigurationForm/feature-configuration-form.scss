@@ -1,0 +1,18 @@
+prm-feature-configuration-form{
+  .feature-configuration-form{
+    display: flex;
+    flex-direction: column;
+  }
+  .forms{
+
+  }
+  button{
+    display: block;
+    width: 130px;
+    margin: 1em;
+    align-self: center;
+  }
+  .submit-button{
+    align-self: center;
+  }
+}

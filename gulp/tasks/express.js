@@ -503,7 +503,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
                 path: req.url,
                 method: 'GET',
                 headers: {
-                    'X-From-ExL-API-Gateway': '1'
+                    'X-From-ExL-API-Gateway': '1',
+                    'User-Agent': ''
                 }
             };
             let requestObject = http;

@@ -21,7 +21,7 @@ let  zlib = require('zlib');
 let tar = require('tar-fs');
 let stylesBaseDir = 'www/styles/partials';
 let templateFile = stylesBaseDir+'/_variables.tmpl.scss';
-let OTBColorsFile = stylesBaseDir+'/../colors.json';
+let OTBColorsFile = stylesBaseDir+'/../colors.json.txt';
 let scssFile = '_variables.scss';
 var runSequence = require('run-sequence');
 let  fs = require('fs');
@@ -51,7 +51,12 @@ function extractScssFiles(userId){
     return new Promise((resolve, reject)=>{
         let stream= request({url:url, 'headers': headers})
             .pipe(zlib.createGunzip()) // unzip
-            .pipe(tar.extract(userCustomDir));
+            .pipe(tar.extract(userCustomDir, {map: (header)=>{
+                if (header.name.indexOf('colors.json') > -1){
+                    header.name = header.name.replace('colors.json', 'colors.json.txt');
+                }
+                return header;
+            }}));
             stream.on('finish', resolve);
             stream.on( 'error', reject);
     });
@@ -64,7 +69,7 @@ gulp.task('color-variables',() => {
 
 function colorVariables(userId){
     let userCustomDir=userId? utils.getUserCustomDir(userId): utils.getUserCustomDir(config.view());
-    let colorVariables = JSON.parse(fs.readFileSync(userCustomDir + '/css' + '/../colors.json', 'utf8'));
+    let colorVariables = JSON.parse(fs.readFileSync(userCustomDir + '/css' + '/../colors.json.txt', 'utf8'));
     let colorVariablesOTB =JSON.parse(fs.readFileSync((userId? userCustomDir + '/' : '') + OTBColorsFile, 'utf8'));
     let colorsMeregd = lodashMerge(colorVariablesOTB, colorVariables);
     return new Promise((resolve, reject)=>{

@@ -85,7 +85,7 @@ function customCssMainPath() {
     return viewCssDir()+'/*.css';
 }
 function customColorsPath(){
-    return `colors.json`;
+    return `colors.json.txt`;
 }
 
 function viewRootDir() {

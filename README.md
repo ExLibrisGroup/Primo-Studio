@@ -23,8 +23,8 @@ Primo Studio allows you to:
 
 ![studio configuration image](./help_files/conf.png "The Configuration screen")
 
- ![studio startup image](./help_files/start.png "The Startup screen")
+ ![studio startup image](./help_files/start.PNG "The Startup screen")
  
- ![studio colors image](./help_files/colors.png "The Color configuration screen")
+ ![studio colors image](./help_files/colors.PNG "The Color configuration screen")
  
- ![studio feature image](./help_files/features.png "The Feature configuration screen")
+ ![studio feature image](./help_files/features.PNG "The Feature configuration screen")

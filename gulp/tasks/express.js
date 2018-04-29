@@ -65,8 +65,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
 
     appS.post('/feature', function (req, res) {
-        if(!process.cwd().includes("Primo-App-Store")) {
-            process.chdir("Primo-App-Store");
+        if(!process.cwd().includes("Primo-Studio")) {
+            process.chdir("Primo-Studio");
         }
         let userId= utils.getUserId(req);
 
@@ -152,8 +152,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
     })
 
     appS.get('/restart',function(req,res){
-        if(!process.cwd().includes("Primo-App-Store")) {
-            process.chdir("Primo-App-Store");
+        if(!process.cwd().includes("Primo-Studio")) {
+            process.chdir("Primo-Studio");
         }
         var userId= utils.getUserId(req);
         // configG.setView(req.query.dirName);
@@ -393,8 +393,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
 
     appS.get('/start', function (req, res) {
-        if(!process.cwd().includes("Primo-App-Store")) {
-            process.chdir("Primo-App-Store");
+        if(!process.cwd().includes("Primo-Studio")) {
+            process.chdir("Primo-Studio");
         }
         var confObj = {"view":req.query.view,
             "url": req.query.url};

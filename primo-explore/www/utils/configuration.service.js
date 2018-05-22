@@ -9,12 +9,12 @@ class ConfigurationService{
         let queryParams= $location.search();
         let url= queryParams['url'] || 'http://primo-demo.exlibrisgroup.com:1701';
         let view= queryParams['vid'] || 'NORTH';
-        let isVe = queryParams['ve'] || false;
+        let isVe = queryParams['ve'] || 'false';
         let dirName = queryParams['dirName'];
         this._config={'view': view,
             'url': url,
             'dirName': dirName,
-            've': isVe,
+            've': isVe === 'true',
             installedFeatures: []
         };
     }
@@ -31,7 +31,7 @@ class ConfigurationService{
                 let dirName = resp.data.dirName;
                 _this.config.dirName = dirName;
                 _this.$cookies.put('dirName', dirName);
-                let searchParams = {'dirName': dirName, 'url': _this.config.url, 'vid': _this.config.view};
+                let searchParams = {'dirName': dirName, 'url': _this.config.url, 'vid': _this.config.view, 've': _this.config.ve.toString()};
                 _this.$location.search(searchParams);
                 _this.config.installedFeatures = resp.data.installedFeatures;
                 console.log('created new directory: '+ _this.config.dirName);

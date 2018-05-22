@@ -4,4 +4,5 @@ package-lock.json
 package.json
 primo-explore/www/bundle.js
 primo-explore/www/bundle.js.map
-primo-explore/custom/MOCK/js/custom.js
+.idea
+npm-debug.log

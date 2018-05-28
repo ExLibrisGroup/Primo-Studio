@@ -33,6 +33,12 @@ class FeatureConfigurationForm{
             this.forms.push(newForm);
     }
 
+    removeConfigItem(formIndex) {
+        this.configItemCounter++;
+        this.forms.splice(formIndex, 1);
+        this.formsData.splice(formIndex, 1);
+    }
+
     submit(formData){
         this.onSubmit(formData);
         console.log(formData);

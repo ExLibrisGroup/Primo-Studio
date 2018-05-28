@@ -7,7 +7,7 @@
             <h3 class="item-line">{{item.what}}</h3>
             <p class="item-line" ng-if="item.notes">{{item.notes}}</p>
             <div class="item-line">
-                <span class="author-image"><img src="{{item.face}}" alt="{{item.who}}" /></span>
+                <span class="author-image"><img ng-src="{{item.face}}" alt="{{item.who}}" /></span>
                 <small class="author-name">{{item.who}}</small>
             </div>
             <div class="item-actions">

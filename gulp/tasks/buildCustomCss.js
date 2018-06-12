@@ -28,7 +28,7 @@ gulp.task('custom-css', () => {
 function customCss(userId){
     let userCustomDir=userId? utils.getUserCustomDir(userId): utils.getUserCustomDir(config.view());
     return new Promise((resolve, reject)=>{
-        let stream= gulp.src([userCustomDir + '/css/*.css', userCustomDir + '/node_modules/primo-explore*/css/*.css', '!'+ userCustomDir + '/css/' + buildParams.customCssFile])
+        let stream= gulp.src([userCustomDir + '/css/*.css', userCustomDir + '/node_modules/*/css/*.css', '!'+ userCustomDir + '/css/' + buildParams.customCssFile])
             .pipe(concat(buildParams.customCssFile))
             .pipe(gulp.dest(userCustomDir + '/css'));
         stream.on('end', resolve);

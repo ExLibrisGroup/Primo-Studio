@@ -536,8 +536,8 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             _next(req, res, urlForProxy, viewForProxy,appPrefix);
         }
     })
-    appS.listen(8004, function () {
-        console.log('Example app listening on port 8004!')
+    appS.listen(80, function () {
+        console.log('Example app listening on port 80!')
     });
     /*server.start();*/
     function _next(req,res,targetUrl,vid,appPrefix){

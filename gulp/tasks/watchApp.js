@@ -30,7 +30,7 @@ gulp.task('watch-app', function() {
     let options = minimist(process.argv.slice(2));
     if (options.dev) {
         browserSync.init({
-            proxy: "localhost:80"
+            proxy: "localhost:8004"
         });
         gulp.watch(scssFiles, ['sass']);
         gulp.watch(src.html).on('change', reload);

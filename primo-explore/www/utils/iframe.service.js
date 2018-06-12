@@ -31,7 +31,7 @@ class IframeService{
     getIframeUrl(){
         let ve = this.configurationService.config.ve;
         let appName = ve ? 'discovery' : 'primo-explore';
-        return this.$sce.trustAsResourceUrl(this.$location.protocol() + '://' + this.$location.host() + '/'+appName+'/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
+        return this.$sce.trustAsResourceUrl(this.$location.protocol() + '://' + this.$location.host() + ':8004/'+appName+'/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
     }
     isUp(){
         return this._up;

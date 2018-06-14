@@ -1,6 +1,7 @@
 /**
  * Created by shoulm on 06/02/2018.
  */
+const _merge= require('lodash/merge');
 class ConfigurationService{
     constructor($http, $location, $cookies){
         this.$http = $http;
@@ -31,7 +32,7 @@ class ConfigurationService{
                 let dirName = resp.data.dirName;
                 _this.config.dirName = dirName;
                 _this.$cookies.put('dirName', dirName);
-                let searchParams = {'dirName': dirName, 'url': _this.config.url, 'vid': _this.config.view, 've': _this.config.ve.toString()};
+                let searchParams = _merge({'dirName': dirName, 'url': _this.config.url, 'vid': _this.config.view, 've': _this.config.ve.toString()}, _this.$location.search());
                 _this.$location.search(searchParams);
                 _this.config.installedFeatures = resp.data.installedFeatures;
                 console.log('created new directory: '+ _this.config.dirName);

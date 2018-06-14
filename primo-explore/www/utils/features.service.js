@@ -2,10 +2,12 @@
  * Created by shoulm on 08/02/2018.
  */
 class FeaturesService{
-    constructor($http, configurationService){
+    constructor($http, configurationService, $location){
        this.$http = $http;
        this.configurationService = configurationService;
-       this.featuresJsonURL= 'https://raw.githubusercontent.com/ShoulM/PrimoFeaturesJSON/master/features.json';
+       let queryParams= $location.search();
+       let featuresJSONBranch = queryParams['branch'] || 'master';
+       this.featuresJsonURL= 'https://raw.githubusercontent.com/primousers/primostudio/' + featuresJSONBranch + '/features.json';
     }
 
     fetchFeaturesData(){
@@ -67,7 +69,7 @@ class FeaturesService{
         });
     }
 }
-FeaturesService.$inject= ['$http', 'configurationService'];
+FeaturesService.$inject= ['$http', 'configurationService', '$location'];
 
 module.exports = {
     name: 'featuresService',

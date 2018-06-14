@@ -72,9 +72,11 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
         storage.getItem(userId).then((userManifest)=>{
             let npmId= req.body.data.id;
+            let npmVersion= req.body.data.version;
             let hookName= req.body.data.hook;
             let featureConfig = req.body.data.featureConfig;
-            npmi({path: 'primo-explore/custom/' + userId, name: npmId, version:'latest', forceInstall: true}, (err, result)=>{
+            console.log('installing add-on: ' + npmId + ' version: ' + npmVersion + ' on hook: ' + hookName);
+            npmi({path: 'primo-explore/custom/' + userId, name: npmId, version: npmVersion, forceInstall: true}, (err, result)=>{
                 if (err){
                     console.log('failed to install feature:');
                     utils.sendErrorResponse(res, err);

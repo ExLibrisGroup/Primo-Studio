@@ -25,6 +25,7 @@ class FeaturesService{
         var config = {
             data: {
                 id: npmid,
+                version: version,
                 hook: hook,
             }
         };

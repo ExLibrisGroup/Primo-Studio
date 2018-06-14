@@ -16,11 +16,11 @@ class FeaturesList{
         })
     }
 
-    selectFeature(item){
-        if(item.config){
-            let featureConfigFromSubmitCallback = this.addFeature.bind(this, item.npmid, item.hook);
+    selectFeature(addOn){
+        if(addOn.config){
+            let addOnConfigFromSubmitCallback = this.addFeature.bind(this, addOn);
             let dialogOptions = this.ngDialog.open({
-                data: {featureConfigFromSubmitCallback: featureConfigFromSubmitCallback, config: item.config},
+                data: {featureConfigFromSubmitCallback: addOnConfigFromSubmitCallback, config: addOn.config},
                 template: `
                 <prm-feature-configuration-form 
                     form-fields-config="ngDialogData.config" on-submit="ngDialogData.featureConfigFromSubmitCallback">
@@ -30,18 +30,19 @@ class FeaturesList{
             this.closeDialog = dialogOptions.close;
         }
         else{
-            this.addFeature(item.npmid, item.hook);
+            this.addFeature(addOn);
         }
     }
 
 
-    addFeature(npmid, hook, featureConfigData){
+    addFeature(addOn, featureConfigData){
+        let npmid= addOn.npmid;
         if (this.closeDialog){ //close open config dialog
             this.closeDialog();
             this.closeDialog = undefined;
         }
         this.inProgress[npmid] = true;
-        this.featuresService.addFeature(npmid, hook, featureConfigData).then((resp)=>{
+        this.featuresService.addFeature(addOn, featureConfigData).then((resp)=>{
             this.inProgress[npmid] = false;
             this.iframeService.refreshNuiIFrame();
         }, (err)=>{

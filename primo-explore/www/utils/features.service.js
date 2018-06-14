@@ -16,7 +16,11 @@ class FeaturesService{
         });
     }
 
-    addFeature(npmid, hook, featureConfigData){
+    addFeature(addOn, featureConfigData){
+        let npmid= addOn.npmid;
+        let version= addOn.version;
+        let hook= addOn.hook
+
         console.log('adding feature with npm id: ' + npmid);
         var config = {
             data: {

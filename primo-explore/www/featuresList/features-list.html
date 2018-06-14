@@ -1,33 +1,33 @@
 <h2>Features</h2>
 <p class="italics">Add features and addons developed and maintained by the Primo community</p>
 <div class="content">
-    <div class="content-row content-item" ng-repeat="item in $ctrl.getFeatures()">
+    <div class="content-row content-item" ng-repeat="addOn in $ctrl.getFeatures()">
 
         <div class="item-body">
-            <h3 class="item-line">{{item.what}}</h3>
-            <p class="item-line" ng-if="item.notes">{{item.notes}}</p>
+            <h3 class="item-line">{{addOn.what}}</h3>
+            <p class="item-line" ng-if="addOn.notes">{{addOn.notes}}</p>
             <div class="item-line">
-                <span class="author-image"><img ng-src="{{item.face}}" alt="{{item.who}}" /></span>
-                <small class="author-name">{{item.who}}</small>
+                <span class="author-image"><img src="{{addOn.face}}" alt="{{addOn.who}}" /></span>
+                <small class="author-name">{{addOn.who}}</small>
             </div>
             <div class="item-actions">
                 <small class="github-link">
-                    <a target="_blank" href="{{item.linkGit}}" title="see it on github">
+                    <a target="_blank" href="{{addOn.linkGit}}" title="see it on github">
                         <i class="icon-github"></i>
                         <span>View in Github</span>
                     </a>
                 </small>
                 
-                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.selectFeature(item)"
-                        ng-disabled="$ctrl.inProgress[item.npmid]">
-                    <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-add"></i>
-                    <prm-busy-spinner ng-if="$ctrl.inProgress[item.npmid]"></prm-busy-spinner>
+                <button class="is-small" ng-if="!$ctrl.isFeatureInstalled(addOn.npmid)" ng-click="$ctrl.selectFeature(addOn)"
+                        ng-disabled="$ctrl.inProgress[addOn.npmid]">
+                    <i ng-if="!$ctrl.inProgress[addOn.npmid]" class="icon-add"></i>
+                    <prm-busy-spinner ng-if="$ctrl.inProgress[addOn.npmid]"></prm-busy-spinner>
                     Add
                 </button>
-                <button  class="is-small" ng-if="$ctrl.isFeatureInstalled(item.npmid)" ng-click="$ctrl.removeFeature(item.npmid, item.hook)"
-                         ng-disabled="$ctrl.inProgress[item.npmid]">
-                    <i ng-if="!$ctrl.inProgress[item.npmid]" class="icon-close"></i>
-                    <prm-busy-spinner ng-if="$ctrl.inProgress[item.npmid]"></prm-busy-spinner>
+                <button class="is-small" ng-if="$ctrl.isFeatureInstalled(addOn.npmid)" ng-click="$ctrl.removeFeature(addOn.npmid, addOn.hook)"
+                        ng-disabled="$ctrl.inProgress[addOn.npmid]">
+                    <i ng-if="!$ctrl.inProgress[addOn.npmid]" class="icon-close"></i>
+                    <prm-busy-spinner ng-if="$ctrl.inProgress[addOn.npmid]"></prm-busy-spinner>
                     Remove
                 </button>
             </div>

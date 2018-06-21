@@ -4,6 +4,7 @@ const angularAnimate = require('angular-animate');
 const angularFormly = require('angular-formly');
 const angularFormlyBootstrapTemplate = require('angular-formly-templates-bootstrap');
 const angularDialog = require('ng-dialog');
+const lodash = require('lodash');
 
 
 let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate, 'ngDialog'])

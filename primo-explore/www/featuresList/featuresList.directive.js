@@ -13,6 +13,17 @@ class FeaturesList{
         this.features = [];
         this.featuresService.fetchFeaturesData().then((data)=>{
             this.features = data;
+            this.features = _.filter(this.features, (feature)=> {
+                if (feature.systemExclusive) {
+                    if (this.configurationService.config.ve) {
+                        return feature.systemExclusive.toLowerCase() === "ve";
+                    } else {
+                        return feature.systemExclusive.toLowerCase() === "primo";
+                    }
+                } else {
+                    return true;
+                }
+            })
         })
     }
 

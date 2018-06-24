@@ -32,7 +32,7 @@ gulp.task('custom-js', ['custom-html-templates'],() => {
 });
 
 function customJs(userId){
-    return utils.promiseSerial([buildCustomHtmlTemplatesExports.customHtmlTemplates, customJsRun], userId);
+    return utils.promiseSerial([buildCustomHtmlTemplatesExports.customHtmlTemplates, customJsRun], [userId]);
 }
 
 function customJsRun(userId){

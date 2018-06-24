@@ -40,8 +40,8 @@ gulp.task('extract-scss-files', ()=> {
     return extractScssFiles();
 });
 
-function extractScssFiles(userId){
-    let proxy_server = config.PROXY_SERVER;
+function extractScssFiles(userId, urlForProxy){
+    let proxy_server = urlForProxy || config.PROXY_SERVER;
     console.log(proxy_server+'/primo-explore/lib/scsss.tar.gz');
     let url = proxy_server+'/primo-explore/lib/scsss.tar.gz';
     var headers = {
@@ -120,8 +120,8 @@ gulp.task('app-css', (cb) => {
 });
 
 
-function appCss(userId){
-    return utils.promiseSerial([extractScssFiles, colorVariables, compileScss, customCss], userId);
+function appCss(userId, urlForProxy){
+    return utils.promiseSerial([extractScssFiles, colorVariables, compileScss, customCss], [userId, urlForProxy]);
 }
 
 

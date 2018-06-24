@@ -22,9 +22,9 @@ function getUserCustomDir(userId){
     return `primo-explore/custom/${userId}`;
 }
 
-function promiseSerial(funcs, param) {
+function promiseSerial(funcs, params) {
     return funcs.reduce((promise, func) =>
-            promise.then(result => func(param).then(Array.prototype.concat.bind(result))),
+            promise.then(result => func.apply(undefined, params).then(Array.prototype.concat.bind(result))),
         Promise.resolve([]));
 }
 

@@ -49,16 +49,25 @@ function extractScssFiles(userId, urlForProxy){
     };
     let userCustomDir=userId? utils.getUserCustomDir(userId) : '.';
     return new Promise((resolve, reject)=>{
-        let stream= request({url:url, 'headers': headers})
-            .pipe(zlib.createGunzip()) // unzip
-            .pipe(tar.extract(userCustomDir, {map: (header)=>{
-                if (header.name.indexOf('colors.json') > -1){
-                    header.name = header.name.replace('colors.json', 'colors.json.txt');
-                }
-                return header;
-            }}));
-            stream.on('finish', resolve);
-            stream.on( 'error', reject);
+        let stream= request({url:url, 'headers': headers}).on('response', function(response) {
+            if (response.statusCode !== 200){
+                console.log('failed to find scsss.tar.gz in primo-explore trying discovery for primoVE');
+                url = proxy_server+'/discovery/lib/scsss.tar.gz';
+                stream = request({url:url, 'headers': headers})
+            }
+            let zipStream = stream.pipe(zlib.createGunzip()) // unzip
+                .pipe(tar.extract(userCustomDir, {map: (header)=>{
+                        if (header.name.indexOf('colors.json') > -1){
+                            header.name = header.name.replace('colors.json', 'colors.json.txt');
+                        }
+                        if (header.name.indexOf('src/main/webapp') > -1){
+                            header.name = header.name.replace('src/main/webapp', 'www');
+                        }
+                        return header;
+                    }}));
+            zipStream.on('finish', resolve);
+            zipStream.on( 'error', reject);
+        })
     });
 }
 

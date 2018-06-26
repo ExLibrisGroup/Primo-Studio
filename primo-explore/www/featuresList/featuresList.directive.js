@@ -8,6 +8,11 @@ class FeaturesList{
         this.iframeService= iframeService;
         this.configurationService= configurationService;
         this.ngDialog = ngDialog;
+        this.selectedFilterField = 'all';
+        this.searchTerm = '';
+        this.filterOptions = [{key:'what', displayName: 'Title'}, {key:'hook', displayName: 'NUI Hook'}, {key:'who', displayName: 'Contributor'}];
+
+        this.filerPredicateBinded = this.filterPredicate.bind(this);
 
         this.inProgress = {};
         this.features = [];
@@ -79,6 +84,22 @@ class FeaturesList{
         return this.configurationService.config.installedFeatures.indexOf(npmid) > -1;
     }
 
+    filterPredicate(value, index, array){
+        if (!this.searchTerm){
+            return true;
+        }
+        let filterTerm = this.searchTerm.toLowerCase();
+        let fieldsToFilterBy = this.selectedFilterField === 'all'? this.filterOptions.map((value)=>value.key) : [this.selectedFilterField];
+        for (let field of fieldsToFilterBy){
+            if(!value[field]){
+               continue;
+            }
+            if (value[field].toLowerCase().indexOf(filterTerm) > -1){
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 FeaturesList.$inject=['featuresService', 'iframeService', 'configurationService', 'ngDialog'];

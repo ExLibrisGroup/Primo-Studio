@@ -1,10 +1,20 @@
 <h2>Features</h2>
 <p class="italics">Add features and addons developed and maintained by the Primo community</p>
+
 <div class="content">
-    <div class="content-row content-item" ng-repeat="addOn in $ctrl.getFeatures()">
+    <div class="filter-container">
+        <input class="" type="text" placeholder="Filter Add-ons" ng-model="$ctrl.searchTerm">
+        <select ng-model="$ctrl.selectedFilterField">
+            <option value="all">All</option>
+            <option ng-repeat="field in $ctrl.filterOptions" value="{{field.key}}">{{field.displayName}}</option>
+        </select>
+    </div>
+
+    <div class="content-row content-item" ng-repeat="addOn in $ctrl.getFeatures() | filter:$ctrl.filerPredicateBinded">
 
         <div class="item-body">
             <h3 class="item-line">{{addOn.what}}</h3>
+            <h4 class="item-line" ng-if="addOn.hook">Hook: {{addOn.hook}}</h4>
             <p class="item-line" ng-if="addOn.notes">{{addOn.notes}}</p>
             <div class="item-line">
                 <span class="author-image"><img ng-src="{{addOn.face}}" alt="{{addOn.who}}" /></span>

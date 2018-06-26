@@ -208,7 +208,7 @@ body {
   transition: width 0.4s cubic-bezier(0.86, 0, 0.07, 1); }
   @media screen and (min-width: 1280px) {
     .app-sidenav {
-      width: 515px; } }
+      width: 543px; } }
   .app-sidenav.ng-enter {
     transform: translateX(-100%);
     transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
@@ -407,6 +407,9 @@ body {
 .icon-add:before {
   content: "\e145"; }
 
+.icon-remove:before {
+  content: "\e5cd"; }
+
 .icon-cloud_upload:before {
   content: "\e2c3"; }
 
@@ -604,6 +607,11 @@ prm-configuration-form {
   border-radius: 10px;
   transition: transform 0.6s cubic-bezier(0.86, 0, 0.07, 1), width 0.4s cubic-bezier(0.86, 0, 0.07, 1), height 0.4s cubic-bezier(0.86, 0, 0.07, 1);
   transform: translate(calc(50vw - 300px), calc(-50vh + 180px)); }
+  @media only screen and (max-width: 768px) {
+    prm-configuration-form {
+      height: 440px;
+      width: 300px;
+      left: 40%; } }
   prm-configuration-form:before {
     content: '';
     position: absolute;
@@ -692,7 +700,7 @@ prm-configuration-form {
     transform: translate(0, 0); }
     @media screen and (min-width: 1280px) {
       prm-configuration-form.is-running {
-        width: 515px; } }
+        width: 543px; } }
     prm-configuration-form.is-running:before {
       opacity: 0; }
     prm-configuration-form.is-running:after {
@@ -734,6 +742,20 @@ prm-edit-images #button-upload {
 prm-features-list img {
   width: 50px;
   height: 50px; }
+
+prm-features-list .filter-container {
+  padding-bottom: 20px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: row;
+      flex-direction: row; }
+  prm-features-list .filter-container select {
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-color: #bbb;
+    padding-left: 0;
+    background: transparent;
+    border-left-width: 1px; }
 
 prm-features-list .content-row, prm-features-list .content-row-column {
   box-shadow: 0 1px 0 0 gainsboro, 0 3px 6px -5px rgba(0, 0, 0, 0.1);
@@ -797,6 +819,12 @@ prm-feature-configuration-form button, prm-feature-configuration-form .inputfile
   display: block;
   width: 130px;
   margin: 1em;
+  -ms-flex-item-align: center;
+      -ms-grid-row-align: center;
+      align-self: center; }
+
+prm-feature-configuration-form .remove-button {
+  width: 161px;
   -ms-flex-item-align: center;
       -ms-grid-row-align: center;
       align-self: center; }

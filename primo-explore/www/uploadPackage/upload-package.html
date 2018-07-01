@@ -6,10 +6,12 @@
     <div class="content-row-column">
         <!--<span class="top-label">Package:</span>-->
         <input  type="file"
+                ngf-select
                 name="upload-package"
                 id="upload-package"
                 class="inputfile"
-                onchange="angular.element(this).scope().$ctrl.setPackage(this.files);" accept=".zip"/>
+                ngf-change="$ctrl.setPackage($files)"
+                accept=".zip"/>
         <label for="upload-package" id="label-for-upload-package">
             <span>Choose package</span>
         </label>

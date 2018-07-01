@@ -2,16 +2,17 @@
  * Created by shoulm on 28/03/2018.
  */
 class PrmUploadPackage{
-    constructor(fileUploaderService, iframeService){
+    constructor(fileUploaderService, iframeService, ngFileUpload){
         this.fileUploaderService = fileUploaderService;
         this.iframeService = iframeService;
+        this.ngFileUpload = ngFileUpload;
         this.uploadDisabled = true;
     }
 
-    setPackage(file){
-        this.package = {'package' : file};
-        if(file.length > 0) {
-            angular.element(document.querySelector('#button-upload-package')).attr('disabled', false)
+    setPackage(files){
+        this.package = {'package' : files};
+        if(files.length > 0) {
+            this.uploadDisabled = false
         }
     }
 
@@ -20,13 +21,14 @@ class PrmUploadPackage{
             console.log('package uploaded successfully');
             //this.iframeService.refreshNuiIFrame();
             location.reload();
+            this.uploadDisabled = true;
         }, (err)=>{
-            console.log('failed to upload package: '+ err);
+            console.log('failed to upload package: '+ err.data);
         });
     }
 }
 
-PrmUploadPackage.$inject= ['fileUploaderService', 'iframeService'];
+PrmUploadPackage.$inject= ['fileUploaderService', 'iframeService', 'Upload'];
 
 module.exports = {
     name: 'prmUploadPackage',

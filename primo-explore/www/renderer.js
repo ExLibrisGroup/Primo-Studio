@@ -4,10 +4,11 @@ const angularAnimate = require('angular-animate');
 const angularFormly = require('angular-formly');
 const angularFormlyBootstrapTemplate = require('angular-formly-templates-bootstrap');
 const angularDialog = require('ng-dialog');
+const ngFileUpload = require('ng-file-upload');
 const lodash = require('lodash');
 
 
-let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate, 'ngDialog'])
+let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate, 'ngDialog', 'ngFileUpload']);
 app.config(['$locationProvider', function($locationProvider){
     $locationProvider.html5Mode({
         enabled: true,

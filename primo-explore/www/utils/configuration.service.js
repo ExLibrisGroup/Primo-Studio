@@ -8,7 +8,7 @@ class ConfigurationService{
         this.$location = $location;
         this.$cookies = $cookies;
         let queryParams= $location.search();
-        let url= queryParams['url'] || 'https://primo-demo.hosted.exlibrisgroup.com/';
+        let url= queryParams['url'] || 'https://primo-demo.hosted.exlibrisgroup.com:443';
         let view= queryParams['vid'] || 'NORTH';
         let isVe = queryParams['ve'] || 'false';
         let dirName = queryParams['dirName'];

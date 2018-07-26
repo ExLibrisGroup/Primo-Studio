@@ -2,14 +2,15 @@
  * Created by shoulm on 15/02/2018.
  */
 class PrmEditImages{
-    constructor(fileUploaderService, iframeService){
+    constructor(fileUploaderService, iframeService, ngFileUpload){
         this.fileUploaderService = fileUploaderService;
         this.iframeService = iframeService;
+        this.ngFileUpload = ngFileUpload;
         this.images={};
         this.logoFileLabel = 'Choose logo file';
         this.faviconFileLabel = 'Choose favicon';
-        this.faviconFileLabel = 'Choose favicon';
-        this.resourceFilesLabel = 'Choose resource type icons'
+        this.svgFileLabel = 'Choose icons svg';
+        this.resourceFilesLabel = 'Choose resource type icons';
         this.uploadDisabled = true;
     }
 
@@ -23,7 +24,7 @@ class PrmEditImages{
             angular.element(document.querySelector('#label-for-' + name + '')).text(files[0].name).addClass('is-touched')
         }
         if(files.length > 0) {
-            angular.element(document.querySelector('#button-upload')).attr('disabled', false)
+            this.uploadDisabled = false;
         }
     }
 
@@ -36,9 +37,18 @@ class PrmEditImages{
         });
     }
 
+    removeImages() {
+        this.fileUploaderService.removeFiles('/images').then((response)=>{
+            console.log('images removed successfully');
+            this.iframeService.refreshNuiIFrame();
+        }, (err)=>{
+            console.log('failed to remove images: ' + err.toString())
+        })
+    }
+
 
 }
-PrmEditImages.$inject=['fileUploaderService', 'iframeService'];
+PrmEditImages.$inject=['fileUploaderService', 'iframeService', 'Upload'];
 
 module.exports = {
     name: 'prmEditImages',

@@ -21,6 +21,8 @@ module.exports.getCustimazationObject = function (vid,appName) {
         favIcon: '',
         libraryLogo: '',
         resourceIcons: '',
+        viewSvg: '',
+        centralSvg: '',
         staticHtml: ''
     };
 
@@ -56,6 +58,14 @@ module.exports.getCustimazationObject = function (vid,appName) {
 
     if (isInherited) {
         customizationObject.centralCss = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/css/custom1.css", {cwd:appName});
+    }
+
+    //svg
+
+    customizationObject.viewSvg = glob.sync(viewPackage + "/img/custom-ui.svg", {cwd:appName})[0];
+
+    if (isInherited) {
+        customizationObject.centralSvg = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/img/custom-ui.svg", {cwd:appName});
     }
 
     //images

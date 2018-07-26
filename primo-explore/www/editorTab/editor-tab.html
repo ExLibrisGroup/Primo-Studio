@@ -1,0 +1,20 @@
+<h2>CSS editor</h2>
+<p class="italics">
+    Change Primo's css to manage Primo's view
+</p>
+<div class="content">
+
+    <div class="input-wrapper content-row-column" ng-repeat="codeFile in $ctrl.codeFiles">
+        <span class="content-row">Your Current {{codeFile.file_path.split('\\').pop().split('/').pop()}}:</span>
+        <prm-code-editor class="content-row" model="codeFile"></prm-code-editor>
+    </div>
+
+</div>
+
+<button ng-click="$ctrl.createTheme()" ng-disabled="$ctrl.inProgress">
+    <i ng-if="!$ctrl.inProgress">
+       <!--class="icon-save">-->
+    </i>
+    <prm-busy-spinner ng-if="$ctrl.inProgress"></prm-busy-spinner>
+    Save All Files
+</button>

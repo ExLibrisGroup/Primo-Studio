@@ -10,9 +10,11 @@ class Server {
         this.tabs = [
             { name: 'Theme', icon: 'palette' },
             { name: 'Images', icon: 'image' },
+            // { name: 'Icons', icon: 'image' },
             { name: 'Addons', icon: 'gift' },
+            { name: 'Editor', icon: 'curly_brackets' },
             { name: 'Download', icon: 'cloud_download' },
-            {name: 'UploadPackage', icon: 'cloud_upload' }
+            { name: 'UploadPackage', icon: 'cloud_upload' }
         ]
         this.selectedTab = 'Theme';
         this.sidenavCollapsed = false;

@@ -14,7 +14,7 @@ app.config(['$locationProvider', function($locationProvider){
         enabled: true,
         requireBase: false
     })
-}])
+}]);
 
 
 /*----------------directives---------------*/
@@ -30,8 +30,14 @@ app.component(colorTheme.name, colorTheme.config);
 const editImages= require('./editImages/editImages.directive');
 app.component(editImages.name, editImages.config);
 
+const iconsPicker= require('./iconsPicker/iconsPicker.directive');
+app.component(iconsPicker.name, iconsPicker.config);
+
 const featuresList= require('./featuresList/featuresList.directive');
 app.component(featuresList.name, featuresList.config);
+
+const editorTab= require('./editorTab/editorTab.directive');
+app.component(editorTab.name, editorTab.config);
 
 const downloadPackage= require('./downloadPackage/downloadPackage.directive');
 app.component(downloadPackage.name, downloadPackage.config);
@@ -44,6 +50,9 @@ app.component(uploadPackage.name, uploadPackage.config);
 
 const featureConfigurationForm= require('./featureConfigurationForm/featureConfigurationForm.directive');
 app.component(featureConfigurationForm.name, featureConfigurationForm.config);
+
+const codeEditor= require('./codeEditor/codeEditor.directive');
+app.component(codeEditor.name, codeEditor.config);
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');
@@ -60,3 +69,9 @@ app.service(fileUploaderService.name, fileUploaderService.service);
 
 const colorThemeService = require('./colorTheme/colorTheme.service');
 app.service(colorThemeService.name, colorThemeService.service);
+
+const iconsPickerService = require('./iconsPicker/iconsPicker.service');
+app.service(iconsPickerService.name, iconsPickerService.service);
+
+const editorService = require('./editorTab/editor.service');
+app.service(editorService.name, editorService.service);

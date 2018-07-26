@@ -208,10 +208,50 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             });
     })
 
+    appS.get('/icons', function(req, res){
+        var userId= utils.getUserId(req);
+        var baseDir = utils.getUserCustomDir(userId);
+        fs.readFile(baseDir+'/img/custom-ui.svg', (err, data)=>{
+            if(err){
+                utils.sendErrorResponse(res, err);
+            }
+            else{
+                res.send(data);
+            }
+        });
+    });
+
+    appS.post('/icons', function (req, res) {
+        let cookies = utils.parseCookies(req);
+        let urlForProxy = cookies['urlForProxy'];
+        var colors = req.body.data.colors;
+        var conf = req.body.data.conf;
+        var userId= utils.getUserId(req);
+        // configG.setView(conf.dirName);
+        configG.setView(userId);
+        var baseDir = utils.getUserCustomDir(userId);
+        process.argv = ["","", "","--view="+conf.dirName];
+
+        console.log('aaa'+baseDir);
+        fs.writeFileAsync(baseDir+'/colors.json.txt', JSON.stringify(colors), { encoding: 'utf-8' })
+            .then(() => {
+                console.log('finished writing colors.json.txt');
+                appCss(userId, urlForProxy).then(()=>{
+                    console.log('finished app css');
+                    var response = {status:'200'};
+                    res.send(response);
+                }, (err)=>{
+                    console.log('failed app css');
+                    utils.sendErrorResponse(res, err);
+                });
+            });
+    });
+
     let imagesUpload= upload.fields([
         {name: 'library-logo', maxCount:1},
         {name: 'favicon', maxCount:1},
-        {name: 'resource-icons' , maxCount:10}
+        {name: 'resource-icons' , maxCount:10},
+        {name: 'custom-ui', maxCount:1}
     ]);
     appS.post('/images', imagesUpload, (req, res)=>{
         let userId= utils.getUserId(req);
@@ -241,9 +281,36 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
         })
     });
 
+    appS.delete('/images', (req, res)=>{
+        let userId= utils.getUserId(req);
+        let baseDir = utils.getUserCustomDir(userId);
+        let imageDir = baseDir + '/img';
+        let deleteImagesPromises = [];
+        fs.readdir(imageDir, (err, files)=>{
+            if (err) {
+                console.log('failed deleting images from ' + userId);
+                utils.sendErrorResponse(res, err);
+            }
+            for (const file of files) {
+                deleteImagesPromises.push(
+                    fs.unlinkAsync(path.join(imageDir, file))
+                );
+            }
+            Promise.all(deleteImagesPromises).then(()=> {
+                let response = {status: '200'};
+                res.send(response);
+            }, (err)=>{
+                console.log('failed deleting images from ' + userId);
+                utils.sendErrorResponse(res, err);
+            });
+        });
+    });
+
     appS.get('/package', (req, res)=>{
         let userId= utils.getUserId(req);
         let vid= req.cookies['viewForProxy'];
+        let ve = req.cookies['ve'];
+        vid = 'true' === ve ? vid.replace(':', '-') : vid;
         let userCustomDir= utils.getUserCustomDir(userId);
         storage.getItem(userId).then((userManifest)=>{
             fs.writeFileSync(userCustomDir + '/features.json.txt', JSON.stringify(userManifest));
@@ -411,6 +478,39 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             });
         });
 
+    });
+
+
+
+    appS.post('/code', function (req, res) {
+        let userId= utils.getUserId(req);
+        let baseDir = utils.getUserCustomDir(userId);
+        let file_path = req.body.file_path;
+        fs.readFile(baseDir + file_path, (err, data)=>{
+            if(err){
+                utils.sendErrorResponse(res, err);
+            }
+            else{
+                res.send(data);
+            }
+        });
+    });
+
+    appS.put('/code', function (req, res) {
+        let userId= utils.getUserId(req);
+        let baseDir = utils.getUserCustomDir(userId);
+        let promises = [];
+        for (let code of req.body.data.code) {
+            let file_path = code.file_path;
+            let data = code.data;
+            promises.push(fs.writeFileAsync(baseDir + file_path, data));
+        }
+        Promise.all(promises).then(() =>  {
+            let response = {status:'200'};
+            res.send(response);
+        }, (err) => {
+            utils.sendErrorResponse(res, err);
+        });
     });
 
 

@@ -23,6 +23,7 @@
     "body-parser": "1.18.2",
     "browser-sync": "^2.23.6",
     "browserify": "13.1.1",
+    "codemirror": "^5.39.2",
     "concat-stream": "^1.6.2",
     "connect-modrewrite": "0.8.2",
     "cookie-parser": "^1.4.3",

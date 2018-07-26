@@ -19,6 +19,10 @@ class FileUploaderService{
             transformRequest: angular.identity
         });
     }
+
+    removeFiles(removeUrl) {
+        return this.$http.delete(removeUrl);
+    }
 }
 FileUploaderService.$inject= ['$http'];
 

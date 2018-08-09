@@ -2,17 +2,20 @@
  * Created by shoulm on 28/03/2018.
  */
 class PrmUploadPackage{
-    constructor(fileUploaderService, iframeService, ngFileUpload){
+    constructor(fileUploaderService, iframeService, ngFileUpload, analytics){
         this.fileUploaderService = fileUploaderService;
         this.iframeService = iframeService;
         this.ngFileUpload = ngFileUpload;
+        this.analytics = analytics;
+        this.analytics.pageView();
         this.uploadDisabled = true;
     }
 
     setPackage(files){
         this.package = {'package' : files};
         if(files.length > 0) {
-            this.uploadDisabled = false
+            this.uploadDisabled = false;
+            this.analytics.trackEvent('UploadPackage', 'setPackage', files[0].name);
         }
     }
 
@@ -25,10 +28,11 @@ class PrmUploadPackage{
         }, (err)=>{
             console.log('failed to upload package: '+ err.data);
         });
+        this.analytics.trackEvent('UploadPackage', 'uploadPackage', this.package['package'][0].name);
     }
 }
 
-PrmUploadPackage.$inject= ['fileUploaderService', 'iframeService', 'Upload'];
+PrmUploadPackage.$inject= ['fileUploaderService', 'iframeService', 'Upload', 'Analytics'];
 
 module.exports = {
     name: 'prmUploadPackage',

@@ -74,6 +74,10 @@ body {
         transition: none;
     }
 
+    &.is-tab-expanded {
+        width: $sidebar-width-expand-tab;
+    }
+
     .menu-button {
         background: none;
         box-shadow: none;

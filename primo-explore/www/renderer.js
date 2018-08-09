@@ -6,14 +6,21 @@ const angularFormlyBootstrapTemplate = require('angular-formly-templates-bootstr
 const angularDialog = require('ng-dialog');
 const ngFileUpload = require('ng-file-upload');
 const lodash = require('lodash');
+const angularGoogleAnalytics = require('angular-google-analytics');
+const TRACK_ID = "UA-123598696-1";
 
 
-let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate, 'ngDialog', 'ngFileUpload']);
-app.config(['$locationProvider', function($locationProvider){
+let app = angular.module('devenv', [ngCookies, 'ngAnimate', angularFormly, angularFormlyBootstrapTemplate,
+    'ngDialog', 'ngFileUpload', 'angular-google-analytics']);
+app.config(['$locationProvider', 'AnalyticsProvider', function($locationProvider, AnalyticsProvider){
     $locationProvider.html5Mode({
         enabled: true,
         requireBase: false
-    })
+    });
+    AnalyticsProvider
+        .setAccount(TRACK_ID)
+        .logAllCalls(true)
+        .trackUrlParams(true);
 }]);
 
 
@@ -53,6 +60,9 @@ app.component(featureConfigurationForm.name, featureConfigurationForm.config);
 
 const codeEditor= require('./codeEditor/codeEditor.directive');
 app.component(codeEditor.name, codeEditor.config);
+
+const fileTree= require('./fileTree/fileTree.directive');
+app.component(fileTree.name, fileTree.config);
 
 /*-----------------services------------ */
 const iframeService= require('./utils/iframe.service');

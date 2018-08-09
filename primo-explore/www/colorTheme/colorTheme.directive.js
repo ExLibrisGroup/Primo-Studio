@@ -2,9 +2,11 @@
  * Created by shoulm on 06/02/2018.
  */
 class PrmColorTheme{
-    constructor(colorThemeService, iframeService){
+    constructor(colorThemeService, iframeService, analytics){
         this.colorThemeService= colorThemeService;
         this.iframeService = iframeService;
+        this.analytics = analytics;
+        this.analytics.pageView();
 
         this.inProgress= false;
     }
@@ -25,10 +27,11 @@ class PrmColorTheme{
         }).finally(()=>{
             this.inProgress = false;
         });
+        this.analytics.trackEvent('colorTheme', 'createTheme', 'all_colors');
     }
 }
 
-PrmColorTheme.$inject= ['colorThemeService', 'iframeService'];
+PrmColorTheme.$inject= ['colorThemeService', 'iframeService', 'Analytics'];
 
 module.exports = {
     name: 'prmColorTheme',

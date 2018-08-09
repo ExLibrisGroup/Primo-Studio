@@ -4,12 +4,16 @@
 
 class EditorTab{
 
-    constructor(editorService, iframeService, $scope){
+    constructor(editorService, iframeService, $scope, analytics){
         this.editorService= editorService;
         this.iframeService = iframeService;
         this.$scope = $scope;
+        this.analytics = analytics;
+        this.analytics.pageView();
 
         this.inProgress= false;
+        this.expanded = true;
+        this.toggleTab();
     }
 
     $onInit() {
@@ -26,6 +30,7 @@ class EditorTab{
             }).finally(()=>{
                 this.inProgress = false;
             });
+            this.analytics.trackEvent('codeEditor', 'save', 'single_file: ' + data.file_path);
         });
 
         CodeMirror.commands.save = (instance) => {
@@ -41,11 +46,17 @@ class EditorTab{
         this.editorService.codeFiles = newArr;
     }
 
+    toggleTab() {
+        this.expanded = !this.expanded;
+        this.$scope.$emit('expandTab', this.expanded);
+        this.analytics.trackEvent('codeEditor', 'expand_tab', this.expanded);
+    }
+
     createTheme(){
         this.inProgress = true;
         this.editorService.createTheme().then((resp)=>{
             if(resp.status === 200){
-                console.log('css and js were saved');
+                console.log('all files were saved');
                 this.iframeService.refreshNuiIFrame();
             }
         }, (err)=> {
@@ -53,10 +64,11 @@ class EditorTab{
         }).finally(()=>{
             this.inProgress = false;
         });
+        this.analytics.trackEvent('codeEditor', 'save', 'all_files');
     }
 }
 
-EditorTab.$inject=['editorService', 'iframeService', '$scope'];
+EditorTab.$inject=['editorService', 'iframeService', '$scope', 'Analytics'];
 
 module.exports = {
     name: 'prmEditor',

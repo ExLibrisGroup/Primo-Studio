@@ -1,12 +1,16 @@
 const template = require('lodash/template');
 
 class Server {
-    constructor($http, configurationService, iframeService) {
+    constructor($http, $scope, configurationService, iframeService, analytics) {
         console.log('constructor running');
         var self = this;
         this.$http = $http;
+        this.$scope = $scope;
         this.configurationService = configurationService;
         this.iframeService = iframeService;
+        this.analytics = analytics;
+        this.analytics.pageView();
+
         this.tabs = [
             { name: 'Theme', icon: 'palette' },
             { name: 'Images', icon: 'image' },
@@ -19,7 +23,14 @@ class Server {
         this.selectedTab = 'Theme';
         this.sidenavCollapsed = false;
         this.sidenavAnimating = false;
+        this.expandTab = false;
+        this.analytics.trackPage("/");
+    }
 
+    $onInit() {
+        this.$scope.$on('expandTab', ((event, data) => {
+            this.expandTab = data;
+        }));
     }
 
     get appTitle(){
@@ -46,13 +57,15 @@ class Server {
                 this.iframeService.refreshNuiIFrame();
             }
         });
+        this.analytics.trackPage("/");
     }
 
     selectTab(tab){
-        this.selectedTab = tab
+        this.selectedTab = tab;
         if (this.sidenavCollapsed) {
             this.sidenavCollapsed = false;
-        } 
+        }
+        this.analytics.trackEvent('tabs', 'change', tab);
     }
 
     toggleSidenav(){
@@ -63,7 +76,7 @@ class Server {
         }
     }
 }
-Server.$inject= ['$http', 'configurationService', 'iframeService'];
+Server.$inject= ['$http', '$scope', 'configurationService', 'iframeService', 'Analytics'];
 
 
 module.exports = {

@@ -96,3 +96,10 @@ prm-code-editor {
     color: #ffee34 !important;
   }
 }
+
+.is-tab-expanded *> prm-code-editor {
+  .CodeMirror-wrap {
+    min-width: 810px;
+    max-width: 810px;
+  }
+}

@@ -2,7 +2,7 @@
 
     <prm-configuration-form ng-class="{'is-running': $ctrl.isUp(), 'is-floating' : $ctrl.isUp() && $ctrl.sidenavCollapsed}"></prm-configuration-form>
 
-    <aside class="app-sidenav" ng-if="$ctrl.isUp()" ng-class="{'is-collapsed': $ctrl.sidenavCollapsed}">
+    <aside class="app-sidenav" ng-if="$ctrl.isUp()" ng-class="{'is-collapsed': $ctrl.sidenavCollapsed, 'is-tab-expanded': !$ctrl.sidenavCollapsed && $ctrl.expandTab}">
         <div class="sidenav-title">
             <img src="images/Exlibris_ProQuest-logo.png" alt="" ng-if="!$ctrl.sidenavCollapsed" >
             <span ng-if="!$ctrl.sidenavCollapsed" >{{$ctrl.appTitle}}</span>

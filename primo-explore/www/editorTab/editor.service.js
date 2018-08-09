@@ -10,7 +10,7 @@ class EditorService {
         this._css = {
             type: 'css',
             data: '',
-            file_path: '/css/custom1.css',
+            file_path: '/css/studio-editor.css',
             version: 0
         };
         this._js = {
@@ -23,9 +23,25 @@ class EditorService {
         this.initAllCodes();
     }
 
+    getFiles() {
+        this.files = {};
+        this.$http.get('/file-tree').then( response => {
+            this.files = response.data;
+            this.files.children = this.files.children.filter(function f(e) {
+                if (e.type !== 'directory')
+                    return true;
+                if (e.size) {
+                    return (e.children = e.children.filter(f)).length;
+                }
+            });
+        }, err => {
+            console.log('failed to get all files from server');
+        })
+    }
+
     initAllCodes() {
         this.initCode(this._css);
-        this.initCode(this._js);
+        // this.initCode(this._js);
     }
 
     initCode(fileJson) {
@@ -43,37 +59,30 @@ class EditorService {
 
     get codeFiles(){
         return [
-            this._css,
-            this._js
+            this._css
+            // this._js
         ];
     }
 
     set codeFiles(newArr) {
         this._css = newArr[0];
-        this._js = newArr[1];
+        // this._js = newArr[1];
     }
 
     saveFile(fileJson) {
-        let config = {
-            data: {
-                code: [
-                    fileJson
-                ],
-                conf: this.config
-            }
-        };
-        return this.$http.put('/code', config);
+        return this.sendFilesToServer([fileJson]);
     }
 
     createTheme() {
+        return this.sendFilesToServer(this.codeFiles);
+    }
+
+    sendFilesToServer(files) {
         let config = {
             data: {
-                code: [
-                    this._css,
-                    this._js
-                ],
-                conf: this.config
-            }
+                code: files
+            },
+            conf: this.config
         };
         return this.$http.put('/code', config);
     }

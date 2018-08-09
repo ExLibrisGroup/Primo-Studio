@@ -226,6 +226,8 @@ body {
       margin-left: -.5rem; }
   .app-sidenav.is-collapsed-remove.is-collapsed-remove-active {
     transition: none; }
+  .app-sidenav.is-tab-expanded {
+    width: 1065px; }
   .app-sidenav .menu-button {
     background: none;
     box-shadow: none;
@@ -928,6 +930,13 @@ prm-code-editor .CodeMirror-matchingbracket {
   text-decoration: underline;
   color: #ffee34 !important; }
 
+.is-tab-expanded * > prm-code-editor .CodeMirror-wrap {
+  min-width: 810px;
+  max-width: 810px; }
+
+prm-editor .float-right {
+  float: right; }
+
 prm-editor button, prm-editor .inputfile + label:not(.is-touched) {
   margin-bottom: 7px; }
 
@@ -948,3 +957,43 @@ prm-icons-picker {
   prm-icons-picker input[type="color"] {
     -ms-flex-negative: 0;
         flex-shrink: 0; }
+
+prm-file-tree ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: none;
+  overflow: hidden;
+  text-decoration: none;
+  color: #555; }
+
+prm-file-tree li {
+  position: relative;
+  padding: 0 20px 20px 20px !important;
+  border: none !important;
+  font-size: inherit !important;
+  height: auto !important;
+  font-weight: initial;
+  line-height: 18px;
+  cursor: pointer; }
+
+prm-file-tree .ft_expand {
+  background: url(https://cdn3.iconfinder.com/data/icons/fugue/bonus/icons-shadowless-24/folder-horizontal-open.png) no-repeat;
+  background-size: 16px 16px; }
+
+prm-file-tree .ft_collapse {
+  background: url(https://cdn2.iconfinder.com/data/icons/fugue/icon_shadowless/folder_horizontal.png) no-repeat;
+  background-size: 16px 16px; }
+
+prm-file-tree .ft_child {
+  background: url(https://cdn2.iconfinder.com/data/icons/font-awesome/1792/file-text-o-16.png) no-repeat;
+  background-size: 16px 16px; }
+
+prm-file-tree .ft_selected {
+  font-weight: 700; }
+
+prm-file-tree .hide {
+  display: none; }
+
+prm-file-tree .ft_deselected {
+  font-weight: normal; }

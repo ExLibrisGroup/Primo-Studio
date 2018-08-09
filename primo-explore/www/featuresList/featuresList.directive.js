@@ -3,14 +3,17 @@
  */
 class FeaturesList{
 
-    constructor(featuresService, iframeService, configurationService, ngDialog){
+    constructor(featuresService, iframeService, configurationService, ngDialog, analytics, $scope){
         this.featuresService= featuresService;
         this.iframeService= iframeService;
         this.configurationService= configurationService;
         this.ngDialog = ngDialog;
+        this.analytics = analytics;
+        this.$scope = $scope;
+        this.analytics.pageView();
         this.selectedFilterField = 'all';
         this.searchTerm = '';
-        this.filterOptions = [{key:'what', displayName: 'Title'}, {key:'hook', displayName: 'NUI Hook'}, {key:'who', displayName: 'Contributor'}];
+        this.filterOptions = [{key:'what', displayName: 'Title'}, {key:'hook', displayName: 'Hook'}, {key:'who', displayName: 'Contributor'}];
 
         this.filerPredicateBinded = this.filterPredicate.bind(this);
 
@@ -29,6 +32,12 @@ class FeaturesList{
                     return true;
                 }
             })
+        })
+    }
+
+    $onInit() {
+        this.$scope.$watchGroup([() => this.selectedFilterField, () => this.searchTerm], () => {
+            this.analytics.trackEvent('Addons', 'filterChange', this.selectedFilterField + " - " + this.searchTerm);
         })
     }
 
@@ -64,6 +73,7 @@ class FeaturesList{
         }, (err)=>{
             this.inProgress[npmid] = false;
         });
+        this.analytics.trackEvent('Addons', 'addFeature', addOn.npmid + " - " + featureConfigData);
     }
 
     removeFeature(npmid, hook){
@@ -74,6 +84,7 @@ class FeaturesList{
         }, (err)=>{
             this.inProgress[npmid] = false;
         });
+        this.analytics.trackEvent('Addons', 'removeFeature', npmid);
     }
 
     getFeatures(){
@@ -102,7 +113,7 @@ class FeaturesList{
     }
 }
 
-FeaturesList.$inject=['featuresService', 'iframeService', 'configurationService', 'ngDialog'];
+FeaturesList.$inject=['featuresService', 'iframeService', 'configurationService', 'ngDialog', 'Analytics', '$scope'];
 
 module.exports = {
     name: 'prmFeaturesList',

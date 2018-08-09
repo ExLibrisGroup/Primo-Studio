@@ -1,4 +1,7 @@
 <h2>CSS editor</h2>
+<button class="menu-button float-right" ng-click="$ctrl.toggleTab()">
+    <i class="icon-chevrons-left" ng-class="{'is-rotated':!$ctrl.expanded}"></i>
+</button>
 <p class="italics">
     Change Primo's css to manage Primo's view
 </p>
@@ -16,5 +19,5 @@
        <!--class="icon-save">-->
     </i>
     <prm-busy-spinner ng-if="$ctrl.inProgress"></prm-busy-spinner>
-    Save All Files
+    Apply Changes
 </button>

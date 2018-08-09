@@ -2,10 +2,13 @@
  * Created by shoulm on 15/02/2018.
  */
 class PrmEditImages{
-    constructor(fileUploaderService, iframeService, ngFileUpload){
+    constructor(fileUploaderService, iframeService, ngFileUpload, analytics){
         this.fileUploaderService = fileUploaderService;
         this.iframeService = iframeService;
         this.ngFileUpload = ngFileUpload;
+        this.analytics = analytics;
+
+        this.analytics.pageView();
         this.images={};
         this.logoFileLabel = 'Choose logo file';
         this.faviconFileLabel = 'Choose favicon';
@@ -26,6 +29,7 @@ class PrmEditImages{
         if(files.length > 0) {
             this.uploadDisabled = false;
         }
+        this.analytics.trackEvent('Images', 'setImage', name + " - " + files[0].name);
     }
 
     uploadImages(){
@@ -35,6 +39,7 @@ class PrmEditImages{
         }, (err)=>{
             console.log('failed to upload images: '+ err)
         });
+        this.analytics.trackEvent('Images', 'uploadImages', this.images);
     }
 
     removeImages() {
@@ -43,12 +48,13 @@ class PrmEditImages{
             this.iframeService.refreshNuiIFrame();
         }, (err)=>{
             console.log('failed to remove images: ' + err.toString())
-        })
+        });
+        this.analytics.trackEvent('Images', 'removeImages', 'all');
     }
 
 
 }
-PrmEditImages.$inject=['fileUploaderService', 'iframeService', 'Upload'];
+PrmEditImages.$inject=['fileUploaderService', 'iframeService', 'Upload', 'Analytics'];
 
 module.exports = {
     name: 'prmEditImages',

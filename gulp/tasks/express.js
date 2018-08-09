@@ -22,6 +22,7 @@ const utils= require('./utils/utils');
 const npmi= require('npmi');
 const rename= require('gulp-rename');
 const buildCustomJs= require('./buildCustomJs');
+const customCss= require('./buildCustomCss').customCss;
 const storage = require('node-persist');
 const httpProxy= require('http-proxy');
 const http = require('http');
@@ -31,6 +32,7 @@ const _url = require("url");
 const https = require('https');
 const streamifier = require('streamifier');
 const ncp = require('ncp').ncp;
+const dirTree = require('directory-tree');
 
 
 let proxy = httpProxy.createProxyServer({changeOrigin: true});
@@ -482,17 +484,42 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
 
 
 
+    appS.get('/file-tree', function(req, res) {
+        let userId = utils.getUserId(req);
+        let baseDir = utils.getUserCustomDir(userId);
+        let tree = dirTree(baseDir, {exclude: /(\\js\\|\/js\/)custom\.js/, extensions: /\.js|\.css|\.ts|\.html/});
+        res.send(tree);
+    });
+
+
     appS.post('/code', function (req, res) {
         let userId= utils.getUserId(req);
         let baseDir = utils.getUserCustomDir(userId);
         let file_path = req.body.file_path;
-        fs.readFile(baseDir + file_path, (err, data)=>{
-            if(err){
-                utils.sendErrorResponse(res, err);
-            }
-            else{
-                res.send(data);
-            }
+        let filename = baseDir + file_path;
+        new Promise((resolve) => {
+            fs.exists(filename, exists => {
+                if (exists) {
+                    resolve();
+                } else {
+                    fs.writeFile(filename, "", {flag: 'wx'}, (err, data) => {
+                        if (err) {
+                            utils.sendErrorResponse(res, err);
+                        } else {
+                            resolve();
+                        }
+                    });
+                }
+            });
+        }).then(()=> {
+            fs.readFile(baseDir + file_path, (err, data)=>{
+                if(err){
+                    utils.sendErrorResponse(res, err);
+                }
+                else{
+                    res.send(data);
+                }
+            });
         });
     });
 
@@ -505,6 +532,7 @@ gulp.task('serve', ['bundle-js', 'watch-app'], function() {
             let data = code.data;
             promises.push(fs.writeFileAsync(baseDir + file_path, data));
         }
+        promises.push(customCss(userId));
         Promise.all(promises).then(() =>  {
             let response = {status:'200'};
             res.send(response);

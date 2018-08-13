@@ -24,7 +24,6 @@ class Server {
         this.sidenavCollapsed = false;
         this.sidenavAnimating = false;
         this.expandTab = false;
-        this.analytics.trackPage("/");
     }
 
     $onInit() {

@@ -1,0 +1,71 @@
+<h2>Images</h2>
+<p class="italics">Upload image files to replace Primo's logo and favicon</p>
+
+<div class="content">
+
+  <div class="content-row-column">
+    <span class="top-label">Library Logo:</span>
+    <input  type="file"
+            name="library-logo"
+            id="library-logo"
+            class="inputfile"
+            (change)="setImage('library-logo', $event.target.files)"
+            accept="image/png"/>
+    <label for="library-logo" id="label-for-library-logo">
+      <span>{{logoFileLabel}}</span>
+    </label>
+  </div>
+  <div class="content-row-column">
+    <span class="top-label">Library Favicon:</span>
+    <input  type="file"
+            name="favicon"
+            id="favicon"
+            class="inputfile"
+            (change)="setImage('favicon', $event.target.files)"
+            accept=".ico"/>
+    <label for="favicon" id="label-for-favicon">
+      <span>{{faviconFileLabel}}</span>
+    </label>
+  </div>
+  <div class="content-row-column">
+    <span class="top-label">Library Icons Svg:</span>
+    <input  type="file"
+            name="svg"
+            id="svg"
+            class="inputfile"
+            (change)="setImage('custom-ui', $event.target.files)"
+            accept="image/svg+xml"/>
+    <label for="svg" id="label-for-custom-ui">
+      <span>{{svgFileLabel}}</span>
+    </label>
+  </div>
+
+  <div class="content-row-column">
+    <span class="top-label">Resource icons:</span>
+    <input
+      type="file"
+      multiple
+      name="resource-icons"
+      id="resource-icons"
+      class="inputfile"
+      (change)="setImage('resource-icons', $event.target.files)"
+      accept="image/png"/>
+    <label for="resource-icons" id="label-for-resource-icons">
+      <span>{{resourceFilesLabel}}</span>
+    </label>
+  </div>
+
+  <button id="button-upload"
+          class="accent content-row"
+          (click)="uploadImages()"
+          [disabled]="uploadDisabled">
+    <i class="icon-cloud_upload"></i>
+    <span>Upload images</span>
+  </button>
+
+  <button id="button-revert"
+          (click)="removeImages()">
+    <span>Revert image changes</span>
+  </button>
+
+</div>

@@ -1,0 +1,38 @@
+<div class="app-wrapper">
+
+  <prm-configuration-form [class.is-running]="isUp()" [class.is-floating]="isUp() && sidenavCollapsed"></prm-configuration-form>
+
+  <aside class="app-sidenav" *ngIf="isUp()" [class.is-collapsed]="sidenavCollapsed" [class.is-tab-expanded]="!sidenavCollapsed && expandTab">
+    <div class="sidenav-title">
+      <img src="../images/Exlibris_ProQuest-logo.png" alt="" *ngIf="!sidenavCollapsed" >
+      <span *ngIf="!sidenavCollapsed" >{{appTitle}}</span>
+      <span class="flex"></span>
+      <button class="menu-button" (click)="toggleSidenav()">
+        <i class="icon-chevrons-left" [class.is-rotated]="sidenavCollapsed"></i>
+      </button>
+    </div>
+    <div class="sidenav-main">
+      <div class="sidenav-nav">
+        <ul>
+          <li *ngFor=" let tab of tabs" title="{{tab.name}}" (click)="selectTab(tab.name)" [class.is-selected]="tab.name == selectedTab">
+            <i class="icon-{{tab.icon}}"></i>
+            <span class="label">{{tab.name}}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="sidenav-content fade-in-out-animation" *ngIf="!sidenavCollapsed">
+        <prm-color-theme *ngIf="selectedTab == 'Theme'" class="sidenav-panel"></prm-color-theme>
+        <prm-edit-images *ngIf="selectedTab == 'Images'" class="sidenav-panel"></prm-edit-images>
+        <!--<prm-icons-picker *ngIf="selectedTab == 'Icons'" class="sidenav-panel"></prm-icons-picker>-->
+        <prm-features-list *ngIf="selectedTab == 'Addons'" class="sidenav-panel"></prm-features-list>
+        <prm-editor (expandTab)="onExpandTab($event)" *ngIf="selectedTab === 'Editor'" class="sidenav-panel"></prm-editor>
+        <prm-download-package *ngIf="selectedTab == 'Download'" class="sidenav-panel"></prm-download-package>
+        <prm-upload-package *ngIf="selectedTab == 'UploadPackage'" class="sidenav-panel"></prm-upload-package>
+      </div>
+    </div>
+  </aside>
+  <main class="app-stage" *ngIf="isUp()">
+    <iframe id="primo-explore-iframe" class="app-iframe" *oneTimeBinding [src]="getIframeUrl()"></iframe>
+  </main>
+
+</div>

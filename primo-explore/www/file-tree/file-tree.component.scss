@@ -1,0 +1,38 @@
+@import "~www/scss/intrinsic";
+
+prm-file-tree {
+  .content {
+    background-color: rgba(232, 232, 232, 0.74);
+    margin-bottom: 16px;
+    padding: 6px;
+  }
+
+  h4 {
+    color: #006aad;
+    margin-bottom: 16px;
+    margin-top: 6px;
+
+    a {
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-position: under;
+    }
+  }
+
+  .directory-content, .file-content {
+    color: #0086d9;
+  }
+
+  .directory-content:hover, .file-content:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-position: under;
+  }
+
+  .read-only-comment {
+    cursor: auto;
+    color: red;
+    font-style: oblique;
+    font-weight: bold;
+  }
+}

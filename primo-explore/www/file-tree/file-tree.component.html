@@ -1,0 +1,16 @@
+<div class="content">
+  <h4>
+    <span *ngFor="let pathComp of (root.path | splitPath | sliceCustomizationPath)"><a (click)="setRoot(pathComp)">{{(pathComp === userId)?view:pathComp}}</a>\</span>{{(root.name === userId)?view:root.name}}
+  </h4>
+  <div *ngFor="let file of root.children">
+    <div class="directory-content" *ngIf="isDirectory(file)" (click)="openDirectory(file)">
+      <i class="icon-directory"></i>
+      {{file.name}}\
+    </div>
+    <div class="file-content" *ngIf="!isDirectory(file)" (click)="openFile(file)">
+      <i class="icon-file"></i>
+      {{file.name}}
+      <span class="read-only-comment" *ngIf="isReadonly(file)">- READ ONLY</span>
+    </div>
+  </div>
+</div>

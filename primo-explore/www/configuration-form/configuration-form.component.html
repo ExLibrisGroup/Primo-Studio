@@ -1,0 +1,50 @@
+<div class="form inner-wrapper" *ngIf="!isUp()">
+  <header>
+    <h1>Primo Studio Configuration</h1>
+    <p class="italics">Enter Primo UI base url and view that you would like to use for preview the customization on.</p>
+  </header>
+  <section class="content">
+
+    <div class="content-row input-wrapper">
+      <label for="primo-url">Primo URL</label>
+      <input #primoUrl id="primo-url" type="text" [value]="config.url" (keyup)="setUrl(primoUrl.value)">
+    </div>
+
+    <div class="content-row input-wrapper">
+      <label for="primo-view">Primo View</label>
+      <input #primoView id="primo-view"  type="text" [value]="config.view" (keyup)="setView(primoView.value)" placeholder="Primo View Identifier (vid)">
+    </div>
+
+    <div class="content-row input-wrapper checkbox-wrapper">
+      <label for="primo-ve">
+        <input #primoVe id="primo-ve" type="checkbox" [value]="configurationService.isVe" (change)="setVe(primoVe.checked)">
+        Primo VE
+      </label>
+    </div>
+
+    <div class="content-row input-wrapper checkbox-wrapper">
+      <label for="central-package">
+        <input #centralPackage id="central-package" type="checkbox" [value]="configurationService.isUsingCentralPackage" (change)="setCentralPackage(centralPackage.checked)">
+        Use Central Package
+      </label>
+    </div>
+
+
+  </section>
+  <footer>
+    <button  class="accent" (click)="start()">
+      <i class="icon-play_arrow"></i>
+      <span>Start your studio with the above details</span>
+    </button>
+  </footer>
+
+</div>
+
+<div class="status inner-wrapper" *ngIf="isUp()">
+  <span class="server-on"></span>
+  <span>Preview is running</span>
+  <button  (click)="stop()">
+    <i class="icon-stop"></i>
+    <span>Back to Configuration</span>
+  </button>
+</div>

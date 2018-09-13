@@ -1,0 +1,24 @@
+<h2>CSS editor</h2>
+<button class="menu-button float-right" (click)="toggleTab()">
+    <i class="icon-chevrons-left" [class.is-rotated]="!expanded"></i>
+</button>
+<p class="italics">
+    Change Primo's customization package contents to manage Primo's view
+</p>
+<prm-file-tree [baseDir]="editorService.files" (fileSelected)="selectFile($event)"></prm-file-tree>
+<div class="content">
+
+    <div *ngIf="codeFile" class="input-wrapper content-row-column">
+        <span class="content-row">Your Current {{codeFile.file_path.split('\\').pop().split('/').pop()}}:</span>
+        <prm-code-editor class="content-row" [model]="codeFile" (save)="onSave($event)"></prm-code-editor>
+    </div>
+
+</div>
+
+<button (click)="createTheme()" [disabled]="inProgress">
+    <i *ngIf="!inProgress">
+       <!--class="icon-save">-->
+    </i>
+    <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
+    Apply Changes
+</button>

@@ -1,0 +1,24 @@
+<div class="feature-configuration-form">
+  <mat-dialog-content>
+    <div class="form" *ngFor="let fields of formFieldsArray; index as i">
+      <button type="submit" class="remove-button" *ngIf="formFieldsArray.length > 1" (click)="removeConfigItem(i)">
+        <i *ngIf="!inProgress[addon.npmid]" class="icon-remove"></i>
+        Remove Item
+      </button>
+      <formly-form [model]="models[i]" [fields]="fields">
+      </formly-form>
+      <hr *ngIf="i+1 !== formFieldsArray.length">
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="content-row-column">
+    <button class="content-row" *ngIf="configItemCounter" (click)="addConfigItem()">
+      <i *ngIf="!inProgress[addon.npmid]" class="icon-add"></i>
+      Add Item
+    </button>
+    <hr *ngIf="configItemCounter">
+    <span class="content-row">
+      <button type="submit" class="submit-button content-row-column" (click)="submit()">Submit</button>
+      <button class="content-row-column" mat-dialog-close>Cancel</button>
+    </span>
+  </mat-dialog-actions>
+</div>

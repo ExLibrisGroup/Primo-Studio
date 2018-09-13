@@ -1,0 +1,22 @@
+<h2>Theme</h2>
+<p class="italics">
+  Change Primo's entire color theme with granular control over base colors
+</p>
+<div class="content">
+
+  <div class="content-row input-wrapper" *ngFor="let key of keys(colors)">
+    <label for="{{key}}">
+      <span *ngIf="key !== 'backgroundColor'">{{key}}</span>
+      <span *ngIf="key == 'backgroundColor'">background</span>
+    </label>
+    <input #txt id="{{key}}" type="text" [value]="colors[key]" (keyup)="setColor(key, txt.value)">
+    <input #clr type="color" (change)="setColor(key, clr.value)" [value]="colors[key]">
+  </div>
+
+</div>
+
+<button (click)="createTheme()" [disabled]="inProgress">
+  <i *ngIf="!inProgress" class="icon-refresh"></i>
+  <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
+  Update Theme
+</button>

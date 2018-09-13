@@ -1,3 +1,5 @@
+@import "variables";
+@import "breakpoints";
 
 html,
 body {
@@ -127,7 +129,11 @@ body {
     }
     .sidenav-nav {
         background-color: darken($background, 5%);
-        border-right: 1px solid $background-border 
+        border-right: 1px solid $background-border;
+
+        li {
+            cursor: pointer;
+        }
     }
     .sidenav-content {
         margin-bottom: $server-status-height;

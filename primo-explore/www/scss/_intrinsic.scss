@@ -1,0 +1,17 @@
+@mixin intrinsic($property, $value) {
+  @if $value == fit-content or $value == min-content or $value == max-content {
+    #{$property}: -webkit-#{$value};
+    #{$property}: -moz-#{$value};
+    #{$property}: $value;
+  }
+
+  @else if $value == fill-available or $value == available {
+    #{$property}: -webkit-fill-available;
+    #{$property}: -moz-available;
+    #{$property}: strech;
+  }
+
+  @else {
+    #{$property}: $value;
+  }
+}

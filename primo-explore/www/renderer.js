@@ -22,66 +22,66 @@ app.config(['$locationProvider', 'AnalyticsProvider', function($locationProvider
         .logAllCalls(true)
         .trackUrlParams(true);
 }]);
-
-
-/*----------------directives---------------*/
-const serverComponent = require('./appserver');
-app.component(serverComponent.name, serverComponent.config );
-
-const configurationForm = require('./configurationForm/configurationForm.directive');
-app.component(configurationForm.name, configurationForm.config);
-
-const colorTheme= require('./colorTheme/colorTheme.directive');
-app.component(colorTheme.name, colorTheme.config);
-
-const editImages= require('./editImages/editImages.directive');
-app.component(editImages.name, editImages.config);
-
-const iconsPicker= require('./iconsPicker/iconsPicker.directive');
-app.component(iconsPicker.name, iconsPicker.config);
-
-const featuresList= require('./featuresList/featuresList.directive');
-app.component(featuresList.name, featuresList.config);
-
-const editorTab= require('./editorTab/editorTab.directive');
-app.component(editorTab.name, editorTab.config);
-
-const downloadPackage= require('./downloadPackage/downloadPackage.directive');
-app.component(downloadPackage.name, downloadPackage.config);
-
-const busySpinner= require('./busySpinner/busySpinner.directive');
-app.component(busySpinner.name, busySpinner.config);
-
-const uploadPackage= require('./uploadPackage/uploadPackage.directive');
-app.component(uploadPackage.name, uploadPackage.config);
-
-const featureConfigurationForm= require('./featureConfigurationForm/featureConfigurationForm.directive');
-app.component(featureConfigurationForm.name, featureConfigurationForm.config);
-
-const codeEditor= require('./codeEditor/codeEditor.directive');
-app.component(codeEditor.name, codeEditor.config);
-
-const fileTree= require('./fileTree/fileTree.directive');
-app.component(fileTree.name, fileTree.config);
-
-/*-----------------services------------ */
-const iframeService= require('./utils/iframe.service');
-app.service(iframeService.name, iframeService.service);
-
-const configurationService= require('./utils/configuration.service');
-app.service(configurationService.name, configurationService.service);
-
-const featuesService= require('./utils/features.service');
-app.service(featuesService.name, featuesService.service);
-
-const fileUploaderService = require('./utils/fileUploader.service');
-app.service(fileUploaderService.name, fileUploaderService.service);
-
-const colorThemeService = require('./colorTheme/colorTheme.service');
-app.service(colorThemeService.name, colorThemeService.service);
-
-const iconsPickerService = require('./iconsPicker/iconsPicker.service');
-app.service(iconsPickerService.name, iconsPickerService.service);
-
-const editorService = require('./editorTab/editor.service');
-app.service(editorService.name, editorService.service);
+//
+//
+// /*----------------directives---------------*/
+// const serverComponent = require('./appserver');
+// app.component(serverComponent.name, serverComponent.config );
+//
+// const configurationForm = require('./configurationForm/configurationForm.directive');
+// app.component(configurationForm.name, configurationForm.config);
+//
+// const colorTheme= require('./colorTheme/colorTheme.directive');
+// app.component(colorTheme.name, colorTheme.config);
+//
+// const editImages= require('./editImages/editImages.directive');
+// app.component(editImages.name, editImages.config);
+//
+// const iconsPicker= require('./iconsPicker/iconsPicker.directive');
+// app.component(iconsPicker.name, iconsPicker.config);
+//
+// const features-list= require('./features-list/features-list.directive');
+// app.component(features-list.name, features-list.config);
+//
+// const editor-tab= require('./editor-tab/editor-tab.directive');
+// app.component(editor-tab.name, editor-tab.config);
+//
+// const downloadPackage= require('./downloadPackage/downloadPackage.directive');
+// app.component(downloadPackage.name, downloadPackage.config);
+//
+// const busySpinner= require('./busySpinner/busySpinner.directive');
+// app.component(busySpinner.name, busySpinner.config);
+//
+// const uploadPackage= require('./uploadPackage/uploadPackage.directive');
+// app.component(uploadPackage.name, uploadPackage.config);
+//
+// const feature-configuration-form= require('./feature-configuration-form/feature-configuration-form.directive');
+// app.component(feature-configuration-form.name, feature-configuration-form.config);
+//
+// const code-editor= require('./code-editor/code-editor.directive');
+// app.component(code-editor.name, code-editor.config);
+//
+// const fileTree= require('./fileTree/fileTree.directive');
+// app.component(fileTree.name, fileTree.config);
+//
+// /*-----------------services------------ */
+// const iframeService= require('./utils/iframe.service');
+// app.service(iframeService.name, iframeService.service);
+//
+// const configurationService= require('./utils/configuration.service');
+// app.service(configurationService.name, configurationService.service);
+//
+// const featuesService= require('./utils/features.service');
+// app.service(featuesService.name, featuesService.service);
+//
+// const fileUploaderService = require('./utils/fileUploader.service');
+// app.service(fileUploaderService.name, fileUploaderService.service);
+//
+// const colorThemeService = require('./colorTheme/colorTheme.service');
+// app.service(colorThemeService.name, colorThemeService.service);
+//
+// const iconsPickerService = require('./iconsPicker/iconsPicker.service');
+// app.service(iconsPickerService.name, iconsPickerService.service);
+//
+// const editorService = require('./editor-tab/editor.service');
+// app.service(editorService.name, editorService.service);

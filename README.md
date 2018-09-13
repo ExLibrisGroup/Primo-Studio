@@ -6,7 +6,7 @@
 
 # Description
 
-The Primo Studio is a project that allows users to easily configure Primo New UI.
+The [Primo Studio](http://primo-studio.exlibrisgroup.com) is a project that allows users to easily configure Primo New UI.
 
 Primo Studio allows you to:
 

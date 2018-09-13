@@ -1,0 +1,64 @@
+@import "~www/scss/intrinsic";
+
+.custom-dialog-container {
+  mat-dialog-container {
+    padding: 0;
+    background: #f0f0f0;
+    overflow: hidden;
+  }
+
+  prm-feature-configuration-form {
+    .feature-configuration-form {
+      display: flex;
+      flex-direction: column;
+      border-radius: 5px;
+      color: #444;
+      font-family: Helvetica, sans-serif;
+      font-size: 1.1em;
+      line-height: 1.5em;
+      margin: 0 auto;
+      padding: 1.2em 1em 1em;
+      position: relative;
+    }
+    .mat-form-field-wrapper {
+      padding-bottom: 0.2em;
+    }
+    .mat-form-field-label {
+      color: #444;
+    }
+    input[type="text"] {
+      caret-color: currentColor;
+      font-family: Helvetica, sans-serif;
+      font-size: 1.1em;
+      line-height: 1.5em;
+    }
+    input[type="text"]:active, input[type="text"]:focus, .mat-form-field.mat-focused .mat-form-field-label {
+      background: #f0f0f0;
+      color: #444;
+    }
+    .mat-form-field.mat-focused .mat-form-field-ripple {
+      background: currentColor;
+    }
+    mat-dialog-content {
+      max-height: 40vw;
+      margin: 0 -18px;
+    }
+    button {
+      display: block;
+      width: 130px;
+      margin: 0.6em 1em 1em;
+      align-self: center;
+    }
+    .remove-button {
+      width: 161px;
+      margin: 1em 0.5em 0.5em;
+    }
+    mat-dialog-actions hr {
+      @include intrinsic(width, fill-available);
+      border-color: #4441;
+    }
+    .content-row-column {
+      align-items: center;
+    }
+  }
+}

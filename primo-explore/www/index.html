@@ -1,19 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <meta http-equiv="X-UA-Compatible" content="ie=edge"> 
     <title>Primo Studio</title>
-    <link rel="stylesheet" href="css/main.css"></link>
-    <script type="text/javascript" src="codemirror/lib/codemirror.js"></script>
-    <script src="codemirror/addon/edit/matchbrackets.js"></script>
-    <script src="codemirror/mode/css/css.js"></script>
-    <script src="codemirror/mode/javascript/javascript.js"></script>
-    <link rel="stylesheet" href="codemirror/lib/codemirror.css">
-    <script type="text/javascript" src="bundle.js"></script>
+    <base href="/">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script src="https://www.googletagmanager.com/gtag/js?id=UA-123598696-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-123598696-1');
+    </script>
+
   </head>
-  <body ng-app="devenv">
-    <server></server>
+  <body>
+  <app-root></app-root>
   </body>
 </html>

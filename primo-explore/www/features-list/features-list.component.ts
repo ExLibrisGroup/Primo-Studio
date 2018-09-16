@@ -18,8 +18,8 @@ import {Overlay} from "@angular/cdk/overlay";
 })
 export class FeaturesListComponent implements OnInit {
   private selectedFilterField: string;
-  private searchTerm: string;
-  private filterOptions: ({ key: string; displayName: string })[];
+  private _searchTerm: string;
+  private _filterOptions: ({ key: string; displayName: string })[];
   private features: Addon[] = [];
   private filerPredicateBinded: any;
   private filteredFeatures: Addon[] = [];
@@ -32,8 +32,8 @@ export class FeaturesListComponent implements OnInit {
               private analytics: Angulartics2GoogleAnalytics){
     this.analytics.pageTrack('/');
     this.selectedFilterField = 'all';
-    this.searchTerm = '';
-    this.filterOptions = [{key:'all', displayName:'All'}, {key:'what', displayName: 'Title'}, {key:'hook', displayName: 'Hook'}, {key:'who', displayName: 'Contributor'}];
+    this._searchTerm = '';
+    this._filterOptions = [{key:'all', displayName:'All'}, {key:'what', displayName: 'Title'}, {key:'hook', displayName: 'Hook'}, {key:'who', displayName: 'Contributor'}];
   }
 
   ngOnInit() {
@@ -57,7 +57,7 @@ export class FeaturesListComponent implements OnInit {
 
   notifyFilterChanged() {
     this.filterFeatures();
-    this.analytics.eventTrack('filterChange', {category: 'Addons', label: this.selectedFilterField + " - " + this.searchTerm});
+    this.analytics.eventTrack('filterChange', {category: 'Addons', label: this.selectedFilterField + " - " + this._searchTerm});
   }
 
   selectFeature(addOn: Addon){
@@ -119,11 +119,11 @@ export class FeaturesListComponent implements OnInit {
   }
 
   filterPredicate(value){
-    if (!this.searchTerm){
+    if (!this._searchTerm){
       return true;
     }
-    let filterTerm = this.searchTerm.toLowerCase();
-    let fieldsToFilterBy = this.selectedFilterField === 'all'? this.filterOptions.map((value)=>value.key) : [this.selectedFilterField];
+    let filterTerm = this._searchTerm.toLowerCase();
+    let fieldsToFilterBy = this.selectedFilterField === 'all'? this._filterOptions.map((value)=>value.key) : [this.selectedFilterField];
     for (let field of fieldsToFilterBy){
       if(!value[field]){
         continue;
@@ -136,7 +136,7 @@ export class FeaturesListComponent implements OnInit {
   }
 
   setSearchTerm(value: string) {
-    this.searchTerm = value;
+    this._searchTerm = value;
     this.notifyFilterChanged();
   }
 
@@ -151,5 +151,22 @@ export class FeaturesListComponent implements OnInit {
 
   set inProgress(value: { [key: string]: boolean }) {
     this.featuresService.inProgress = value;
+  }
+
+
+  get searchTerm(): string {
+    return this._searchTerm;
+  }
+
+  set searchTerm(value: string) {
+    this._searchTerm = value;
+  }
+
+  get filterOptions(): { key: string; displayName: string }[] {
+    return this._filterOptions;
+  }
+
+  set filterOptions(value: { key: string; displayName: string }[]) {
+    this._filterOptions = value;
   }
 }

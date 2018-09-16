@@ -454,8 +454,8 @@ router.post('/package', packageUpload,  (req, res)=>{
 router.get('/file-tree', function(req, res) {
     let userId = utils.getUserId(req);
     let baseDir = utils.getUserCustomDir(userId);
-    let filename = path.resolve(baseDir);
-    if (filename.indexOf(baseDir.replace(/\//g, '\\')) === -1 && filename.indexOf(baseDir.replace(/\\/g, '/')) === -1) {
+    let filename = path.resolve(baseDir).replace(/[\/\\]/g, path.sep);;
+    if (filename.indexOf(baseDir.replace(/\//g, path.sep)) === -1 && filename.indexOf(baseDir.replace(/\\/g, path.sep)) === -1) {
         utils.sendErrorResponse(res, new Error('File path is not available for you'));
         return;
     }
@@ -466,9 +466,9 @@ router.get('/file-tree', function(req, res) {
 router.post('/code', function (req, res) {
     let userId= utils.getUserId(req);
     let baseDir = utils.getUserCustomDir(userId);
-    let file_path = req.body.file_path;
+    let file_path = req.body.file_path.replace(/[\/\\]/g, path.sep);
     let filename = path.join(baseDir, file_path);
-    if (filename.indexOf(baseDir.replace(/\//g, '\\')) === -1 && filename.indexOf(baseDir.replace(/\\/g, '/')) === -1) {
+    if (filename.indexOf(baseDir.replace(/\//g, path.sep)) === -1 && filename.indexOf(baseDir.replace(/\\/g, path.sep)) === -1) {
         utils.sendErrorResponse(res, new Error('File path is not available for you'));
         return;
     }
@@ -504,10 +504,10 @@ router.put('/code', function (req, res) {
     let baseDir = utils.getUserCustomDir(userId);
     let promises = [];
     for (let code of req.body.data.code) {
-        let file_path = code.file_path;
+        let file_path = code.file_path.replace(/[\/\\]/g, path.sep);;
         let data = code.data;
         let filename = path.join(baseDir, file_path);
-        if (filename.indexOf(baseDir.replace(/\//g, '\\')) === -1 && filename.indexOf(baseDir.replace(/\\/g, '/')) === -1) {
+        if (filename.indexOf(baseDir.replace(/\//g, path.sep)) === -1 && filename.indexOf(baseDir.replace(/\\/g, path.sep)) === -1) {
             utils.sendErrorResponse(res, new Error('File path is not available for you'));
             return;
         }

@@ -14,19 +14,19 @@ export class FileTreeComponent implements OnInit {
   private fileSelected: EventEmitter<FileTree> = new EventEmitter();
 
   private _baseDir: FileTree;
-  private root: FileTree = {path: '', name: '', size: 0, type: "directory"};
+  private _root: FileTree = {path: '', name: '', size: 0, type: "directory"};
 
   constructor(private configurationService: ConfigurationService,
               private editorService: EditorService) { }
 
   ngOnInit() {
-    this.root = this.baseDir;
+    this._root = this.baseDir;
   }
 
   @Input()
   set baseDir(file: FileTree) {
     this._baseDir = file;
-    this.root = file;
+    this._root = file;
   }
 
   get baseDir(): FileTree {
@@ -38,7 +38,7 @@ export class FileTreeComponent implements OnInit {
   }
 
   openDirectory(file: FileTree) {
-    this.root = file;
+    this._root = file;
   }
 
   openFile(file: FileTree) {
@@ -47,7 +47,7 @@ export class FileTreeComponent implements OnInit {
 
   setRoot(pathComp: string, root: FileTree = this.baseDir) {
     if (root.name === pathComp) {
-      this.root = root;
+      this._root = root;
     } else {
       if (root.children && root.children.length > 0) {
         root.children.forEach(node => this.setRoot(pathComp, node));
@@ -65,5 +65,14 @@ export class FileTreeComponent implements OnInit {
 
   get view() {
     return this.configurationService.config.view;
+  }
+
+
+  get root(): FileTree {
+    return this._root;
+  }
+
+  set root(value: FileTree) {
+    this._root = value;
   }
 }

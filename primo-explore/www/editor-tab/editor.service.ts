@@ -10,7 +10,7 @@ import {FileTree} from "../classes/file-tree";
 export class EditorService {
   private _codeFiles: Map<string, CodeFile>;
   private readonly _css: CodeFile;
-  private files: FileTree;
+  private _files: FileTree;
   private _readonlyFilesRegex: RegExp;
 
   constructor(private configurationService:ConfigurationService,
@@ -27,10 +27,10 @@ export class EditorService {
   }
 
   getFiles() {
-    this.files = new FileTree();
+    this._files = new FileTree();
     this.$http.get<FileTree>('/file-tree').subscribe( response => {
-      this.files = response;
-      this.files.children = this.files.children.filter(function f(e) {
+      this._files = response;
+      this._files.children = this._files.children.filter(function f(e) {
         if (e.type !== 'directory')
           return true;
         if (e.name === 'js' || e.name === 'img' || e.name === 'html' || e.name === 'css')
@@ -94,5 +94,14 @@ export class EditorService {
 
   set readonlyFilesRegex(value: RegExp) {
     this._readonlyFilesRegex = value;
+  }
+
+
+  get files(): FileTree {
+    return this._files;
+  }
+
+  set files(value: FileTree) {
+    this._files = value;
   }
 }

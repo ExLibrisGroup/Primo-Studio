@@ -11,17 +11,17 @@ import {FeaturesService} from "../utils/features.service";
   styleUrls: ['./feature-configuration-form.component.scss']
 })
 export class FeatureConfigurationFormComponent implements OnInit {
-  private configItemCounter: number;
+  private _configItemCounter: number;
   private models: {}[];
   private formFields: any[];
-  private formFieldsArray: any[][];
+  private _formFieldsArray: any[][];
 
   constructor(private featuresService: FeaturesService,
               private dialogRef: MatDialogRef<FeatureConfigurationFormComponent>,
               @Inject(MAT_DIALOG_DATA) private addon: Addon){  }
 
   ngOnInit() {
-    this.configItemCounter = this.addon.config.multiple - 1 | 0; //we subtract 1 because of the first config item which appears by default
+    this._configItemCounter = this.addon.config.multiple - 1 | 0; //we subtract 1 because of the first config item which appears by default
     this.models = [{}];
     let defaultFieldConf=
       {
@@ -40,19 +40,19 @@ export class FeatureConfigurationFormComponent implements OnInit {
       }
       return _merge(defaultField, field); //extend default conf with field conf
     });
-    this.formFieldsArray = [copy(this.formFields)];
+    this._formFieldsArray = [copy(this.formFields)];
   }
 
   addConfigItem(){
-    this.configItemCounter--;
+    this._configItemCounter--;
     let newForm = copy(this.formFields);
-    this.formFieldsArray.push(newForm);
+    this._formFieldsArray.push(newForm);
     this.models.push({});
   }
 
   removeConfigItem(formIndex) {
-    this.configItemCounter++;
-    this.formFieldsArray.splice(formIndex, 1);
+    this._configItemCounter++;
+    this._formFieldsArray.splice(formIndex, 1);
     this.models.splice(formIndex, 1);
   }
 
@@ -67,5 +67,22 @@ export class FeatureConfigurationFormComponent implements OnInit {
 
   set inProgress(value: { [key: string]: boolean }) {
     this.featuresService.inProgress = value;
+  }
+
+
+  get configItemCounter(): number {
+    return this._configItemCounter;
+  }
+
+  set configItemCounter(value: number) {
+    this._configItemCounter = value;
+  }
+
+  get formFieldsArray(): any[][] {
+    return this._formFieldsArray;
+  }
+
+  set formFieldsArray(value: any[][]) {
+    this._formFieldsArray = value;
   }
 }

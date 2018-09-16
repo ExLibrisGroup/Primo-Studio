@@ -4,7 +4,7 @@
   "description": "The Exlibris Primo Open Discovery Framework",
   "author": "noamamit92",
   "scripts": {
-    "start": "forever start --uid appstore -o out.log -e err.log -a node_modules/gulp/bin/gulp.js web ",
+    "start": "cd primo-explore && npm run build-prod && cd .. && forever start --uid appstore -o out.log -e err.log -a node_modules/gulp/bin/gulp.js web ",
     "stop": "forever stop appstore"
   },
   "dependencies": {

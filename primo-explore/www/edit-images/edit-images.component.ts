@@ -11,22 +11,22 @@ import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 })
 export class EditImagesComponent {
   private images: {[key: string]: string} = {};
-  private logoFileLabel: string;
-  private faviconFileLabel: string;
-  private svgFileLabel: string;
-  private resourceFilesLabel: string;
-  private uploadDisabled: boolean;
+  private _logoFileLabel: string;
+  private _faviconFileLabel: string;
+  private _svgFileLabel: string;
+  private _resourceFilesLabel: string;
+  private _uploadDisabled: boolean;
 
   constructor(private fileUploaderService: FileUploaderService,
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics){
 
     this.analytics.pageTrack('/');
-    this.logoFileLabel = 'Choose logo file';
-    this.faviconFileLabel = 'Choose favicon';
-    this.svgFileLabel = 'Choose icons svg';
-    this.resourceFilesLabel = 'Choose resource type icons';
-    this.uploadDisabled = true;
+    this._logoFileLabel = 'Choose logo file';
+    this._faviconFileLabel = 'Choose favicon';
+    this._svgFileLabel = 'Choose icons svg';
+    this._resourceFilesLabel = 'Choose resource type icons';
+    this._uploadDisabled = true;
   }
 
   setImage(name, files){
@@ -38,7 +38,7 @@ export class EditImagesComponent {
       element(document.querySelector('#label-for-' + name + '')).text(files[0].name).addClass('is-touched')
     }
     if(files.length > 0) {
-      this.uploadDisabled = false;
+      this._uploadDisabled = false;
     }
     this.analytics.eventTrack('setImage', {category: 'Images', label: name + " - " + files[0].name});
   }
@@ -63,4 +63,45 @@ export class EditImagesComponent {
     this.analytics.eventTrack('removeImages', {category: 'Images', label: 'all'});
   }
 
+
+  get logoFileLabel(): string {
+    return this._logoFileLabel;
+  }
+
+  set logoFileLabel(value: string) {
+    this._logoFileLabel = value;
+  }
+
+  get faviconFileLabel(): string {
+    return this._faviconFileLabel;
+  }
+
+  set faviconFileLabel(value: string) {
+    this._faviconFileLabel = value;
+  }
+
+  get svgFileLabel(): string {
+    return this._svgFileLabel;
+  }
+
+  set svgFileLabel(value: string) {
+    this._svgFileLabel = value;
+  }
+
+  get resourceFilesLabel(): string {
+    return this._resourceFilesLabel;
+  }
+
+  set resourceFilesLabel(value: string) {
+    this._resourceFilesLabel = value;
+  }
+
+
+  get uploadDisabled(): boolean {
+    return this._uploadDisabled;
+  }
+
+  set uploadDisabled(value: boolean) {
+    this._uploadDisabled = value;
+  }
 }

@@ -13,9 +13,9 @@ import {ConfigurationService} from "../utils/configuration.service";
   styleUrls: ['./editor-tab.component.scss']
 })
 export class EditorTabComponent implements OnInit {
-  private inProgress: boolean;
-  private expanded: boolean;
-  private codeFile: CodeFile;
+  private _inProgress: boolean;
+  private _expanded: boolean;
+  private _codeFile: CodeFile;
 
   @Output()
   private expandTab: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -26,13 +26,13 @@ export class EditorTabComponent implements OnInit {
               private configurationService: ConfigurationService){
     this.analytics.pageTrack('/');
 
-    this.inProgress= false;
-    this.expanded = true;
+    this._inProgress= false;
+    this._expanded = true;
     this.toggleTab();
 
     this.editorService.getFiles();
-    this.codeFile = this.editorService.getDefaultCodeFile();
-    this.editorService.initCode(this.codeFile);
+    this._codeFile = this.editorService.getDefaultCodeFile();
+    this.editorService.initCode(this._codeFile);
   }
 
   ngOnInit() {
@@ -42,7 +42,7 @@ export class EditorTabComponent implements OnInit {
   }
 
   onSave(data: CodeFile) {
-      this.inProgress = true;
+      this._inProgress = true;
       this.editorService.saveFile(data).subscribe((resp)=>{
         if(+resp.status === 200){
           console.log('file "' + data.file_path + '" was saved');
@@ -51,7 +51,7 @@ export class EditorTabComponent implements OnInit {
       }, (err)=> {
         console.log(err);
       }).add(()=>{
-        this.inProgress = false;
+        this._inProgress = false;
       });
       this.analytics.eventTrack('save',{category: 'codeEditor', label: 'single_file: ' + data.file_path});
   }
@@ -65,13 +65,13 @@ export class EditorTabComponent implements OnInit {
   }
 
   toggleTab() {
-    this.expanded = !this.expanded;
-    this.expandTab.emit(this.expanded);
-    this.analytics.eventTrack('expandTab', {category: 'codeEditor', label: this.expanded});
+    this._expanded = !this._expanded;
+    this.expandTab.emit(this._expanded);
+    this.analytics.eventTrack('expandTab', {category: 'codeEditor', label: this._expanded});
   }
 
   createTheme(){
-    this.inProgress = true;
+    this._inProgress = true;
     this.editorService.createTheme().subscribe((resp)=>{
       if(+resp.status === 200){
         console.log('all files were saved');
@@ -80,7 +80,7 @@ export class EditorTabComponent implements OnInit {
     }, (err)=> {
       console.log(err);
     }).add(()=>{
-      this.inProgress = false;
+      this._inProgress = false;
     });
     this.analytics.eventTrack('save', {category: 'codeEditor', label: 'all_files'});
   }
@@ -93,6 +93,31 @@ export class EditorTabComponent implements OnInit {
       this.editorService.initCode(codeFile);
       this.editorService.codeFiles.set(codeFile.file_path, codeFile);
     }
-    this.codeFile = codeFile;
+    this._codeFile = codeFile;
+  }
+
+
+  get inProgress(): boolean {
+    return this._inProgress;
+  }
+
+  set inProgress(value: boolean) {
+    this._inProgress = value;
+  }
+
+  get expanded(): boolean {
+    return this._expanded;
+  }
+
+  set expanded(value: boolean) {
+    this._expanded = value;
+  }
+
+  get codeFile(): CodeFile {
+    return this._codeFile;
+  }
+
+  set codeFile(value: CodeFile) {
+    this._codeFile = value;
   }
 }

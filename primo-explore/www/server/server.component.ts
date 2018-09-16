@@ -13,7 +13,7 @@ export class ServerComponent implements OnInit {
 
   private tabs: ({ name: string; icon: string })[];
   private selectedTab: string;
-  private sidenavCollapsed: boolean;
+  private _sidenavCollapsed: boolean;
   private sidenavAnimating: boolean;
   private expandTab: boolean;
 
@@ -36,7 +36,7 @@ export class ServerComponent implements OnInit {
       { name: 'UploadPackage', icon: 'cloud_upload' }
     ];
     this.selectedTab = 'Theme';
-    this.sidenavCollapsed = false;
+    this._sidenavCollapsed = false;
     this.sidenavAnimating = false;
     this.expandTab = false;
   }
@@ -67,18 +67,26 @@ export class ServerComponent implements OnInit {
 
   selectTab(tab){
     this.selectedTab = tab;
-    if (this.sidenavCollapsed) {
-      this.sidenavCollapsed = false;
+    if (this._sidenavCollapsed) {
+      this._sidenavCollapsed = false;
     }
     this.analytics.eventTrack('change', {category: 'tabs', label: tab});
   }
 
   toggleSidenav(){
-    this.sidenavCollapsed = !this.sidenavCollapsed;
+    this._sidenavCollapsed = !this._sidenavCollapsed;
   }
 
   onExpandTab($event: boolean) {
     this.expandTab = $event;
   }
 
+
+  get sidenavCollapsed(): boolean {
+    return this._sidenavCollapsed;
+  }
+
+  set sidenavCollapsed(value: boolean) {
+    this._sidenavCollapsed = value;
+  }
 }

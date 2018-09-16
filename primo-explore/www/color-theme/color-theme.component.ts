@@ -11,14 +11,14 @@ import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
   styleUrls: ['./color-theme.component.scss']
 })
 export class ColorThemeComponent{
-  private inProgress: boolean;
+  private _inProgress: boolean;
 
   constructor(private colorThemeService: ColorThemeService,
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics){
     this.analytics.pageTrack('/');
 
-    this.inProgress= false;
+    this._inProgress= false;
   }
 
   get colors(){
@@ -30,7 +30,7 @@ export class ColorThemeComponent{
   }
 
   createTheme(){
-    this.inProgress = true;
+    this._inProgress = true;
     this.colorThemeService.createTheme().subscribe((resp)=>{
       if(+resp.status === 200){
         console.log('theme created');
@@ -39,7 +39,7 @@ export class ColorThemeComponent{
     }, (err)=> {
       console.log(err);
     }).add(()=>{
-      this.inProgress = false;
+      this._inProgress = false;
     });
     this.analytics.eventTrack('createTheme', {category: 'colorTheme', label: 'all_colors'});
   }
@@ -48,4 +48,12 @@ export class ColorThemeComponent{
     this.colors[key] = newValue;
   }
 
+
+  get inProgress(): boolean {
+    return this._inProgress;
+  }
+
+  set inProgress(value: boolean) {
+    this._inProgress = value;
+  }
 }

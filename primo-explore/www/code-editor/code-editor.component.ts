@@ -37,16 +37,16 @@ export class CodeEditorComponent implements OnInit, AfterViewInit {
   private editor: CodemirrorComponent;
 
   private data: string;
-  private codemirrorOptions: any;
+  private _codemirrorOptions: any;
   private _model: CodeFile;
-  private readOnly: boolean = false;
+  private _readOnly: boolean = false;
 
   constructor(private editorService: EditorService){  }
 
   ngOnInit() {
     this.data = this.model.data;
 
-    this.codemirrorOptions = {
+    this._codemirrorOptions = {
       lineNumbers: true,
       lineWrapping: true,
       matchBrackets: true,
@@ -80,8 +80,8 @@ export class CodeEditorComponent implements OnInit, AfterViewInit {
         }
 
         if (this._model.file_path != value.file_path) {
-          this.readOnly = this.editorService.readonlyFilesRegex.test(value.file_path);
-          if (this.readOnly) {
+          this._readOnly = this.editorService.readonlyFilesRegex.test(value.file_path);
+          if (this._readOnly) {
             this.editor.instance.setOption('readOnly', 'nocursor');
           } else {
             this.editor.instance.setOption('readOnly', false);
@@ -94,5 +94,22 @@ export class CodeEditorComponent implements OnInit, AfterViewInit {
 
       this._model = value;
     }
+  }
+
+
+  get codemirrorOptions(): any {
+    return this._codemirrorOptions;
+  }
+
+  set codemirrorOptions(value: any) {
+    this._codemirrorOptions = value;
+  }
+
+  get readOnly(): boolean {
+    return this._readOnly;
+  }
+
+  set readOnly(value: boolean) {
+    this._readOnly = value;
   }
 }

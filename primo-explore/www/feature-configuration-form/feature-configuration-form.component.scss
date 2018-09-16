@@ -39,6 +39,18 @@
     .mat-form-field.mat-focused .mat-form-field-ripple {
       background: currentColor;
     }
+    .mat-form-field-type-mat-select .mat-form-field-underline {
+      bottom: 15%;
+    }
+    .mat-form-field-subscript-wrapper {
+      position: relative;
+    }
+    .mat-checkbox-checked.mat-accent .mat-checkbox-background, .mat-checkbox-indeterminate.mat-accent .mat-checkbox-background {
+      background-color: #444444;
+    }
+    .mat-checkbox:not(.mat-checkbox-disabled).mat-accent .mat-checkbox-ripple .mat-ripple-element {
+      background-color: rgba(87, 87, 87, 0.22);
+    }
     mat-dialog-content {
       max-height: 40vw;
       margin: 0 -18px;

@@ -33,6 +33,11 @@ export class FeatureConfigurationFormComponent implements OnInit {
     this.formFields = this.addon.config.form.map((field)=>{
       let defaultField = copy(defaultFieldConf);
       defaultField.templateOptions['label'] = field['key'];
+      if (field.type === 'select' && field.templateOptions && field.templateOptions.options) {
+        field.templateOptions.options.forEach(option => {
+          option.label = option.label || option.name;
+        })
+      }
       return _merge(defaultField, field); //extend default conf with field conf
     });
     this.formFieldsArray = [copy(this.formFields)];

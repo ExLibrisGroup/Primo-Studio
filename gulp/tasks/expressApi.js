@@ -28,6 +28,10 @@ const primoProxy = require('../primoProxy');
 const _url = require("url");
 const http = require('http');
 const https = require('https');
+const extractor = require('font-blast/lib/glyph-extractor');
+const svg2js = require('svgo/lib/svgo/svg2js');
+const svg2jsAsync = Promise.promisify(svg2js);
+const js2svg = require('svgo/lib/svgo/js2svg');
 
 
 module.exports = router;
@@ -183,40 +187,133 @@ router.post('/colors', function (req, res) {
 router.get('/icons', function(req, res){
     let userId= utils.getUserId(req);
     let baseDir = utils.getUserCustomDir(userId);
-    fs.readFile(baseDir+'/img/custom-ui.svg', (err, data)=>{
-        if(err){
-            utils.sendErrorResponse(res, err);
+    let customUiPath = baseDir+'/img/custom-ui.svg';
+    new Promise((resolve) => {
+        if (fs.existsSync(customUiPath)) {
+            fs.readFile(customUiPath, (err, data) => {
+                if (err) {
+                    utils.sendErrorResponse(res, err);
+                }
+                else {
+                    resolve(data.toString('utf-8'));
+                }
+            });
+        } else {
+            fs.writeFile(customUiPath,
+                "<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"24\" height=\"5000\" viewBox=\"0 0 24 5000\">\n</svg>\n",
+                {flag: 'wx'},
+                (err) => {
+                    if (err) {
+                        utils.sendErrorResponse(res, err);
+                    } else {
+                        resolve();
+                    }
+            });
         }
-        else{
-            res.send(data);
-        }
+    }).then(data => {
+        res.send(data);
     });
 });
 
 router.post('/icons', function (req, res) {
     let cookies = utils.parseCookies(req);
     let urlForProxy = cookies['urlForProxy'];
-    let colors = req.body.data.colors;
+    let icons = req.body.data.icons;
     let conf = req.body.data.conf;
     let userId = utils.getUserId(req);
-    // configG.setView(conf.dirName);
-    configG.setView(userId);
     let baseDir = utils.getUserCustomDir(userId);
-    process.argv = ["","", "","--view="+conf.dirName];
+    let customUiPath = baseDir+'/img/custom-ui.svg';
 
-    console.log('aaa'+baseDir);
-    fs.writeFileAsync(baseDir+'/colors.json.txt', JSON.stringify(colors), { encoding: 'utf-8' })
-        .then(() => {
-            console.log('finished writing colors.json.txt');
-            appCss(userId, urlForProxy).then(()=>{
-                console.log('finished app css');
+    fs.readFile(customUiPath, (err, data) => {
+        if (err) {
+            console.log('failed reading custom-ui.svg');
+            utils.sendErrorResponse(res, err);
+        }
+
+        svg2js(data, (doc => {
+            let root = doc.content[0];
+            let svgs = root.content || [];
+
+            // Create list of Promise which first making the svg to json object
+            let iconPromises = Object.keys(icons).map(icon => {
+                return new Promise((resolve, reject) => {
+                    svg2js(icons[icon].path, svgJs => {
+                        if (svgJs.error) {
+                            reject(svgJs.error)
+                        } else {
+                            resolve([svgJs, icons[icon]]);
+                        }
+                    })
+                })
+                // then bind the relevant icon object to the promise
+                    .bind(icons[icon])
+                    // in case of error -> throw an error to the client
+                    .catch(err => {
+                        utils.sendErrorResponse(res, err);
+                    });
+            });
+
+            // split the promises to two arrays, one for the changing mission and one for the creating mission
+            let idsInSvgFile = svgs.map(cont => cont.attrs.id.value);
+            let needToChangePromises = iconPromises.filter((iconPromise) => {
+                return idsInSvgFile.indexOf(iconPromise._boundTo.id) !== -1;
+            });
+            let needToCreatePromises = iconPromises.filter((iconPromise) => {
+                return idsInSvgFile.indexOf(iconPromise._boundTo.id) === -1;
+            });
+
+            // changing the relevant json objects
+            let afterChangedPromise = Promise.each(needToChangePromises, (arr) => {
+                let toChangeJs = arr[0];
+                let icon = arr[1];
+                let i = idsInSvgFile.indexOf(icon.id);
+
+                doc.content[0].content[i].content = toChangeJs.content;
+            });
+
+            // creating the relevant json objects
+            let createPromises = needToCreatePromises.map((toCreatePromise) => {
+                return toCreatePromise.then(arr => {
+                    let toCreateJs = arr[0];
+                    let icon = arr[1];
+
+                    toCreateJs.elem = 'svg';
+                    toCreateJs.local = 'svg';
+                    if (!toCreateJs.attrs) {
+                        toCreateJs.attrs = {};
+                    }
+
+                    toCreateJs.attrs.id = {name: 'id', value: icon.id, prefix:"", local: "id"};
+                    toCreateJs.attrs.viewBox = {name: 'viewBox', value: '0 0 24 24', prefix:"", local: "viewBox"};
+
+                    return toCreateJs
+                });
+            });
+
+            // push the elements to the document
+            let afterCreatedPromise = Promise.each(createPromises, toAddContent => {
+                if (!doc.content[0].content) {
+                    doc.content[0].content = [];
+                }
+                toAddContent.parentNode = root;
+                doc.content[0].content.push(toAddContent);
+            });
+
+            Promise.all([afterCreatedPromise, afterChangedPromise]).then(() => {
+                let toWrite = js2svg(doc);
+                fs.writeFileSync(customUiPath, toWrite.data);
+
                 let response = {status:'200'};
                 res.send(response);
-            }, (err)=>{
-                console.log('failed app css');
-                utils.sendErrorResponse(res, err);
             });
-        });
+        }));
+    });
+});
+
+router.post('/optimize-svg', function (req, res) {
+    extractor(req.body.data, undefined, characterSvg => {
+        res.send(characterSvg)
+    });
 });
 
 let imagesUpload= upload.fields([

@@ -5,7 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {CookieService} from 'ngx-cookie-service';
 import {FormlyModule} from "@ngx-formly/core";
 import {FormlyMaterialModule} from "@ngx-formly/material";
-import {MatDialogModule} from "@angular/material";
+import {MatDialogModule, MatTooltipModule} from "@angular/material";
 import {Angulartics2Module, RouterlessTracking} from "angulartics2";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
@@ -33,6 +33,12 @@ import { UploadPackageComponent } from './upload-package/upload-package.componen
 import { FileTreeComponent } from './file-tree/file-tree.component';
 import { SplitPathPipe } from './file-tree/split-path.pipe';
 import { SliceCustomizationPathPipe } from './file-tree/slice-customization-path.pipe';
+import { AddClassToChildrenDirective } from './utils/add-class-to-children.directive';
+import { IconsPickerComponent } from './icons-picker/icons-picker.component';
+import {IconsPickerService} from "./icons-picker/icons-picker.service";
+import { CalcSVGViewBoxDirective } from './utils/calc-view-box.directive';
+import { IconPickerDialogComponent } from './icon-picker-dialog/icon-picker-dialog.component';
+import { SearchIconPipe } from './icon-picker-dialog/search-icon.pipe';
 
 
 const appRoutes: Routes = [
@@ -57,10 +63,16 @@ const appRoutes: Routes = [
     UploadPackageComponent,
     FileTreeComponent,
     SplitPathPipe,
-    SliceCustomizationPathPipe
+    SliceCustomizationPathPipe,
+    AddClassToChildrenDirective,
+    IconsPickerComponent,
+    CalcSVGViewBoxDirective,
+    IconPickerDialogComponent,
+    SearchIconPipe
   ],
   entryComponents: [
-    FeatureConfigurationFormComponent
+    FeatureConfigurationFormComponent,
+    IconPickerDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -71,11 +83,15 @@ const appRoutes: Routes = [
         clearQueryParams: false
       }
     }),
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {
+      scrollPositionRestoration: "top",
+      anchorScrolling: "enabled"
+    }),
     FormlyModule.forRoot(),
     FormlyMaterialModule,
     BrowserAnimationsModule,
     MatDialogModule,
+    MatTooltipModule,
     CodemirrorModule
   ],
   providers: [
@@ -85,7 +101,8 @@ const appRoutes: Routes = [
     IframeService,
     FeaturesService,
     RouterlessTracking,
-    EditorService
+    EditorService,
+    IconsPickerService
   ],
   bootstrap: [AppComponent]
 })

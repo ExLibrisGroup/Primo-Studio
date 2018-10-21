@@ -16,7 +16,6 @@ export class ColorThemeComponent{
   constructor(private colorThemeService: ColorThemeService,
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics){
-    this.analytics.pageTrack('/');
 
     this._inProgress= false;
   }

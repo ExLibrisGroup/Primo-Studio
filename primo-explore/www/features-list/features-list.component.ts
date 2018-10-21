@@ -30,7 +30,6 @@ export class FeaturesListComponent implements OnInit {
               private overlay: Overlay,
               private configurationService: ConfigurationService,
               private analytics: Angulartics2GoogleAnalytics){
-    this.analytics.pageTrack('/');
     this.selectedFilterField = 'all';
     this._searchTerm = '';
     this._filterOptions = [{key:'all', displayName:'All'}, {key:'what', displayName: 'Title'}, {key:'hook', displayName: 'Hook'}, {key:'who', displayName: 'Contributor'}];

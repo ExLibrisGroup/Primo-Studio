@@ -28,7 +28,8 @@
               },
               "www/scss/main.scss",
               "node_modules/codemirror/lib/codemirror.css",
-              "node_modules/codemirror/addon/hint/show-hint.css"
+              "node_modules/codemirror/addon/hint/show-hint.css",
+              "node_modules/@neos21/bootstrap3-glyphicons/dist/css/bootstrap3-glyphicons.css"
             ],
             "scripts": [
               "node_modules/codemirror/lib/codemirror.js",

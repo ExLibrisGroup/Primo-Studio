@@ -3,6 +3,7 @@ import {ConfigurationService} from "../utils/configuration.service";
 import {HttpClient} from "@angular/common/http";
 import {CodeFile} from "../classes/code-file";
 import {FileTree} from "../classes/file-tree";
+import {IconsPickerService} from "../icons-picker/icons-picker.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,7 @@ export class EditorService {
   private _readonlyFilesRegex: RegExp;
 
   constructor(private configurationService:ConfigurationService,
+              private iconsPickerService: IconsPickerService,
               private $http: HttpClient) {
 
     this.getFiles();
@@ -66,7 +68,7 @@ export class EditorService {
     this._codeFiles = value;
   }
 
-  saveFile(fileJson) {
+  saveFile(fileJson: CodeFile) {
     return this.sendFilesToServer([fileJson]);
   }
 
@@ -74,7 +76,12 @@ export class EditorService {
     return this.sendFilesToServer(Array.from(this.codeFiles.values()));
   }
 
-  sendFilesToServer(files) {
+  sendFilesToServer(files: Array<CodeFile>) {
+    files.forEach(codeFile => {
+      if ("\\img\\custom-ui.svg" === codeFile.file_path) {
+        this.iconsPickerService.loadIconsFromServer();
+      }
+    });
     let config = {
       data: {
         code: files

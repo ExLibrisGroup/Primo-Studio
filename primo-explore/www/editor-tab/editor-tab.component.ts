@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {EditorService} from "./editor.service";
 import {IframeService} from "../utils/iframe.service";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
@@ -12,7 +12,7 @@ import {ConfigurationService} from "../utils/configuration.service";
   templateUrl: './editor-tab.component.html',
   styleUrls: ['./editor-tab.component.scss']
 })
-export class EditorTabComponent implements OnInit {
+export class EditorTabComponent implements OnInit, OnDestroy {
   private _inProgress: boolean;
   private _expanded: boolean;
   private _codeFile: CodeFile;
@@ -24,7 +24,6 @@ export class EditorTabComponent implements OnInit {
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics,
               private configurationService: ConfigurationService){
-    this.analytics.pageTrack('/');
 
     this._inProgress= false;
     this._expanded = true;
@@ -39,6 +38,12 @@ export class EditorTabComponent implements OnInit {
     CodeMirror.commands.save = (instance) => {
       instance.onSave();
     };
+  }
+
+  ngOnDestroy(): void {
+    if (this.expanded) {
+      this.expandTab.emit(!this.expanded)
+    }
   }
 
   onSave(data: CodeFile) {

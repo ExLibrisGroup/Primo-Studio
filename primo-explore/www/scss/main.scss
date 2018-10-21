@@ -8,6 +8,9 @@
 @import '~www/scss/animations';
 @import '~www/scss/layout';
 
+@import "~@neos21/bootstrap3-glyphicons/dist/css/bootstrap3-glyphicons.css";
+@import '~font-awesome/scss/font-awesome';
+
 @import '~www/configuration-form/configuration-form.component';
 @import '~www/color-theme/color-theme.component';
 @import '~www/edit-images/edit-images.component';
@@ -16,7 +19,7 @@
 @import '~www/feature-configuration-form/feature-configuration-form.component';
 @import '~www/code-editor/code-editor.component';
 @import '~www/editor-tab/editor-tab.component';
-@import '~www/iconsPicker/icons-picker';
+@import '~www/icons-picker/icons-picker.component';
 @import '~www/file-tree/file-tree.component';
 @import '~www/server/server.component';
 

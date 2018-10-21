@@ -11,7 +11,6 @@ export class DownloadPackageComponent  {
 
   constructor(private $http: HttpClient,
               private analytics: Angulartics2GoogleAnalytics){
-    this.analytics.pageTrack('/');
   }
 
   downloadPackage(){

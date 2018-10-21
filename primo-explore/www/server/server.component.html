@@ -14,20 +14,27 @@
     <div class="sidenav-main">
       <div class="sidenav-nav">
         <ul>
-          <li *ngFor=" let tab of tabs" title="{{tab.name}}" (click)="selectTab(tab.name)" [class.is-selected]="tab.name == selectedTab">
+          <li *ngFor=" let tab of tabs"
+              title="{{tab.name}}"
+              (click)="selectTab(tab)"
+              [class.is-selected]="tab.name == selectedTab.name"
+              [matTooltip]="getTooltipMessage(tab)"
+              [matTooltipDisabled]="!isTooltipDisplayed(tab)"
+              [matTooltipClass]='"custom-tooltip"'>
             <i class="icon-{{tab.icon}}"></i>
             <span class="label">{{tab.name}}</span>
           </li>
         </ul>
       </div>
-      <div class="sidenav-content fade-in-out-animation" *ngIf="!sidenavCollapsed">
-        <prm-color-theme *ngIf="selectedTab == 'Theme'" class="sidenav-panel"></prm-color-theme>
-        <prm-edit-images *ngIf="selectedTab == 'Images'" class="sidenav-panel"></prm-edit-images>
-        <!--<prm-icons-picker *ngIf="selectedTab == 'Icons'" class="sidenav-panel"></prm-icons-picker>-->
-        <prm-features-list *ngIf="selectedTab == 'Addons'" class="sidenav-panel"></prm-features-list>
-        <prm-editor (expandTab)="onExpandTab($event)" *ngIf="selectedTab === 'Editor'" class="sidenav-panel"></prm-editor>
-        <prm-download-package *ngIf="selectedTab == 'Download'" class="sidenav-panel"></prm-download-package>
-        <prm-upload-package *ngIf="selectedTab == 'UploadPackage'" class="sidenav-panel"></prm-upload-package>
+      <div class="sidenav-content fade-in-out-animation" add-class-to-children="sidenav-panel"
+           *ngIf="!sidenavCollapsed" [ngSwitch]="selectedTab.name">
+        <prm-color-theme *ngSwitchCase="'Theme'"></prm-color-theme>
+        <prm-edit-images *ngSwitchCase="'Images'"></prm-edit-images>
+        <prm-icons-picker *ngSwitchCase="'Icons'"></prm-icons-picker>
+        <prm-features-list *ngSwitchCase="'Addons'"></prm-features-list>
+        <prm-editor *ngSwitchCase="'Editor'" (expandTab)="onExpandTab($event)"></prm-editor>
+        <prm-download-package *ngSwitchCase="'Download'"></prm-download-package>
+        <prm-upload-package *ngSwitchCase="'UploadPackage'"></prm-upload-package>
       </div>
     </div>
   </aside>

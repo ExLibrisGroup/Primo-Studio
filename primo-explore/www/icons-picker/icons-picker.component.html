@@ -1,0 +1,19 @@
+<h2>Icons picker</h2>
+<p class="italics">
+  Change Primo's entire set of icons with your own icons
+</p>
+<div class="content-row input-wrapper" *ngFor="let key of keys(icons)">
+  <label>{{key}}</label>
+  <button #buttonRef class="icon-picker" [id]="key" (click)="openDialog(buttonRef)">
+    <svg *ngIf="icons[key].path" [calcSVGViewBox]="icons[key].viewBox"
+         [innerHTML]="sanitizer.bypassSecurityTrustHtml(icons[key].path)"></svg>
+  </button>
+</div>
+
+<div class="sticky-button">
+  <button class="update-theme" (click)="createTheme()" [disabled]="inProgress">
+    <i *ngIf="!inProgress" class="icon-refresh"></i>
+    <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
+    Update Icons
+  </button>
+</div>

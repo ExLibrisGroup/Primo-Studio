@@ -36,10 +36,6 @@ gulp.task('serve', [], function() {
 
     appS.use('', api);
 
-    // appS.get('*', (req, res) => {
-    //     res.sendFile(path.resolve('primo-explore/dist/primo-explore/index.html'));
-    // });
-
     let server = http.createServer(appS);
 
     server.listen(80, function () {

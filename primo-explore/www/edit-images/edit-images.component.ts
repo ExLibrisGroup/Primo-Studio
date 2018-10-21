@@ -3,6 +3,7 @@ import {FileUploaderService} from "../utils/file-uploader.service";
 import {IframeService} from "../utils/iframe.service";
 import {element} from "angular";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
+import {ConfigurationService} from "../utils/configuration.service";
 
 @Component({
   selector: 'prm-edit-images',
@@ -19,9 +20,9 @@ export class EditImagesComponent {
 
   constructor(private fileUploaderService: FileUploaderService,
               private iframeService: IframeService,
-              private analytics: Angulartics2GoogleAnalytics){
+              private analytics: Angulartics2GoogleAnalytics,
+              private configurationService: ConfigurationService){
 
-    this.analytics.pageTrack('/');
     this._logoFileLabel = 'Choose logo file';
     this._faviconFileLabel = 'Choose favicon';
     this._svgFileLabel = 'Choose icons svg';
@@ -63,6 +64,9 @@ export class EditImagesComponent {
     this.analytics.eventTrack('removeImages', {category: 'Images', label: 'all'});
   }
 
+  getTooltipMessage(data: string): string {
+    return data + ` will take place from Primo ${this.configurationService.isVe ?'VE 2018 October' : '2018 November'} release`;
+  }
 
   get logoFileLabel(): string {
     return this._logoFileLabel;

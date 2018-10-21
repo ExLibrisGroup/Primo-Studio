@@ -15,7 +15,6 @@ export class UploadPackageComponent {
   constructor(private fileUploaderService: FileUploaderService,
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics){
-    this.analytics.pageTrack('/');
     this._uploadDisabled = true;
   }
 

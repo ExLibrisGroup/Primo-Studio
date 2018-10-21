@@ -10,7 +10,7 @@
   
   [class^="icon-"], [class*=" icon-"] {
     /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'Primo-apps-store' !important;
+    font-family: 'Primo-apps-store';
     speak: none;
     font-style: normal;
     font-weight: normal;
@@ -70,4 +70,8 @@
   }
   .icon-save:before {
     content: "\e962";
+  }
+  .icon-icons:before {
+    font-family: 'fontawesome';
+    content: "\f009";
   }

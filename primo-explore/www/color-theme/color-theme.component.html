@@ -5,11 +5,11 @@
 <div class="content">
 
   <div class="content-row input-wrapper" *ngFor="let key of keys(colors)">
-    <label for="{{key}}">
+    <label [for]="key">
       <span *ngIf="key !== 'backgroundColor'">{{key}}</span>
       <span *ngIf="key == 'backgroundColor'">background</span>
     </label>
-    <input #txt id="{{key}}" type="text" [value]="colors[key]" (keyup)="setColor(key, txt.value)">
+    <input #txt [id]="key" type="text" [value]="colors[key]" (keyup)="setColor(key, txt.value)">
     <input #clr type="color" (change)="setColor(key, clr.value)" [value]="colors[key]">
   </div>
 

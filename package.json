@@ -8,6 +8,7 @@
     "stop": "forever stop appstore"
   },
   "dependencies": {
+    "@neos21/bootstrap3-glyphicons": "^1.0.1",
     "@types/angular": "^1.6.50",
     "@types/express": "^4.16.0",
     "angular": "^1.6.3",
@@ -35,6 +36,8 @@
     "del": "2.2.1",
     "directory-tree": "^2.1.0",
     "express": "4.16.0",
+    "font-awesome": "^4.7.0",
+    "font-blast": "^0.7.0",
     "fs-extra": "2.1.2",
     "glob": "6.0.4",
     "gulp": "3.9.1",

@@ -111,13 +111,11 @@ export class IconsPickerService {
       let textContent = styles[0].textContent;
       let classCssRegex = new RegExp("[\\s\\S]*?(" + className.replace('.', '\\.') + "[\\s]*?:before[\\s]*?{[\\s\\S]*?})[\\s\\S]*");
       let specificCss = textContent.replace(classCssRegex, '$1');
-      console.debug(specificCss);
       let contentRegex = /[\s\S]*content:.*"(.*)"[\s\S]*/;
       let content = specificCss.replace(contentRegex, '$1');
       let charCode = content.charCodeAt(0);
       let hexCode = charCode.toString(16);
 
-      console.debug(hexCode);
       new Observable(observer => {
         if (this._thirdPartyIcons[icon.type]){
           observer.next();

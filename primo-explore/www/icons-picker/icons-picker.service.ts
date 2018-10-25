@@ -109,7 +109,7 @@ export class IconsPickerService {
       let className = `.${icon.type===IconType.FONT_AWESOME? 'fa':'glyphicon'}-${icon.id}`;
       let styles = _filter(document.head.querySelectorAll("style"), e => e.textContent.indexOf(className)!==-1);
       let textContent = styles[0].textContent;
-      let classCssRegex = new RegExp("[\\s\\S]*?(" + className.replace('.', '\\.') + "[\\s]*?:before[\\s]*?{[\\s\\S]*?})[\\s\\S]*");
+      let classCssRegex = new RegExp("[\\s\\S]*?(" + className.replace('.', '\\.') + "[\\s\\S]*?:before[\\s]*?{[\\s\\S]*?})[\\s\\S]*");
       let specificCss = textContent.replace(classCssRegex, '$1');
       let contentRegex = /[\s\S]*content:.*"(.*)"[\s\S]*/;
       let content = specificCss.replace(contentRegex, '$1');

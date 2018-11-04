@@ -38,8 +38,8 @@ gulp.task('serve', [], function() {
 
     let server = http.createServer(appS);
 
-    server.listen(8080, function () {
-        console.log('Example app listening on port 80!')
+    server.listen(8004, function () {
+        console.log('Example app listening on port 8004!')
     });
     /*server.start();*/
 });

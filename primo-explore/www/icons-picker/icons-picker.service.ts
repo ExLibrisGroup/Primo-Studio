@@ -229,21 +229,21 @@ export class IconsPickerService {
       icons = icons.concat(prmIcons);
     }
 
-    if (ipIconPack === 'fa' || ipIconPack === 'all') {
-      const faIcons = this.getFaIcons().map(icon => {
-        icon.type = IconType.FONT_AWESOME;
-        return icon;
-      });
-      icons = icons.concat(faIcons);
-    }
-
-    if (ipIconPack === 'bs' || ipIconPack === 'all') {
-      const bsIcons = this.getBsIcons().map(icon => {
-        icon.type = IconType.BOOTSTRAP;
-        return icon;
-      });
-      icons = icons.concat(bsIcons);
-    }
+    // if (ipIconPack === 'fa' || ipIconPack === 'all') {
+    //   const faIcons = this.getFaIcons().map(icon => {
+    //     icon.type = IconType.FONT_AWESOME;
+    //     return icon;
+    //   });
+    //   icons = icons.concat(faIcons);
+    // }
+    //
+    // if (ipIconPack === 'bs' || ipIconPack === 'all') {
+    //   const bsIcons = this.getBsIcons().map(icon => {
+    //     icon.type = IconType.BOOTSTRAP;
+    //     return icon;
+    //   });
+    //   icons = icons.concat(bsIcons);
+    // }
 
     return icons;
   }

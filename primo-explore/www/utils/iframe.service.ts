@@ -35,7 +35,7 @@ export class IframeService {
   getIframeUrl(){
     let ve = this.configurationService.isVe;
     let appName = ve ? 'discovery' : 'primo-explore';
-    return this.sanitizer.bypassSecurityTrustResourceUrl(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + '/'+appName+'/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(window.location.protocol + '//' + window.location.host + '/'+appName+'/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
   }
 
   isUp(){

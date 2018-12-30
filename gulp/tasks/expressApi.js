@@ -637,7 +637,7 @@ router.get('/start', function (req, res) {
     configG.setView(userId);
 
     //create a directory from MOCK
-    let readStream = fs.createReadStream('templatePackage/VIEW_CODE.zip');
+    let readStream = fs.createReadStream('templatePackage/VIEW_CODE' + (req.query.ve? '_VE' : '') + '.zip');
     /*writeStream2 = fstream.Writer({
      path: path.resolve(__dirname, '../../primo-explore/custom/' + n),
      type: 'Directory'
@@ -702,7 +702,7 @@ router.all('*',function(req, res, next){
         res1.on("end", function () {
 
             let vid = dirForProxy || configG.view() || '';
-            let customizationProxy = primoProxy.getCustimazationObject(vid, appName);
+            let customizationProxy = primoProxy.getCustimazationObject(vid, appName, (ve === 'true'));
 
             if (isConfByFile) {
                 res.end('');

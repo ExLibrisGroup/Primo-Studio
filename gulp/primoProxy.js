@@ -7,7 +7,7 @@ var glob = require('glob');
 Promise.promisifyAll(glob);
 var Response = require('http-response-object');
 
-module.exports.getCustimazationObject = function (vid,appName) {
+module.exports.getCustimazationObject = function (vid,appName,isVe) {
 
 
     var basedir = appName+'/custom';
@@ -136,20 +136,21 @@ module.exports.getCustimazationObject = function (vid,appName) {
             paths = glob.sync(viewPackage + "/html/*.html", {cwd:appName});
         }
         var staticHtmlRes = {};
-        staticHtmlRes = getHtmlCustomizations(paths,viewPackage,staticHtmlRes);
+        staticHtmlRes = getHtmlCustomizations(paths,viewPackage,staticHtmlRes, isVe);
 
         if (isInherited) {
             var paths = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/html/**/*.html", {cwd:appName});
-            staticHtmlRes = getHtmlCustomizations(paths,'custom/CENTRAL_PACKAGE',staticHtmlRes);
+            staticHtmlRes = getHtmlCustomizations(paths,'custom/CENTRAL_PACKAGE',staticHtmlRes, isVe);
         }
         customizationObject.staticHtml = staticHtmlRes;
     }
-    function getLanguage(entry) {
-        var start = entry.indexOf('.html')-5;
-        var res = entry.substring(start,start+5);
+    function getLanguage(entry, isVe) {
+        var numberOfCharsForLang = isVe ? 2 : 5;
+        var start = entry.indexOf('.html')-numberOfCharsForLang;
+        var res = entry.substring(start,start+numberOfCharsForLang);
         return res;
     }
-    function getHtmlCustomizations(paths,path,staticDict){
+    function getHtmlCustomizations(paths,path,staticDict, isVe){
         var patternString = path+'/html/';
 
         var re = new RegExp(patternString, "g");
@@ -158,13 +159,17 @@ module.exports.getCustimazationObject = function (vid,appName) {
 
 
         res.forEach((e)=> {
-            var lang = getLanguage(e);
+            var lang = getLanguage(e, isVe);
             var dirName = e.replace('_'+lang+'.html','');
+            if (dirName.indexOf('/') > -1) {
+                var sepIndex = dirName.indexOf('/');
+                dirName = dirName.substr(0, sepIndex);
+            }
             if(!staticDict[dirName]) {
                 staticDict[dirName] = {};
             }
             staticDict[dirName][lang] = path+ '/html/'+e;
-            if(lang ==='en_US') {
+            if(lang ==='en_US' || lang === 'en') {
                 staticDict[dirName]['default'] = path+ '/html/'+e;
             }
 

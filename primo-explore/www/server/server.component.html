@@ -21,7 +21,7 @@
               [matTooltip]="getTooltipMessage(tab)"
               [matTooltipDisabled]="!isTooltipDisplayed(tab)"
               [matTooltipClass]='"custom-tooltip"'>
-            <i class="icon-{{tab.icon}}"></i>
+            <i class="icon-{{tab.icon}}" [class.material-icons]="tab.name === 'Icons'"></i>
             <span class="label">{{tab.name}}</span>
           </li>
         </ul>

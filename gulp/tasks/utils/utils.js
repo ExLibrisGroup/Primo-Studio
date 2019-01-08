@@ -114,7 +114,7 @@ function nextChar(c) {
 
 function fixManuallyAddedComponents(content, userManifest){
     let componentRegex = /\.component[\s]*?\([\s]*?['|"](prm.*?After)['|"]/g;
-    let controllerRegex = /controller[\s]*?:[\s]*?['|"](.*)['|"]/g;
+    let controllerRegex = /controller[\s]*?:[\s]*?['|"](.*?)['|"]/g;
     let match;
     let addedString = 'AppStoreGenerated';
 

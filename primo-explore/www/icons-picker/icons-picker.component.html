@@ -2,12 +2,14 @@
 <p class="italics">
   Change Primo's entire set of icons with your own icons
 </p>
-<div class="content-row input-wrapper" *ngFor="let key of keys(icons)">
-  <label>{{key}}</label>
-  <button #buttonRef class="icon-picker" [id]="key" (click)="openDialog(buttonRef)">
-    <svg *ngIf="icons[key].path" [calcSVGViewBox]="icons[key].viewBox"
-         [innerHTML]="sanitizer.bypassSecurityTrustHtml(icons[key].path)"></svg>
-  </button>
+<div class="icons-picker-wrapper" layout="column">
+  <div class="content-row input-wrapper" *ngFor="let key of keys(icons)" layout="row">
+    <label>{{key}}</label>
+    <button #buttonRef class="icon-picker" [id]="key" (click)="openDialog(buttonRef)">
+      <svg *ngIf="icons[key].path" [calcSVGViewBox]="icons[key].viewBox"
+           [innerHTML]="sanitizer.bypassSecurityTrustHtml(icons[key].path)"></svg>
+    </button>
+  </div>
 </div>
 
 <div class="sticky-button">

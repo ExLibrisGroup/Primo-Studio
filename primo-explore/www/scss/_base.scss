@@ -14,7 +14,7 @@ body {
 
 .app-wrapper, .app-init {
     height: 100%;
-    display: flex;    
+    display: flex;
 }
 
 .app-wrapper {
@@ -30,7 +30,7 @@ body {
         z-index: 1;
         opacity: .5;
         background-image: url(#{$pattern-dotted});
-    }  
+    }
 }
 .app-sidenav {
     position: relative;
@@ -42,30 +42,30 @@ body {
     flex-direction: column;
     align-items: stretch;
     transition: width .4s $ease-in-out-quint;
-    
+
     @include breakpoint($lg) {
         width: $sidebar-width-wide
     }
-    
+
     &.ng-enter {
-        transform: translateX(-100%); 
+        transform: translateX(-100%);
         transition: transform .5s $ease-out-quint;
         &.ng-enter-active {
-            transform: translateX(0); 
+            transform: translateX(0);
         }
     }
 
     &.ng-leave {
-        transform: translateX(0); 
+        transform: translateX(0);
         transition: transform .5s $ease-in-out-quint;
         &.ng-leave-active {
-            transform: translateX(-100%); 
+            transform: translateX(-100%);
         }
     }
 
     &.is-collapsed {
         width: 61px;
-        transition-duration: 0s;      
+        transition-duration: 0s;
 
         .menu-button {
             margin-left: -.5rem;
@@ -92,24 +92,25 @@ body {
                transform: rotate(180deg)
             }
         }
-        
+
     }
 
     .sidenav-title {
-        height: 62px;        
+        height: 62px;
         padding: 1rem;
         background-color: darken($background, 5%);
         box-shadow: inset 0 -1px $background-border ;
         display: flex;
         align-items: center;
         overflow: hidden;
-        box-sizing: border-box;        
+        box-sizing: border-box;
+        min-height: 62px;
         span {
             text-transform: uppercase;
             letter-spacing: 0.15rem;
             font-weight: 700;
             font-size: .85rem;
-            opacity: .7;  
+            opacity: .7;
             white-space: nowrap;
         }
         img {
@@ -163,7 +164,7 @@ body {
             @include breakpoint($lg){
                 display: none;
             }
-        }        
+        }
     }
 
     ul {
@@ -188,7 +189,7 @@ body {
         .label {
             font-size: 1rem;
             margin-left: 1rem;
-            font-size: 1rem;            
+            font-size: 1rem;
             display: none;
             font-weight: 600;
         }
@@ -198,15 +199,15 @@ body {
             justify-content: flex-start;
             font-size: 1.5rem;
             padding-left: 1rem;
-            padding-right: 1rem;           
+            padding-right: 1rem;
 
-            .label {        
-                display: inline-flex;                        
+            .label {
+                display: inline-flex;
             }
         }
     }
-    &.is-collapsed {  
-        li {   
+    &.is-collapsed {
+        li {
             &.is-selected {
                 box-shadow: inset 5px 0 0 $accent, 0 -3px 10px -2px rgba(0,0,0,0.1), 0 3px 10px -2px rgba(0,0,0,0.1);
             }
@@ -214,29 +215,29 @@ body {
                 width: 60px;
                 justify-content: center;
                 font-size: 2rem;
-                padding: 0;           
+                padding: 0;
 
-                .label {        
-                    display: none;                        
+                .label {
+                    display: none;
                 }
             }
         }
 
-        
+
     }
 }
 
 .app-stage {
     flex: 1;
     align-items: stretch;
-    position: relative; 
+    position: relative;
     &.ng-leave {
         opacity: 1;
         transition: opacity .5s ease;
         &.ng-leave-active {
             opacity: 0;
         }
-    }   
+    }
 }
 
 .app-iframe {
@@ -264,7 +265,7 @@ body {
 }
 
 .input-wrapper {
-    display: flex;    
+    display: flex;
     align-items: center;
     label {
         flex: 1 0 0;

@@ -4,6 +4,7 @@ import {IframeService} from "../utils/iframe.service";
 import {element} from "angular";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {ConfigurationService} from "../utils/configuration.service";
+import {IconsPickerService} from "../icons-picker/icons-picker.service";
 
 @Component({
   selector: 'prm-edit-images',
@@ -21,7 +22,8 @@ export class EditImagesComponent {
   constructor(private fileUploaderService: FileUploaderService,
               private iframeService: IframeService,
               private analytics: Angulartics2GoogleAnalytics,
-              private configurationService: ConfigurationService){
+              private configurationService: ConfigurationService,
+              private iconsPickerService: IconsPickerService){
 
     this._logoFileLabel = 'Choose logo file';
     this._faviconFileLabel = 'Choose favicon';
@@ -48,6 +50,9 @@ export class EditImagesComponent {
     this.fileUploaderService.uploadFiles('/images', this.images).subscribe(()=>{
       console.log('images uploaded successfully');
       this.iframeService.refreshNuiIFrame();
+      if (this.images['custom-ui']) {
+        this.iconsPickerService.loadIconsFromServer();
+      }
     }, (err)=>{
       console.log('failed to upload images: '+ err.stack)
     });

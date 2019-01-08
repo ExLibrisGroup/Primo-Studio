@@ -188,7 +188,7 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
     return customizationObject;
 
 
-}
+};
 
 
 module.exports.proxy_function = function (viewForProxy,urlForProxy) {
@@ -203,6 +203,7 @@ module.exports.proxy_function = function (viewForProxy,urlForProxy) {
         '/primaws/rest/(.*) ' + proxyServer + '/primaws/rest/$1 [PL]',
         '/primo_library/libweb/primoExploreLogin ' + proxyServer + '/primo_library/libweb/primoExploreLogin [PL]',
         '/primaws/suprimaLogin ' + proxyServer + '/primaws/suprimaLogin [PL]',
+        '/primaws/suprimaExtLogin ' + proxyServer + '/primaws/suprimaExtLogin [RL]',
 
         '/primo-explore/index.html ' + proxyServer + '/primo-explore/index.html [PL]',
         '/discovery/index.html ' + proxyServer + '/discovery/index.html [PL]',

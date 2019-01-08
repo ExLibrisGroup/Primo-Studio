@@ -20,7 +20,7 @@ prm-configuration-form {
     border-radius: 10px;
     transition: transform .6s $ease-in-out-quint, width .4s $ease-in-out-quint, height .4s $ease-in-out-quint;
     transform: translate(calc(50vw - #{$config-dialog-width/2}), calc(-50vh + #{$config-dialog-height/2}));
-    
+
     &:before {
         content: '';
         position: absolute;
@@ -45,7 +45,7 @@ prm-configuration-form {
         z-index: -1;
         opacity: 0;
         transition: opacity .4s ease;
-        box-shadow: 0 -1px  0 0px $background-border 
+        box-shadow: 0 -1px  0 0px $background-border
     }
     header {
         padding: 2rem 2rem 0 2rem;
@@ -111,7 +111,7 @@ prm-configuration-form {
                 opacity: 0;
             }
         }
-     
+
         > span {
             margin-right: .5rem
         }
@@ -145,9 +145,9 @@ prm-configuration-form {
                     width .6s $ease-out-quint,
                     height .6s $ease-out-quint;
     }
-    
+
     .inner-wrapper {
-        overflow: hidden;        
+        overflow: hidden;
         height: 100%;
         box-sizing: border-box;
     }

@@ -6,16 +6,18 @@ prm-icons-picker {
   padding: 2rem;
   display: block;
 
-  label {
-    margin-right: 1rem
-  }
+  .icons-picker-wrapper {
+      label {
+        margin-right: 1rem
+      }
 
-  .icon-picker {
-    flex-shrink: 0;
-    box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
-    height: 44px;
-    width: 48px;
-    padding: 10px 12px;
+      .icon-picker {
+        flex-shrink: 0;
+        box-shadow: 0 0px 0px 0px rgba(0, 0, 0, 0.1), 0px 0px 1px 1px rgba(0, 0, 0, 0.2);
+        height: 44px;
+        width: 48px;
+        padding: 10px 12px;
+      }
   }
 
   .sticky-button {

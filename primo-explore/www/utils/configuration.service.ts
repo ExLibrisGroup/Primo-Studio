@@ -4,6 +4,8 @@ import {CookieService} from "ngx-cookie-service";
 import * as _forEach from "lodash/forEach";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
+import {FileUploaderService} from "./file-uploader.service";
+import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,9 @@ export class ConfigurationService {
 
   constructor(private $http: HttpClient,
               private route: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private analytics: Angulartics2GoogleAnalytics,
+              private fileUploaderService: FileUploaderService) {
     this.$cookies = new CookieService(window.document);
     let params = this.route.snapshot.queryParams;
     let url = params['url'] || 'https://primo-demo.hosted.exlibrisgroup.com:443';
@@ -32,7 +36,7 @@ export class ConfigurationService {
     };
   }
 
-  start(): Observable<any> {
+  start(existingPackage?: any): Observable<any> {
     let config = {params: new HttpParams({fromObject: this.config})};
     this.$cookies.set('urlForProxy', this.config.url);
     this.$cookies.set('viewForProxy', this.config.view);
@@ -59,10 +63,26 @@ export class ConfigurationService {
           this.router.navigate(['.'], {queryParams: searchParams});
           this.config.installedFeatures = resp.installedFeatures;
           console.log('created new directory: ' + this.config.dirName);
-        }
 
-        observer.next(resp);
-        observer.complete();
+          if (existingPackage.package) {
+            this.fileUploaderService.uploadFiles('/package', existingPackage).subscribe(()=>{
+              console.log('package uploaded successfully');
+              observer.next(resp);
+              observer.complete();
+
+              }, (err)=>{
+                console.log('failed to upload package: '+ err.data);
+              }
+            );
+            this.analytics.eventTrack('uploadPackage', {category: 'Configuration', label: existingPackage['package'][0].name});
+          } else {
+            observer.next(resp);
+            observer.complete();
+          }
+        } else {
+          observer.next(resp);
+          observer.complete();
+        }
       });
     });
   }

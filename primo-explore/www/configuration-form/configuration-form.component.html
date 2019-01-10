@@ -29,6 +29,13 @@
       </label>
     </div>
 
+    <div class="content-row input-wrapper checkbox-wrapper">
+      <label for="start-with-existing-package">
+        <input #startWithPackageCheckbox id="start-with-existing-package" type="checkbox" [value]="existingPackage" (change)="setExistingPackage(startWithPackageCheckbox.checked)">
+        Start with existing package
+      </label>
+      <input type="file" accept="application/zip" *ngIf="existingPackage" (change)="setPackageToLoad($event.target.files)" placeholder="Upload your current package">
+    </div>
 
   </section>
   <footer>

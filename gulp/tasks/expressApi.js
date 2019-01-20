@@ -656,7 +656,7 @@ router.get('/start', function (req, res) {
             });
     //let p2 = rimrafAsync("primo-explore-devenv/primo-explore/custom/" + n);
     Promise.join(p1).then(() => {
-        return fs.rename("./tmp/VIEW_CODE", "primo-explore/custom/" + userId, ()=>{
+        return fs.rename("./tmp/VIEW_CODE" + (req.query.ve? "_VE" : "") + ".zip", "primo-explore/custom/" + userId, ()=>{
             fs.rename("primo-explore/custom/" + userId + '/colors.json', "primo-explore/custom/" + userId + '/colors.json.txt', () => { //change colors.json file to colors.json.txt since BO doesn't accept .json files
                 buildCustomJs.customJs(userId);
             });

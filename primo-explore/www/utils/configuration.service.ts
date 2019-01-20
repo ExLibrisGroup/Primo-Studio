@@ -16,9 +16,7 @@ export class ConfigurationService {
 
   constructor(private $http: HttpClient,
               private route: ActivatedRoute,
-              private router: Router,
-              private analytics: Angulartics2GoogleAnalytics,
-              private fileUploaderService: FileUploaderService) {
+              private router: Router) {
     this.$cookies = new CookieService(window.document);
     let params = this.route.snapshot.queryParams;
     let url = params['url'] || 'https://primo-demo.hosted.exlibrisgroup.com:443';
@@ -36,7 +34,7 @@ export class ConfigurationService {
     };
   }
 
-  start(existingPackage?: any): Observable<any> {
+  start(): Observable<any> {
     let config = {params: new HttpParams({fromObject: this.config})};
     this.$cookies.set('urlForProxy', this.config.url);
     this.$cookies.set('viewForProxy', this.config.view);
@@ -63,26 +61,10 @@ export class ConfigurationService {
           this.router.navigate(['.'], {queryParams: searchParams});
           this.config.installedFeatures = resp.installedFeatures;
           console.log('created new directory: ' + this.config.dirName);
-
-          if (existingPackage.package) {
-            this.fileUploaderService.uploadFiles('/package', existingPackage).subscribe(()=>{
-              console.log('package uploaded successfully');
-              observer.next(resp);
-              observer.complete();
-
-              }, (err)=>{
-                console.log('failed to upload package: '+ err.data);
-              }
-            );
-            this.analytics.eventTrack('uploadPackage', {category: 'Configuration', label: existingPackage['package'][0].name});
-          } else {
-            observer.next(resp);
-            observer.complete();
-          }
-        } else {
-          observer.next(resp);
-          observer.complete();
         }
+
+        observer.next(resp);
+        observer.complete();
       });
     });
   }

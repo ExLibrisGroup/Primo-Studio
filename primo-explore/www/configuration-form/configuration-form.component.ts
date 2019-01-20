@@ -9,13 +9,10 @@ import {ActivatedRoute} from "@angular/router";
   styleUrls: ['./configuration-form.component.scss']
 })
 export class ConfigurationFormComponent implements OnInit {
-    existingPackage: boolean;
-    private currentPackage: any;
 
   constructor(private iframeService: IframeService,
               private configurationService: ConfigurationService,
               private route: ActivatedRoute){
-      this.currentPackage = {};
   }
 
   ngOnInit(): void {
@@ -30,15 +27,13 @@ export class ConfigurationFormComponent implements OnInit {
   }
 
   start(){
-    this.configurationService.start(this.currentPackage).subscribe(()=>{
+    this.configurationService.start().subscribe(()=>{
       this.iframeService.up = true;
     });
   }
 
   stop(){
     this.iframeService.up = false;
-    this.currentPackage = {};
-    this.existingPackage = false;
   }
 
   isUp(){
@@ -60,12 +55,4 @@ export class ConfigurationFormComponent implements OnInit {
   setCentralPackage(central: boolean) {
     this.config.useCentral = central.toString();
   }
-
-    setExistingPackage(checked: boolean) {
-        this.existingPackage = checked;
-    }
-
-    setPackageToLoad(file: any) {
-        this.currentPackage = {package: file};
-    }
 }

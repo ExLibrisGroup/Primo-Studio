@@ -637,7 +637,7 @@ router.get('/start', function (req, res) {
     configG.setView(userId);
 
     //create a directory from MOCK
-    let readStream = fs.createReadStream('templatePackage/VIEW_CODE' + (req.query.ve? '_VE' : '') + '.zip');
+    let readStream = fs.createReadStream('templatePackage/VIEW_CODE' + (req.query.ve === 'true'? '_VE' : '') + '.zip');
     /*writeStream2 = fstream.Writer({
      path: path.resolve(__dirname, '../../primo-explore/custom/' + n),
      type: 'Directory'

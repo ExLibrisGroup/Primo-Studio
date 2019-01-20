@@ -3,6 +3,7 @@ primo-explore/custom/
 package-lock.json
 primo-explore/www/bundle.js
 primo-explore/www/bundle.js.map
+tmp
 .idea
 npm-debug.log
 primo-explore/uploadedPackages/

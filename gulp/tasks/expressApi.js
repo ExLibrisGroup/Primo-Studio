@@ -811,7 +811,13 @@ function _next(req, res, targetUrl, vid, appPrefix){
     req.removeAllListeners('end');
     process.nextTick(function () {
         if(req.body) {
-            req.emit('data', JSON.stringify(req.body));
+            var postStr = "";
+            for(var key in req.body){
+                postStr = postStr + encodeURIComponent(key) + "=" + encodeURIComponent(req.body[key]) + "&";
+            }
+            postStr = postStr.substr(0, postStr.length - 1);
+            req.headers['Content-Length'] = Buffer.byteLength(postStr);
+            req.emit('data', postStr);
         }
         req.emit('end');
     });

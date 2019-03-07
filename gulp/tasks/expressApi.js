@@ -811,13 +811,17 @@ function _next(req, res, targetUrl, vid, appPrefix){
     req.removeAllListeners('end');
     process.nextTick(function () {
         if(req.body) {
-            var postStr = "";
-            for(var key in req.body){
-                postStr = postStr + encodeURIComponent(key) + "=" + encodeURIComponent(req.body[key]) + "&";
+            if (path === '/primaws/suprimaLogin') {
+                var postStr = "";
+                for (var key in req.body) {
+                    postStr = postStr + encodeURIComponent(key) + "=" + encodeURIComponent(req.body[key]) + "&";
+                }
+                postStr = postStr.substr(0, postStr.length - 1);
+                req.headers['Content-Length'] = Buffer.byteLength(postStr);
+                req.emit('data', postStr);
+            } else {
+                req.emit('data', JSON.stringify(req.body));
             }
-            postStr = postStr.substr(0, postStr.length - 1);
-            req.headers['Content-Length'] = Buffer.byteLength(postStr);
-            req.emit('data', postStr);
         }
         req.emit('end');
     });

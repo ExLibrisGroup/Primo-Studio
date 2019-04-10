@@ -28,7 +28,7 @@ export class SubscribeTestsComponent implements OnInit {
     public signUpClicked: boolean;
     public signUpInProgress: boolean;
     private suitesToSignUp: string[];
-    private isSignedUp: boolean;
+    public isSignedUp: boolean;
     public removeTestsInProgress: boolean;
     private removeTestsDialogRef: MatDialogRef<ConfirmationDialogComponent>;
     public changeDone: boolean;

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
-import {keys} from "lodash";
+import * as _ from "lodash";
 import {TestResult} from "../classes/test-result";
 
 @Injectable({
@@ -67,7 +67,7 @@ export class TestsService {
             if (!this.results) {
                 this.http.get<any>('/test-results').subscribe(results => {
                     this.results = results;
-                    this._haveResults = !!results;
+                    this._haveResults = !_.isEmpty(results);
                     observer.next(this.results);
                     observer.complete();
                 });
@@ -91,7 +91,7 @@ export class TestsService {
         if (isSubscribed) {
             this.http.get<any>('/test-results').subscribe(results => {
                 this.results = results;
-                this._haveResults = !!results;
+                this._haveResults = !_.isEmpty(results);
             });
         }
     }

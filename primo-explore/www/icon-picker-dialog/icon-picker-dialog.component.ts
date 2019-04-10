@@ -2,7 +2,7 @@ import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angu
 import {Icon, IconType} from "../classes/icon";
 import {IconsPickerService} from "../icons-picker/icons-picker.service";
 import {IconsPickerComponent} from "../icons-picker/icons-picker.component";
-import * as _filter from 'lodash/filter';
+import * as _ from 'lodash';
 import {DomSanitizer} from "@angular/platform-browser";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
@@ -128,7 +128,7 @@ export class IconPickerDialogComponent implements OnInit {
       this.hidden = true;
       setTimeout(() => {
         this.setDialogPosition();
-        _filter(this.dialogElement.nativeElement.children, e => e.className === 'icon-grid')[0].scroll({top: 0, left: null, behavior: "auto"});
+        _.filter(this.dialogElement.nativeElement.children, e => e.className === 'icon-grid')[0].scroll({top: 0, left: null, behavior: "auto"});
         this.hidden = false;
         this.cdr.detectChanges();
       }, 0);

@@ -1,0 +1,8 @@
+<div class="confirmation-dialog-wrapper">
+    <h1 mat-dialog-title>{{confirmationTitle | textFormat}}</h1>
+    <mat-dialog-content>{{confirmationMessage}}</mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button class="confirm" (click)="dialogRef.close(true)">{{confirmButtonText | textFormat}}</button>
+        <button mat-button class="cancel" (click)="dialogRef.close(false)">{{cancelButtonText | textFormat}}</button>
+    </mat-dialog-actions>
+</div>

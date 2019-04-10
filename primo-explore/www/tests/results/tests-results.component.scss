@@ -1,0 +1,46 @@
+prm-tests-results {
+
+    .content-wrapper {
+        margin: 5% 4%;
+    }
+
+    .haveResults {
+        .results-container {
+            max-height: 708px;
+            overflow-x: hidden;
+
+            .result {
+                margin: 8px 4px 8px 0;
+
+                .passed {
+                    color: #002d00;
+
+                    &::before {
+                        content: '✓';
+                        color: #008d00;
+                    }
+                }
+
+                .failed {
+                    color: #520000;
+
+                    &::before {
+                        content: '✕';
+                        color: #a00000;
+                    }
+                }
+
+                .duration {
+                    color: initial;
+                    font-size: smaller;
+                    font-style: italic;
+                    font-weight: 600;
+                }
+            }
+        }
+
+        .last-run-date {
+            margin: 20px 0;
+        }
+    }
+}

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import {ColorThemeService} from "./color-theme.service";
 import {IframeService} from "../utils/iframe.service";
 
-import * as _keys from "lodash/keys";
+import * as _ from 'lodash';
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 @Component({
@@ -25,7 +25,7 @@ export class ColorThemeComponent{
   }
 
   keys(object) {
-    return _keys(object);
+    return _.keys(object);
   }
 
   createTheme(){

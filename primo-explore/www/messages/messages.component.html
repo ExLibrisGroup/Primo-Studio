@@ -1,0 +1,3 @@
+<div *ngFor="let message of messages" class="content-row" [ngClass]="message.classes" [@fadeOutAnimation] [@fadeInAnimation]>
+    {{message.content}}
+</div>

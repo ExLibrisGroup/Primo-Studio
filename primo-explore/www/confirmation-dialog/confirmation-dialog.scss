@@ -1,0 +1,28 @@
+@import "~www/scss/variables";
+@import "~www/scss/inputs";
+
+prm-confirmation-dialog-component {
+    .confirmation-dialog-wrapper {
+        color: #444;
+        font-family: Helvetica, sans-serif;
+        font-size: 1.1em;
+        line-height: 1.5em;
+        margin: 0 auto;
+        padding: 1.2em 1em 1em;
+
+        mat-dialog-actions {
+            justify-content: space-evenly;
+            padding-top: 20px;
+            padding-bottom: 18px;
+
+            .confirm {
+                color: $background;
+                background-color: $accent;
+            }
+
+            .cancel {
+                color: currentColor;
+            }
+        }
+    }
+}

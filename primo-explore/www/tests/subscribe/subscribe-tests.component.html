@@ -1,0 +1,27 @@
+<prm-messages [durationInMilliseconds]="10000"></prm-messages>
+<div class="content-row-column" [@fadeOutAnimation] *ngIf="isSignedUp && !changeDone">
+    You are already subscribed to the next tests:
+</div>
+<div class="content-row" *ngFor="let suite of suites; let i = index">
+    <label>
+        <input #suiteCheckbox type="checkbox" [checked]="checkedSuites[i]"
+               (change)="setSuite(i, suiteCheckbox.checked)">
+        {{suite | textFormat}}
+    </label>
+</div>
+<button class="content-row-column" *ngIf="showSelectAll()" (click)="selectAll()">{{"select all" | textFormat}}
+</button>
+<button class="content-row-column" *ngIf="!showSelectAll()" (click)="unselectAll()">{{"unselect all" |
+    textFormat}}
+</button>
+<button class="content-row-column" *ngIf="!isSignedUp || !isAllCheckedSuitesFalse()" (click)="signUp()"
+        [disabled]="signUpInProgress">
+    <span *ngIf="!isSignedUp">Subscribe For Tests</span>
+    <span *ngIf="isSignedUp">Change Tests Subscription</span>
+    <prm-busy-spinner *ngIf="signUpInProgress"></prm-busy-spinner>
+</button>
+<button class="content-row-column" *ngIf="isSignedUp && isAllCheckedSuitesFalse()" (click)="removeAllTests()"
+        [disabled]="signUpInProgress">
+    <span>{{"unsubscribe to tests" | textFormat}}</span>
+    <prm-busy-spinner *ngIf="removeTestsInProgress"></prm-busy-spinner>
+</button>

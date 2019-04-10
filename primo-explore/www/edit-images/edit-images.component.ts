@@ -69,10 +69,6 @@ export class EditImagesComponent {
     this.analytics.eventTrack('removeImages', {category: 'Images', label: 'all'});
   }
 
-  getTooltipMessage(data: string): string {
-    return data + ` will take place from Primo ${this.configurationService.isVe ?'VE 2018 October' : '2018 November'} release`;
-  }
-
   get logoFileLabel(): string {
     return this._logoFileLabel;
   }

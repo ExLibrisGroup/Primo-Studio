@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {copy} from "angular";
-import * as _merge from 'lodash/merge';
+import {merge} from 'lodash';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 import {Addon} from "../classes/addon";
 import {FeaturesService} from "../utils/features.service";
@@ -38,7 +38,7 @@ export class FeatureConfigurationFormComponent implements OnInit {
           option.label = option.label || option.name;
         })
       }
-      return _merge(defaultField, field); //extend default conf with field conf
+      return merge(defaultField, field); //extend default conf with field conf
     });
     this._formFieldsArray = [copy(this.formFields)];
   }

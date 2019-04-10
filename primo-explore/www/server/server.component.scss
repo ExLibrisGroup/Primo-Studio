@@ -4,3 +4,10 @@
 .custom-tooltip {
   font-size: 14px;
 }
+
+.remove-background-image {
+    &::before {
+        background-image: unset;
+        z-index: unset;
+    }
+}

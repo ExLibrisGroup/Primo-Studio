@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {IframeService} from "../utils/iframe.service";
 import {ConfigurationService} from "../utils/configuration.service";
 import {FeaturesService} from "../utils/features.service";
 
-import * as _filter from 'lodash/filter';
+import * as _ from 'lodash';
 import {Addon} from "../classes/addon";
 import {FeatureConfigurationFormComponent} from "../feature-configuration-form/feature-configuration-form.component";
 import {MatDialog} from "@angular/material";
@@ -24,6 +24,9 @@ export class FeaturesListComponent implements OnInit {
   private filerPredicateBinded: any;
   private filteredFeatures: Addon[] = [];
 
+  @Input()
+  private queryPackageName: string;
+
   constructor(private featuresService: FeaturesService,
               private iframeService: IframeService,
               private ngDialog: MatDialog,
@@ -32,14 +35,20 @@ export class FeaturesListComponent implements OnInit {
               private analytics: Angulartics2GoogleAnalytics){
     this.selectedFilterField = 'all';
     this._searchTerm = '';
-    this._filterOptions = [{key:'all', displayName:'All'}, {key:'what', displayName: 'Title'}, {key:'hook', displayName: 'Hook'}, {key:'who', displayName: 'Contributor'}];
+    this._filterOptions = [
+        {key:'all', displayName:'All'},
+        {key:'what', displayName: 'Title'},
+        {key:'hook', displayName: 'Hook'},
+        {key:'who', displayName: 'Contributor'},
+        {key:'linkGit', displayName: 'GitHub Link'}
+        ];
   }
 
   ngOnInit() {
     this.filerPredicateBinded = this.filterPredicate.bind(this);
     this.featuresService.fetchFeaturesData().subscribe((data)=>{
       this.features = data;
-      this.features = _filter(this.features, (feature: Addon)=> {
+      this.features = _.filter(this.features, (feature: Addon)=> {
         if (feature.systemExclusive) {
           if (this.configurationService.config.ve) {
             return feature.systemExclusive.toLowerCase() === "ve";
@@ -52,6 +61,11 @@ export class FeaturesListComponent implements OnInit {
       });
       this.filterFeatures();
     });
+
+    if (this.queryPackageName) {
+        this._searchTerm = this.queryPackageName;
+        this.selectedFilterField = this._filterOptions[4].key;
+    }
   }
 
   notifyFilterChanged() {

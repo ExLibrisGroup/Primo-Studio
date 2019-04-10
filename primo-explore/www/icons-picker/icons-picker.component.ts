@@ -9,7 +9,7 @@ import {
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
-import * as _keys from "lodash/keys";
+import * as _ from 'lodash';
 import {IframeService} from "../utils/iframe.service";
 import {IconsPickerService} from "./icons-picker.service";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -47,7 +47,7 @@ export class IconsPickerComponent implements OnInit {
   }
 
   keys(object) {
-    return _keys(object);
+    return _.keys(object);
   }
 
   openDialog(buttonElement: HTMLButtonElement) {

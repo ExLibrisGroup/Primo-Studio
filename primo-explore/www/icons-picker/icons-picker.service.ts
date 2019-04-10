@@ -1,10 +1,7 @@
 import {Injectable, Renderer2, RendererFactory2} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ConfigurationService} from "../utils/configuration.service";
-import * as _merge from 'lodash/merge';
-import * as _keys from 'lodash/keys';
-import * as _filter from 'lodash/filter';
-import * as _cloneDeep from 'lodash/cloneDeep';
+import * as _ from 'lodash';
 import {Icon, IconType} from "../classes/icon";
 import {IconInformation} from "../classes/icon-information";
 import {Observable} from "rxjs";
@@ -87,7 +84,7 @@ export class IconsPickerService {
 
   iconSelected(id: string, icon: Icon) {
     if (!this._icons[id]) {
-      this._icons[id] = _cloneDeep(icon);
+      this._icons[id] = _.cloneDeep(icon);
       this._icons[id].id = id;
       this._icons[id].name = id;
     }
@@ -95,7 +92,7 @@ export class IconsPickerService {
   }
 
   get icons(): any{
-    return _merge(_cloneDeep(this._defaultIcons), this._icons);
+    return _.merge(_.cloneDeep(this._defaultIcons), this._icons);
   }
 
   set icons(value: any) {
@@ -107,7 +104,7 @@ export class IconsPickerService {
       this._icons[id].path = icon.path;
     } else {
       let className = `.${icon.type===IconType.FONT_AWESOME? 'fa':'glyphicon'}-${icon.id}`;
-      let styles = _filter(document.head.querySelectorAll("style"), e => e.textContent.indexOf(className)!==-1);
+      let styles = _.filter(document.head.querySelectorAll("style"), e => e.textContent.indexOf(className)!==-1);
       let textContent = styles[0].textContent;
       let classCssRegex = new RegExp("[\\s\\S]*?(" + className.replace('.', '\\.') + "[\\s\\S]*?:before[\\s]*?{[\\s\\S]*?})[\\s\\S]*");
       let specificCss = textContent.replace(classCssRegex, '$1');
@@ -140,8 +137,8 @@ export class IconsPickerService {
     let icons: Icon[] = [];
 
     if (ipIconPack === 'prm' || ipIconPack === 'all') {
-      let prmIcons = _keys(this._defaultIcons).map(key => {
-        let icon = _cloneDeep(this._defaultIcons[key]);
+      let prmIcons = _.keys(this._defaultIcons).map(key => {
+        let icon = _.cloneDeep(this._defaultIcons[key]);
         icon.type = IconType.PRIMO_UI;
         if (!icon.filter) {
           icon.filter = []

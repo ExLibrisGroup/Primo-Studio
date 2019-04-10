@@ -536,7 +536,7 @@ router.post('/package', packageUpload,  (req, res)=>{
                     utils.sendErrorResponse(res, 'internal error');
                     return console.error('failed to copy uploaded package: ' + err.data);
                 }).finally(() => {
-                    // rimrafAsync(packagePath); //delete uploaded package once copy is finished
+                    rimrafAsync(packagePath); //delete uploaded package once copy is finished
                 });
             }, (err) => {
                 rimrafAsync(packagePath); //delete uploaded package
@@ -680,6 +680,106 @@ router.get('/start', function (req, res) {
 
 });
 
+router.get('/signed-params', (req, res) => {
+    let directoryPath = './tests-params';
+    let filename = utils.getUserTestsPath(req) + '.json';
+    let params = {};
+    if (fs.existsSync(path.join(directoryPath, filename))) {
+        params = fs.readFileSync(path.join(directoryPath, filename));
+    }
+
+    res.status(200);
+    res.send(params);
+});
+
+router.delete('/signed-params', (req, res) => {
+    let directoryPath = './tests-params';
+    let filename = utils.getUserTestsPath(req) + '.json';
+    if (fs.existsSync(path.join(directoryPath, filename))) {
+        fs.unlinkSync(path.join(directoryPath, filename));
+    }
+
+    res.sendStatus(200);
+});
+
+router.put('/tests-sign-up', (req, res) => {
+    let params = {};
+    let cookies = utils.parseCookies(req);
+
+    params["baseUrl"] = cookies['urlForProxy'];
+    params["vid"] = cookies['viewForProxy'];
+    params["isVe"] = cookies['ve'];
+    params["suites"] = req.body;
+
+    let directoryPath = './tests-params';
+    if (!fs.existsSync(directoryPath)) {
+        fs.mkdirSync(directoryPath);
+    }
+    let filename = utils.getUserTestsPath(req) + '.json';
+    fs.writeFileSync(path.join(directoryPath, filename), JSON.stringify(params));
+
+    res.sendStatus(200);
+});
+
+router.get('/test-params', (req, res) => {
+    utils.trustedTravisIp(req).then(trusted => {
+        if (trusted) {
+            let readableStream = gulp.src(['./tests-params/*'])
+                .pipe(rename((file) => {
+                    file.basename = file.basename.replace('tess-params', 'params');
+                    file.dirname = file.dirname.replace('tess-params', 'params');
+                }))
+                .pipe(zip('params.zip', {buffer: true}));
+            let buffer;
+            readableStream.on('data', (data) => {
+                buffer = data;
+            });
+            readableStream.on('end', () => {
+                res.type('zip');
+                res.end(buffer._contents, 'binary');
+            });
+        } else {
+            utils.sendErrorResponse(res, new Error('The request is not available from IP: ' + req.ip));
+        }
+    }, err => {
+        utils.sendErrorResponse(res, err);
+    });
+});
+
+router.post('/test-response', (req, res) => {
+    utils.trustedTravisIp(req).then(trusted => {
+        if (trusted) {
+            let directoryPath = './tests-results';
+            if (!fs.existsSync(directoryPath)) {
+                fs.mkdirSync(directoryPath);
+            }
+            let filename = utils.getUserTestsPath(req) + '.json';
+            fs.writeFileSync(path.join(directoryPath, filename), JSON.stringify(req.body));
+
+            res.sendStatus(200);
+        } else {
+            utils.sendErrorResponse(res, new Error('The request is not available from IP: ' + req.ip));
+        }
+    }, err => {
+        utils.sendErrorResponse(res, err);
+    });
+});
+
+router.get('/test-results', (req, res) => {
+    let directoryPath = './tests-results';
+    let filename = utils.getUserTestsPath(req) + '.json';
+    let resultsObj = {};
+    if (fs.existsSync(path.join(directoryPath, filename))) {
+        let results = fs.readFileSync(path.join(directoryPath, filename), "utf-8");
+        let stat = fs.statSync(path.join(directoryPath, filename));
+        resultsObj["results"] = JSON.parse(results);
+        resultsObj["last-modified"] = stat.mtime;
+    }
+
+    res.status(200);
+    res.send(resultsObj);
+});
+
 router.all('*',function(req, res, next){
     let appName = 'primo-explore';
     let cookies = utils.parseCookies(req);
@@ -785,6 +885,7 @@ function _next(req, res, targetUrl, vid, appPrefix){
 
     let proxyUrl = targetUrl || configG.PROXY_SERVER;
     let fixedurl = proxyUrl+req.url;
+    let protocol = proxyUrl.split(':')[0];
     let base = proxyUrl.replace('http:\/\/','').replace('https:\/\/','');
     let method = proxyUrl.split('://')[0];
     let parts = base.split(':');

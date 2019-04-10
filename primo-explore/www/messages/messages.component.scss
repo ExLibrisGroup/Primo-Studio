@@ -1,0 +1,28 @@
+prm-messages {
+    .error-message {
+        color: #be0029;
+        background-color: lightpink;
+        font-weight: bold;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 0 1px 0px 1px lightpink, 0 1px 3px 0px #be0029;
+    }
+
+    .warning-message {
+        margin-top: 10px;
+        color: darkgoldenrod;
+        background-color: #f0faaa;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 0 1px 0px 1px #f0faaa, 0 1px 3px 0px darkgoldenrod;
+    }
+
+    .success-message {
+        margin-top: 10px;
+        color: darkgreen;
+        background-color: lightgreen;
+        text-align: center;
+        border-radius: 4px;
+        box-shadow: 0 1px 0px 1px lightgreen, 0 1px 3px 0px darkgreen;
+    }
+}

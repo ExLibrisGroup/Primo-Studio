@@ -1,0 +1,29 @@
+<div class="content-wrapper" layout="column">
+    <div *ngIf="results; else notHaveResults" class="haveResults">
+        <h3>
+            {{"test results:" | textFormat}}
+        </h3>
+        <div class="last-run-date">
+            Last run on: {{lastModified | date:"MMM d, y, HH:mm:ss"}}
+        </div>
+        <div class="results-container">
+            <div *ngFor="let result of results" class="result content-row">
+                <span [ngClass]="isPassed(result) ? 'passed' : 'failed'" #resultDescription>
+                    {{result.description}}.
+                    <span *ngIf="!result.firstFailure.passed">
+                        {{result.firstFailure.errorMsg}}
+                    </span>
+                    <span class="duration">
+                        (duration: {{result.duration | date: "HH:mm:ss":"+00:00"}})
+                    </span>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <ng-template #notHaveResults>
+        <div class="dontHaveResults">
+            There are no results yet, please wait for the next tests cycle to run
+        </div>
+    </ng-template>
+</div>

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {CookieService} from "ngx-cookie-service";
-import * as _forEach from "lodash/forEach";
+import * as _ from 'lodash';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
 import {FileUploaderService} from "./file-uploader.service";
@@ -49,7 +49,7 @@ export class ConfigurationService {
           this.config.dirName = dirName;
           this.$cookies.set('dirName', dirName);
           let searchParams = Object.assign({}, this.route.snapshot.queryParams);
-          _forEach({
+          _.forEach({
             'dirName': dirName,
             'url': this.config.url,
             'vid': this.config.view,

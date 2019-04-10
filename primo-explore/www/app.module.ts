@@ -39,6 +39,13 @@ import {IconsPickerService} from "./icons-picker/icons-picker.service";
 import { CalcSVGViewBoxDirective } from './utils/calc-view-box.directive';
 import { IconPickerDialogComponent } from './icon-picker-dialog/icon-picker-dialog.component';
 import { SearchIconPipe } from './icon-picker-dialog/search-icon.pipe';
+import { TestsComponent } from './tests/tests.component';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { StringArrayLookPipe } from './utils/string-array-look.pipe';
+import { TextFormatPipe } from './utils/text-format.pipe';
+import { MessagesComponent } from './messages/messages.component';
+import { SubscribeTestsComponent } from './tests/subscribe/subscribe-tests.component';
+import { TestsResultsComponent } from './tests/results/tests-results.component';
 
 
 const appRoutes: Routes = [
@@ -68,11 +75,19 @@ const appRoutes: Routes = [
     IconsPickerComponent,
     CalcSVGViewBoxDirective,
     IconPickerDialogComponent,
-    SearchIconPipe
+    SearchIconPipe,
+    TestsComponent,
+    ConfirmationDialogComponent,
+    StringArrayLookPipe,
+    TextFormatPipe,
+    MessagesComponent,
+    SubscribeTestsComponent,
+    TestsResultsComponent
   ],
   entryComponents: [
     FeatureConfigurationFormComponent,
-    IconPickerDialogComponent
+    IconPickerDialogComponent,
+    ConfirmationDialogComponent
   ],
   imports: [
     BrowserModule,

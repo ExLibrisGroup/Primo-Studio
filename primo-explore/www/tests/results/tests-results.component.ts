@@ -1,6 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {TestsService} from "../tests.service";
-import {isArray} from "util";
 import {TestResult} from "../../classes/test-result";
 import * as _ from 'lodash';
 
@@ -42,4 +41,18 @@ export class TestsResultsComponent implements OnInit {
         return result.firstFailure.passed;
     }
 
+    private getNumberOfPassedOrNotPassed(passed: boolean) {
+        return this._results.map(testResult => testResult.assertions)
+                            .reduce((allAssertions, assertionArray) => allAssertions.concat(assertionArray))
+                            .filter(assertion => assertion.passed === passed)
+                            .length
+    }
+
+    getNumberOfPassed() {
+        return this.getNumberOfPassedOrNotPassed(true);
+    }
+
+    getNumberOfFailed() {
+        return this.getNumberOfPassedOrNotPassed(false);
+    }
 }

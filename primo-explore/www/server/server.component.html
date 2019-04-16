@@ -33,7 +33,7 @@
                 <prm-color-theme *ngSwitchCase="'Theme'"></prm-color-theme>
                 <prm-edit-images *ngSwitchCase="'Images'"></prm-edit-images>
                 <prm-icons-picker *ngSwitchCase="'Icons'"></prm-icons-picker>
-                <prm-features-list *ngSwitchCase="'Addons'" [queryPackageName]="queryPackageName"></prm-features-list>
+                <prm-features-list *ngSwitchCase="'Addons'" [queryPackageName]="queryPackageName" (removeQueryPackageName)="onRemoveQueryPackageName()"></prm-features-list>
                 <prm-editor *ngSwitchCase="'Editor'" (expandTab)="onExpandTab($event)"></prm-editor>
                 <prm-download-package *ngSwitchCase="'Download'"></prm-download-package>
                 <prm-upload-package *ngSwitchCase="'UploadPackage'"></prm-upload-package>

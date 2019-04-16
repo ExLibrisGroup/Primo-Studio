@@ -1,3 +1,13 @@
 .flex {
+    display: flex;
     flex: 1 0 auto;
+}
+%layout-row, .layout-row, [layout="row"] {
+    display: flex;
+    flex-direction: row;
+}
+
+%layout-column, .layout-column, [layout="column"] {
+    display: flex;
+    flex-direction: column;
 }

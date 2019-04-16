@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IframeService} from "../utils/iframe.service";
 import {ConfigurationService} from "../utils/configuration.service";
 import {FeaturesService} from "../utils/features.service";
@@ -26,6 +26,8 @@ export class FeaturesListComponent implements OnInit {
 
   @Input()
   private queryPackageName: string;
+  @Output()
+  public removeQueryPackageName = new EventEmitter<void>();
 
   constructor(private featuresService: FeaturesService,
               private iframeService: IframeService,
@@ -65,6 +67,7 @@ export class FeaturesListComponent implements OnInit {
     if (this.queryPackageName) {
         this._searchTerm = this.queryPackageName;
         this.selectedFilterField = this._filterOptions[4].key;
+        this.removeQueryPackageName.emit();
     }
   }
 

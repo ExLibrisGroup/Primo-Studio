@@ -6,7 +6,7 @@ import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {SidenavTab} from "../classes/sidenav-tab";
 import {TestsService} from "../tests/tests.service";
 import {Animations} from "../utils/animations";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
     selector: 'prm-server',
@@ -28,6 +28,7 @@ export class ServerComponent implements OnInit {
 
     constructor(private $http: HttpClient,
                 private route: ActivatedRoute,
+                private router: Router,
                 private configurationService: ConfigurationService,
                 private iframeService: IframeService,
                 private analytics: Angulartics2GoogleAnalytics,
@@ -57,6 +58,7 @@ export class ServerComponent implements OnInit {
                 this.sidenavCollapsed = false;
             }
             this.queryPackageName = params.packageName;
+            this.router.navigate([],{queryParams: {packageName: null}, queryParamsHandling: "merge"});
         }
 
         if (params.tests && params.tests === 'true') {
@@ -129,6 +131,10 @@ export class ServerComponent implements OnInit {
 
     set tabs(value: SidenavTab[]) {
         this._tabs = value;
+    }
+
+    onRemoveQueryPackageName() {
+        this.queryPackageName = null;
     }
 
     isInTestTabWithResults() {

@@ -1,10 +1,18 @@
 <div class="content-wrapper" layout="column">
-    <div *ngIf="results; else notHaveResults" class="haveResults">
-        <h3>
-            {{"test results:" | textFormat}}
-        </h3>
-        <div class="last-run-date">
-            Last run on: {{lastModified | date:"MMM d, y, HH:mm:ss"}}
+    <div *ngIf="results; else notHaveResults" class="haveResults" layout="column">
+        <div class="results-header" layout="row">
+            <div class="results-title" layout="column">
+                <h3>
+                    {{"test results:" | textFormat}}
+                </h3>
+                <div class="last-run-date">
+                    Last run on: {{lastModified | date:"MMM d, y, HH:mm:ss"}}
+                </div>
+            </div>
+            <div class="results-summary" layout="column">
+                passed: {{getNumberOfPassed()}}<br>
+                failed: {{getNumberOfFailed()}}
+            </div>
         </div>
         <div class="results-container">
             <div *ngFor="let result of results" class="result content-row">

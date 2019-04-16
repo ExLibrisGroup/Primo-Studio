@@ -5,6 +5,16 @@ prm-tests-results {
     }
 
     .haveResults {
+
+        .results-header {
+            justify-content: space-between;
+
+            .results-summary {
+                margin-right: 48px;
+                justify-content: center;
+            }
+        }
+
         .results-container {
             max-height: 708px;
             overflow-x: hidden;
@@ -13,11 +23,12 @@ prm-tests-results {
                 margin: 8px 4px 8px 0;
 
                 .passed {
-                    color: #002d00;
+                    color: #003700;
 
                     &::before {
                         content: '✓';
                         color: #008d00;
+                        font-weight: bold;
                     }
                 }
 

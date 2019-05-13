@@ -35,7 +35,21 @@ export class IframeService {
   getIframeUrl(){
     let ve = this.configurationService.isVe;
     let appName = ve ? 'discovery' : 'primo-explore';
-    return this.sanitizer.bypassSecurityTrustResourceUrl(window.location.protocol + '//' + window.location.host + '/'+appName+'/search/?vid='+this.config.view+'&dirName='+this.config.dirName+'&url='+this.config.url);
+    if (this.config.suffix) {
+        let middlePart = this.config.suffix;
+        if (middlePart.indexOf('/discovery') > -1) {
+            middlePart = middlePart.replace('/discovery', '');
+        }
+        if (middlePart.indexOf('/primo-explore') > -1) {
+            middlePart = middlePart.replace('/primo-explore', '');
+        }
+        if (middlePart.indexOf('?') < 0) {
+            middlePart = middlePart + '?';
+        }
+        return this.sanitizer.bypassSecurityTrustResourceUrl(window.location.protocol + '//' + window.location.host + '/' + appName + middlePart + '&vid=' + this.config.view + '&dirName=' + this.config.dirName + '&url=' + this.config.url)
+    } else {
+        return this.sanitizer.bypassSecurityTrustResourceUrl(window.location.protocol + '//' + window.location.host + '/' + appName + '/search/?vid=' + this.config.view + '&dirName=' + this.config.dirName + '&url=' + this.config.url);
+    }
   }
 
   isUp(){

@@ -7,7 +7,7 @@
 
     <div class="content-row input-wrapper">
       <label for="primo-url">Primo URL</label>
-      <input #primoUrl id="primo-url" type="text" [value]="config.url" (keyup)="setUrl(primoUrl.value)">
+      <input #primoUrl *oneTimeBinding id="primo-url" type="text" [value]="getUrl()" (keyup)="setUrl(primoUrl.value)">
     </div>
 
     <div class="content-row input-wrapper">
@@ -17,7 +17,7 @@
 
     <div class="content-row input-wrapper checkbox-wrapper">
       <label for="primo-ve">
-        <input #primoVe id="primo-ve" type="checkbox" [value]="configurationService.isVe" (change)="setVe(primoVe.checked)">
+        <input #primoVe id="primo-ve" type="checkbox" [checked]="configurationService.isVe" (change)="setVe(primoVe.checked)">
         Primo VE
       </label>
     </div>

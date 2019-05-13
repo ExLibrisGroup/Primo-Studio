@@ -11,7 +11,7 @@ import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
   providedIn: 'root'
 })
 export class ConfigurationService {
-  private _config: { view: string, url: string, dirName: string, ve: string, useCentral: string, installedFeatures: string[] };
+  private _config: { view: string, url: string, dirName: string, ve: string, useCentral: string, installedFeatures: string[], suffix?: string };
   private $cookies: CookieService;
 
   constructor(private $http: HttpClient,
@@ -23,6 +23,10 @@ export class ConfigurationService {
     let view = params['vid'] || 'NORTH';
     let isVe = params['ve'] || 'false';
     let useCentral = params['central'] || 'false';
+    let suffix = params['suffix'] || undefined;
+    if (suffix && suffix.length > 0 && !suffix.startsWith('/')) {
+        suffix = '/' + suffix;
+    }
     let dirName = params['dirName'];
     this._config = {
       'view': view,
@@ -30,6 +34,7 @@ export class ConfigurationService {
       'dirName': dirName,
       've': isVe,
       'useCentral': useCentral,
+      'suffix': suffix,
       installedFeatures: []
     };
   }
@@ -41,6 +46,7 @@ export class ConfigurationService {
     this.$cookies.set('ve', this.config.ve);
     this.$cookies.set('useCentral', this.config.useCentral);
     this.$cookies.set('dirName', this.config.dirName ? this.config.dirName : '');
+    this.$cookies.set('suffix', this.config.suffix ? this.config.suffix: '');
 
     return new Observable<any>(observer => {
       this.$http.get<any>('/start', config).subscribe(resp => {
@@ -54,7 +60,8 @@ export class ConfigurationService {
             'url': this.config.url,
             'vid': this.config.view,
             've': this.config.ve,
-            'central': this.config.useCentral
+            'central': this.config.useCentral,
+            'suffix': this.config.suffix
           }, (value, key) => {
             searchParams[key] = value;
           });

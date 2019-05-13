@@ -80,7 +80,7 @@
     "shelljs": "0.6.0",
     "shorthash": "0.0.2",
     "streamifier": "^0.1.1",
-    "tar-fs": "1.13.0",
+    "tar-fs": "1.16.3",
     "ts-loader": "^4.5.0",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.1.8",

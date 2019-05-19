@@ -49,6 +49,7 @@ export class ConfigurationFormComponent implements OnInit {
 
   stop(){
     this.iframeService.up = false;
+    this.urlTouched = false;
   }
 
   isUp(){

@@ -1,4 +1,5 @@
-<div class="app-wrapper" [class.remove-background-image]="isInTestTabWithResults()">
+<div class="app-wrapper" [class.remove-background-image]="isInTestTabWithResults()"
+                         [class.configuration-page]="!isUp()">
 
     <prm-configuration-form [class.is-running]="isUp()"
                             [class.is-floating]="isUp() && sidenavCollapsed"></prm-configuration-form>
@@ -41,7 +42,7 @@
             </div>
         </div>
     </aside>
-    <main class="app-stage" *ngIf="isUp()">
+    <main class="app-stage" [class.full-screen]="sidenavCollapsed" *ngIf="isUp()">
         <ng-container *ngIf="!isInTestTabWithResults(); else testTabWithResults" [@easeInOutAnimation]>
             <iframe id="primo-explore-iframe" class="app-iframe" *oneTimeBinding [src]="getIframeUrl()"></iframe>
         </ng-container>

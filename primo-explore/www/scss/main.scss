@@ -1,6 +1,7 @@
 @import '~www/scss/variables';
 @import '~www/scss/reset';
 @import '~www/scss/breakpoints';
+@import '~www/scss/target-metro';
 @import '~www/scss/base';
 @import '~www/scss/icons';
 @import '~www/scss/typography';
@@ -27,6 +28,7 @@
 @import '~www/messages/messages.component';
 @import '~www/tests/subscribe/subscribe-tests.component';
 @import '~www/tests/results/tests-results.component';
+@import '~www/utils/analytics.toast';
 
 @import "~www/css/ngDialog.min.css";
 @import "~www/css/ngDialog-theme-default.min.css";

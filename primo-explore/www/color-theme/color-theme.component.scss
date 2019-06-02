@@ -13,4 +13,7 @@ prm-color-theme {
   input[type="color"] {
     flex-shrink: 0;
   }
+  button:last-child {
+      margin-bottom: 0.65rem;
+  }
 }

@@ -3,6 +3,12 @@ prm-code-editor {
 @import "~codemirror/lib/codemirror.css";
 @import "~codemirror/addon/hint/show-hint.css";
 
+  width: 100%;
+
+  .codeMirror__container {
+    width: 100%;
+  }
+
   .CodeMirror-readOnly {
     .CodeMirror {
       background: #474747;
@@ -38,12 +44,6 @@ prm-code-editor {
   .CodeMirror {
     background: #303030;
     color: #c9c9c9;
-    width: fit-content;
-  }
-
-  .CodeMirror-wrap {
-    min-width: 273px;
-    max-width: 273px;
   }
 
   .CodeMirror-scroll {
@@ -130,13 +130,6 @@ prm-code-editor {
   .CodeMirror-matchingbracket {
     text-decoration: underline;
     color: #ffee34 !important;
-  }
-}
-
-.is-tab-expanded *> prm-code-editor {
-  .CodeMirror-wrap {
-    min-width: 810px;
-    max-width: 810px;
   }
 }
 

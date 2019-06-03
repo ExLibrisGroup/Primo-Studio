@@ -21,7 +21,7 @@ body {
 .app-wrapper {
     align-items: stretch;
     display: grid;
-    grid-template-rows: auto $server-status-height ;
+    grid-template-rows: auto $server-status-height;
     grid-template-columns: $sidebar-width auto;
     grid-template-areas: "sidenav main" "configuration main";
     -ms-grid-rows: minmax(min-content, 1fr) $server-status-height;
@@ -34,6 +34,11 @@ body {
 
     @include target-metro {
         display: -ms-flexbox;
+    }
+
+    &.is-tab-expanded {
+        grid-template-columns: $sidebar-width-expand-tab auto;
+        -ms-grid-columns: $sidebar-width-expand-tab auto;
     }
 
     &.configuration-page {
@@ -111,7 +116,7 @@ body {
         transition: none;
     }
 
-    &.is-tab-expanded {
+    .is-tab-expanded & {
         width: $sidebar-width-expand-tab;
     }
 
@@ -268,6 +273,10 @@ prm-configuration-form.is-running {
     grid-area: configuration;
     -ms-grid-row: 2;
     -ms-grid-column: 1;
+
+    .is-tab-expanded & {
+        width: $sidebar-width-expand-tab;
+    }
 }
 
 .app-stage {

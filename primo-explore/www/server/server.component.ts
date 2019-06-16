@@ -22,7 +22,7 @@ export class ServerComponent implements OnInit {
     private selectedTab: SidenavTab;
     private _sidenavCollapsed: boolean;
     private sidenavAnimating: boolean;
-    private expandTab: boolean;
+    public expandTab: boolean;
     private haveResults: boolean;
     private queryPackageName: string;
 

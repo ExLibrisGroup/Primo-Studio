@@ -1,6 +1,7 @@
 @import "variables";
 @import "breakpoints";
 @import "target-metro";
+@import "intrinsic";
 
 html,
 body {
@@ -287,6 +288,7 @@ prm-configuration-form.is-running {
     -ms-grid-row-span: 2;
     align-items: stretch;
     position: relative;
+    @include intrinsic(max-height, fill-available);
 
     &.full-screen {
         position: absolute;

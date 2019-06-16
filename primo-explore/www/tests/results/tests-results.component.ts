@@ -14,7 +14,7 @@ export class TestsResultsComponent implements OnInit {
     public _results: TestResult[];
 
     constructor(public testsService: TestsService) {
-        this._results = undefined;
+        this._results = [];
     }
 
     ngOnInit() {
@@ -43,7 +43,7 @@ export class TestsResultsComponent implements OnInit {
 
     private getNumberOfPassedOrNotPassed(passed: boolean) {
         return this._results.map(testResult => testResult.assertions)
-                            .reduce((allAssertions, assertionArray) => allAssertions.concat(assertionArray))
+                            .reduce((allAssertions, assertionArray) => allAssertions.concat(assertionArray), [])
                             .filter(assertion => assertion.passed === passed)
                             .length
     }

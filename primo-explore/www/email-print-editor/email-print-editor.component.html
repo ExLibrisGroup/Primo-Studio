@@ -1,0 +1,107 @@
+<h2>{{'dynamic editor' | textFormat}}</h2>
+<button class="menu-button float-right" (click)="toggleTab()" *ngIf="isShowCodeEditor">
+    <i class="icon-chevrons-left" [class.is-rotated]="!expanded"></i>
+</button>
+<p class="italics">Customize the Primo Email/Print template using the below display options. Use the advanced HTML
+    editor for more options. When done, download the changes and upload them via the Primo Admin</p>
+
+<div class="content">
+    <div class="content-row">
+        <label for="categorySelect">Section:</label>
+        <select #cat id="categorySelect" (change)="setSelectedCategory(cat.value)">
+            <option *ngFor="let entry of categories | keyvalue" [value]="entry.key"
+                    [selected]="entry.key === selectedCategory.key">{{entry.value.displayName}}
+            </option>
+        </select>
+    </div>
+
+    <!--TODO remove false when language issue is done by BA-->
+    <div class="content-row" *ngIf="availableLanguages && false">
+        <label for="languageSelect">Language:</label>
+        <select #lang id="languageSelect" (change)="setSelectedLanguage(lang.value)">
+            <option *ngFor="let language of availableLanguages" [value]="language"
+                    [selected]="language === selectedLanguage">{{language}}
+            </option>
+        </select>
+    </div>
+
+    <div class="content-row-column custom-drag-and-drop-list"
+         *ngIf="codeFile"
+         (cdkDropListDropped)="onDropField($event)"
+         cdkDropList>
+        {{'include in ' + selectedCategory.key | textFormat}}:
+        <ng-container *ngFor="let field of fields">
+            <ng-container [ngTemplateOutlet]="field === pnxFieldsField ? isPnx : isNotPnx"></ng-container>
+
+            <ng-template #isPnx>
+                <div
+                    class="custom-drag-and-drop"
+                    layout="row"
+                    cdkdragboundary="prm-email-print-editor"
+                    cdkDrag>
+                    <mat-checkbox
+                        #pnx_fields_checkbox
+                        [indeterminate]="isAnyVariableInTemplate() && field.inserted"
+                        [checked]="isAllVariablesInTemplate(field)"
+                        (change)="setFieldToTemplate(field, $event)">
+                        {{field.name}}:
+                    </mat-checkbox>
+                    <mat-select
+                        placeholder="Fields"
+                        [value]="variables | filterBy: 'inserted' | mapBy: 'name'"
+                        (selectionChange)="setVariableToTemplate($event)"
+                        multiple>
+                        <div
+                            class="custom-drag-and-drop"
+                            (cdkDropListDropped)="onDropVariable($event)"
+                            cdkDropList>
+                            <mat-option
+                                *ngFor="let variable of variables; index as i"
+                                class="custom-drag-and-drop"
+                                [value]="variable.name"
+                                cdkdragboundary=".mat-select-panel"
+                                cdkDrag>
+                                {{variable.name}}
+                            </mat-option>
+                        </div>
+                    </mat-select>
+                </div>
+            </ng-template>
+
+            <ng-template #isNotPnx>
+                <mat-checkbox
+                    class="custom-drag-and-drop"
+                    [checked]="field.inserted"
+                    [value]="field.name"
+                    (change)="setFieldToTemplate(field, $event)"
+                    cdkdragboundary="prm-email-print-editor"
+                    cdkDrag>
+                    {{field.name}}
+                </mat-checkbox>
+            </ng-template>
+        </ng-container>
+    </div>
+
+    <div class="content-row-column" *ngIf="codeFile">
+        <button (click)="showCodeEditor()">
+            {{(isShowCodeEditor ? 'hide' : 'show') + ' advanced editor' | textFormat}}
+        </button>
+        <prm-code-editor class="content-row" *ngIf="isShowCodeEditor" [model]="codeFile"
+                         (save)="onSave($event)"></prm-code-editor>
+    </div>
+</div>
+
+<div layout="row">
+    <button (click)="createTheme()" [disabled]="inProgress">
+        <i *ngIf="!inProgress"></i>
+        <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
+        {{'apply changes' | textFormat}}
+    </button>
+    <button (click)="download()" [disabled]="inProgress">
+        <i *ngIf="!inProgress"
+           class="icon-cloud_download">
+        </i>
+        <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
+        {{'download' | textFormat}}
+    </button>
+</div>

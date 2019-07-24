@@ -8,6 +8,7 @@
 @import '~www/scss/inputs';
 @import '~www/scss/animations';
 @import '~www/scss/layout';
+@import '~www/scss/drag_and_drop';
 
 //@import "~@neos21/bootstrap3-glyphicons/dist/css/bootstrap3-glyphicons.css";
 //@import '~font-awesome/scss/font-awesome';
@@ -28,6 +29,7 @@
 @import '~www/messages/messages.component';
 @import '~www/tests/subscribe/subscribe-tests.component';
 @import '~www/tests/results/tests-results.component';
+@import '~www/email-print-editor/email-print-editor.component';
 
 //@import "~www/css/ngDialog.min.css";
 //@import "~www/css/ngDialog-theme-default.min.css";

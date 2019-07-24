@@ -11,7 +11,7 @@ const api = require('./expressApi');
 const http = require('http');
 
 
-gulp.task('serve', [], function() {
+gulp.task('serve', function() {
     //1. serve with default settings
     /* var server = gls.static(); //equals to gls.static('public', 3000);
      server.start();*/
@@ -22,8 +22,8 @@ gulp.task('serve', [], function() {
         dir: 'userManifestStorage/'
     });
 
-    if (gulp.tasks.runAppStore) {
-        gulp.start('runAppStore')
+    if (gulp.task("runAppStore")) {
+        gulp.series('runAppStore')
     }
 
     //var server = gls.static(['primo-explore/www','primo-explore/api'], 8888);

@@ -132,6 +132,6 @@ function _next(req,res,targetUrl,vid){
     proxy.web(req, res, { target: targetUrl });
 }
 
-gulp.task('runAppStore', ['reinstall-primo-node-modules','custom-js','custom-scss','custom-css']); //watch
+gulp.task('runAppStore', gulp.series('reinstall-primo-node-modules','custom-js','custom-scss','custom-css')); //watch
 
-gulp.task('web', ['serve']); //watch
+gulp.task('web', gulp.series('serve')); //watch

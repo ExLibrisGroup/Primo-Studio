@@ -104,4 +104,12 @@ input[type="color"]::-webkit-color-swatch {
     background-color: white
 }
 
+select {
+    border-width: 0;
+    border-bottom-width: 1px;
+    border-color: #bbb;
+    padding-left: 0;
+    background: transparent;
+}
+
 

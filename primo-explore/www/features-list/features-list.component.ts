@@ -6,7 +6,7 @@ import {FeaturesService} from "../utils/features.service";
 import * as _ from 'lodash';
 import {Addon} from "../classes/addon";
 import {FeatureConfigurationFormComponent} from "../feature-configuration-form/feature-configuration-form.component";
-import {MatDialog} from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {Overlay} from "@angular/cdk/overlay";
 

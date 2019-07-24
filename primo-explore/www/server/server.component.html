@@ -17,7 +17,7 @@
         <div class="sidenav-main">
             <div class="sidenav-nav">
                 <ul>
-                    <li *ngFor=" let tab of tabs"
+                    <li *ngFor="let tab of _values(tabs)"
                         title="{{tab.name}}"
                         (click)="selectTab(tab)"
                         [class.is-selected]="tab.name == selectedTab.name"
@@ -31,20 +31,21 @@
             </div>
             <div class="sidenav-content fade-in-out-animation" add-class-to-children="sidenav-panel"
                  *ngIf="!sidenavCollapsed" [ngSwitch]="selectedTab.name">
-                <prm-color-theme *ngSwitchCase="'Theme'"></prm-color-theme>
-                <prm-edit-images *ngSwitchCase="'Images'"></prm-edit-images>
-                <prm-icons-picker *ngSwitchCase="'Icons'"></prm-icons-picker>
-                <prm-features-list *ngSwitchCase="'Addons'" [queryPackageName]="queryPackageName" (removeQueryPackageName)="onRemoveQueryPackageName()"></prm-features-list>
-                <prm-editor *ngSwitchCase="'Editor'" (expandTab)="onExpandTab($event)"></prm-editor>
-                <prm-download-package *ngSwitchCase="'Download'"></prm-download-package>
-                <prm-upload-package *ngSwitchCase="'UploadPackage'"></prm-upload-package>
-                <prm-tests *ngSwitchCase="'Tests'" (haveResults)="onHaveResults($event)"></prm-tests>
+                <prm-color-theme *ngSwitchCase="tabs.theme.name"></prm-color-theme>
+                <prm-edit-images *ngSwitchCase="tabs.images.name"></prm-edit-images>
+                <prm-icons-picker *ngSwitchCase="tabs.icons.name"></prm-icons-picker>
+                <prm-features-list *ngSwitchCase="tabs.addons.name" [queryPackageName]="queryPackageName" (removeQueryPackageName)="onRemoveQueryPackageName()"></prm-features-list>
+                <prm-editor *ngSwitchCase="tabs.editor.name" (expandTab)="onExpandTab($event)"></prm-editor>
+                <prm-email-print-editor *ngSwitchCase="tabs.emailPrint.name" (urlChange)="onUrlChange($event)" (expandTab)="onExpandTab($event)"></prm-email-print-editor>
+                <prm-download-package *ngSwitchCase="tabs.download.name"></prm-download-package>
+                <prm-upload-package *ngSwitchCase="tabs.upload.name"></prm-upload-package>
+                <prm-tests *ngSwitchCase="tabs.tests"></prm-tests>
             </div>
         </div>
     </aside>
     <main class="app-stage" [class.full-screen]="sidenavCollapsed" *ngIf="isUp()">
         <ng-container *ngIf="!isInTestTabWithResults(); else testTabWithResults" [@easeInOutAnimation]>
-            <iframe id="primo-explore-iframe" class="app-iframe" *oneTimeBinding [src]="getIframeUrl()"></iframe>
+            <iframe id="primo-explore-iframe" class="app-iframe" *oneTimeBinding="!changeUrl" [src]="getIframeUrl()"></iframe>
         </ng-container>
 
         <ng-template #testTabWithResults>

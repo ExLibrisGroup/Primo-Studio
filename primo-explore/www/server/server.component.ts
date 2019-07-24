@@ -7,6 +7,7 @@ import {SidenavTab} from "../classes/sidenav-tab";
 import {TestsService} from "../tests/tests.service";
 import {Animations} from "../utils/animations";
 import {ActivatedRoute, Router} from "@angular/router";
+import * as _ from "lodash";
 
 @Component({
     selector: 'prm-server',
@@ -18,13 +19,14 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class ServerComponent implements OnInit {
 
-    private _tabs: SidenavTab[];
+    private _tabs: {[tabName: string]: SidenavTab};
     private selectedTab: SidenavTab;
     private _sidenavCollapsed: boolean;
     private sidenavAnimating: boolean;
     public expandTab: boolean;
     private haveResults: boolean;
     private queryPackageName: string;
+    private changeUrl: boolean;
 
     constructor(private $http: HttpClient,
                 private route: ActivatedRoute,
@@ -33,16 +35,17 @@ export class ServerComponent implements OnInit {
                 private iframeService: IframeService,
                 private analytics: Angulartics2GoogleAnalytics,
                 private testsService: TestsService) {
-        this._tabs = [
-            new SidenavTab('Theme', 'palette'),
-            new SidenavTab('Images', 'image'),
-            new SidenavTab('Icons', 'icons'),
-            new SidenavTab('Addons', 'gift'),
-            new SidenavTab('Editor', 'curly_brackets'),
-            new SidenavTab('Download', 'cloud_download'),
-            new SidenavTab('UploadPackage', 'cloud_upload')
-        ];
-        this.selectedTab = this._tabs[0];
+        this._tabs = {
+            theme: new SidenavTab('Theme', 'palette'),
+            images: new SidenavTab('Images', 'image'),
+            icons: new SidenavTab('Icons', 'icons'),
+            addons: new SidenavTab('Addons', 'gift'),
+            editor: new SidenavTab('Editor', 'curly_brackets'),
+            // emailPrint: new SidenavTab('Email / Print', 'email'),
+            download: new SidenavTab('Download', 'cloud_download'),
+            upload: new SidenavTab('UploadPackage', 'cloud_upload')
+        };
+        this.selectedTab = this._tabs.theme;
         this._sidenavCollapsed = false;
         this.sidenavAnimating = false;
         this.expandTab = false;
@@ -62,7 +65,7 @@ export class ServerComponent implements OnInit {
         }
 
         if (params.tests && params.tests === 'true') {
-            this._tabs.push(new SidenavTab('Tests', 'test'));
+            this._tabs.test = new SidenavTab('Tests', 'test');
         }
 
         this.analytics.pageTrack(window.location.href);
@@ -125,11 +128,11 @@ export class ServerComponent implements OnInit {
         this._sidenavCollapsed = value;
     }
 
-    get tabs(): SidenavTab[] {
+    get tabs(): {[tabName: string]: SidenavTab} {
         return this._tabs;
     }
 
-    set tabs(value: SidenavTab[]) {
+    set tabs(value: {[tabName: string]: SidenavTab}) {
         this._tabs = value;
     }
 
@@ -138,7 +141,7 @@ export class ServerComponent implements OnInit {
     }
 
     isInTestTabWithResults() {
-        return (this.selectedTab === this.tabs.reduce((prev, curr) => curr.name==='Tests' ? curr : prev)) && this.testsService.haveResults;
+        return (this.selectedTab === this.tabs.tests && this.testsService.haveResults);
     }
 
     isTooltipDisplayed(tab: SidenavTab): boolean {
@@ -147,5 +150,18 @@ export class ServerComponent implements OnInit {
 
     getTooltipMessage(tab: SidenavTab): string {
         return tab.name + ` is available from Primo ${this.configurationService.isVe ?'VE 2018 October' : '2018 November'} release`;
+    }
+
+    onUrlChange(suffix: string) {
+        this.iframeService.categorySuffix = suffix;
+        this.changeUrl = true;
+        setTimeout(()=>{
+            this.changeUrl = false;
+            this.iframeService.refreshNuiIFrame();
+        }, 100);
+    }
+
+    _values(obj: {}) {
+        return _.values(obj);
     }
 }

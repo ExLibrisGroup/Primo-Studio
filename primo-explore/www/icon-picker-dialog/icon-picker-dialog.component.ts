@@ -30,7 +30,8 @@ export class IconPickerDialogComponent implements OnInit {
 
   private dialogArrowSize = 10;
 
-  @ViewChild('dialogPopup') dialogElement: ElementRef<HTMLDivElement>;
+  @ViewChild('dialogPopup', { static: true })
+  dialogElement: ElementRef<HTMLDivElement>;
 
   public show: boolean;
   public hidden: boolean;

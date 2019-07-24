@@ -4,6 +4,9 @@ import {HttpClient} from "@angular/common/http";
 import {CodeFile} from "../classes/code-file";
 import {FileTree} from "../classes/file-tree";
 import {IconsPickerService} from "../icons-picker/icons-picker.service";
+import {EMPTY, Subscription} from 'rxjs';
+import * as CodeMirror from 'codemirror';
+import * as _ from 'lodash';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +29,8 @@ export class EditorService {
     this.codeFiles = new Map();
 
     this.codeFiles.set(this._css.file_path, this._css);
+
+    this.populatePrimoHtmlSchema();
   }
 
   getFiles() {
@@ -46,14 +51,18 @@ export class EditorService {
     })
   }
 
-  initCode(fileJson: CodeFile) {
-    this.$http.post('/code', fileJson, {responseType: 'text'}).subscribe((response) => {
-      fileJson.data = response;
-      fileJson.version++;
-      this.codeFiles.set(fileJson.file_path, fileJson);
-    }, () => {
-      console.log('failed to get ' + fileJson.type + ' from server. file path: ' + fileJson.file_path);
-    });
+  public initCode(fileJson: CodeFile): Subscription {
+    if (!this.codeFiles.get(fileJson.file_path)) {
+        return this.$http.post('/code', fileJson, {responseType: 'text'}).subscribe((response) => {
+            fileJson.data = response;
+            fileJson.version++;
+            this.codeFiles.set(fileJson.file_path, fileJson);
+        }, () => {
+            console.log('failed to get ' + fileJson.type + ' from server. file path: ' + fileJson.file_path);
+        });
+    } else {
+        return EMPTY.subscribe();
+    }
   }
 
   get config(){
@@ -110,5 +119,36 @@ export class EditorService {
 
   set files(value: FileTree) {
     this._files = value;
+  }
+
+  public populatePrimoHtmlSchema() {
+      let defaultAttrs = CodeMirror.htmlSchema["b"];
+      let addAttrs = (attrs) => {
+          return _.assign(attrs ,defaultAttrs.attrs)
+      };
+      let prmElements = {
+          "prm-logo": defaultAttrs,
+          "prm-icon": {
+              attrs: addAttrs({
+                  "icon-type": null,
+                  "svg-icon-set": null,
+                  "icon-definition": null
+              })
+          },
+          "prm-service-details": {
+              attrs: addAttrs({"[item]": ["$ctrl.parentCtrl.item"]})
+          },
+          "prm-search-result-availability-line": {
+              attrs: addAttrs({"[result]": ["$ctrl.parentCtrl.item"]})
+          }
+      };
+
+      let htmlPrimoSchema = _.assign(prmElements, CodeMirror.htmlSchema);
+
+      CodeMirror.hint.html = (cm, options) => {
+          let local = {schemaInfo: htmlPrimoSchema};
+          if (options) for (let opt in options) local[opt] = options[opt];
+          return CodeMirror.hint.xml(cm, local);
+      };
   }
 }

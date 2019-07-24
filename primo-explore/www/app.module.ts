@@ -5,7 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {CookieService} from 'ngx-cookie-service';
 import {FormlyModule} from "@ngx-formly/core";
 import {FormlyMaterialModule} from "@ngx-formly/material";
-import {MatDialogModule, MatTooltipModule} from "@angular/material";
+import {MatCheckboxModule, MatDialogModule, MatMenuModule, MatSelectModule, MatTooltipModule} from '@angular/material';
 import {Angulartics2Module, RouterlessTracking} from "angulartics2";
 import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 

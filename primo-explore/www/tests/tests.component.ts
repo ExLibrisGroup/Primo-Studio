@@ -1,5 +1,4 @@
-import {Component, EventEmitter, OnInit} from '@angular/core';
-import 'rxjs/add/observable/timer'
+import {Component, OnInit} from '@angular/core';
 import {Animations} from "../utils/animations";
 import {TestsService} from "./tests.service";
 

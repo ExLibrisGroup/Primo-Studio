@@ -41,7 +41,7 @@ export class ServerComponent implements OnInit {
             icons: new SidenavTab('Icons', 'icons'),
             addons: new SidenavTab('Addons', 'gift'),
             editor: new SidenavTab('Editor', 'curly_brackets'),
-            // emailPrint: new SidenavTab('Email / Print', 'email'),
+            emailPrint: new SidenavTab('Email / Print', 'email'),
             download: new SidenavTab('Download', 'cloud_download'),
             upload: new SidenavTab('UploadPackage', 'cloud_upload')
         };

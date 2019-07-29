@@ -5,7 +5,7 @@ import {IframeService} from '../utils/iframe.service';
 import {EditorService} from '../editor-tab/editor.service';
 import {CodeFile} from '../classes/code-file';
 import {PnxVariable} from '../classes/pnx-variable';
-import {MatCheckbox, MatCheckboxChange, MatDialog, MatSelectChange} from '@angular/material';
+import {MatCheckbox, MatCheckboxChange, MatDialog, MatSelect, MatSelectChange} from '@angular/material';
 import * as CodeMirror from 'codemirror';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TemplateContentField} from '../classes/template-content-field';
@@ -35,13 +35,15 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
 
     @ViewChild('pnx_fields_checkbox',{static: false})
     public pnxFieldsCheckbox: MatCheckbox;
+    @ViewChild('pnx_fields_select',{static: false})
+    public pnxFieldsSelect: MatSelect;
 
     private _url: string;
     private frameAttributesMap: any = {};
     private _inProgress: boolean;
     private _expanded: boolean;
-    private openRepeat: string = '<div ng-repeat="item in $ctrl.parentCtrl.items">';
-    private closeRepeat: string = '</div>';
+    private openRepeat: string = '<div ng-repeat="item in $ctrl.parentCtrl.items"><md-divider ng-if="$first"></md-divider>';
+    private closeRepeat: string = '<md-divider></md-divider></div>';
 
     constructor(public configurationService: ConfigurationService,
                 public iframeService: IframeService,
@@ -54,13 +56,18 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             print: new StaticCategory('print', 'Print', '/email-template') // TODO change to print template
         };
         this.fields = [
-            new TemplateContentField('Logo', false, 'prm-logo'),
-            new TemplateContentField('Personal Note (for signed in users)', false), // TODO what does it means?
-            new TemplateContentField('Brief display', true, 'prm-brief-result-container', '[item]="item"'),
-            new TemplateContentField('Availability status', true, 'prm-search-result-availability-line', '[result]="::item"'),
-            new TemplateContentField('Detailed display', true, 'prm-service-details', '[item]="item"'),
+            new TemplateContentField('Logo', false, {component: 'prm-logo'}),
+            new TemplateContentField('Institution Note', false, {parameters: 'translate="nui.email.institutionNote"'}), // TODO get code table from Yael
+            new TemplateContentField('Personal Note (for signed in users)', false,
+                {parameters: 'ng-if="$ctrl.parentCtrl.note"', content: '<b>Note:</b> {{$ctrl.parentCtrl.note}}'}),
+            new TemplateContentField('Brief display', true,
+                {component: 'prm-brief-result-container', parameters: '[item]="item"'}),
+            new TemplateContentField('Availability status', true,
+                {component: 'prm-search-result-availability-line', parameters: '[result]="::item"'}),
+            new TemplateContentField('Detailed display', true,
+                {component: 'prm-service-details', parameters: '[item]="item"'}),
             new TemplateContentField('PNX Fields', true),
-            new TemplateContentField('Footer', false) // TODO what does it means?
+            new TemplateContentField('Footer', false, {component: 'prm-explore-footer'})
         ];
         this.variables = [
             new PnxVariable('type', 'pnx.display.type[0]', false),
@@ -69,8 +76,8 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             new PnxVariable('publisher', 'pnx.display.publisher[0]', false),
             new PnxVariable('creation date', 'pnx.display.creationdate[0]', false),
             new PnxVariable('format', 'pnx.display.format[0]', false),
-            new PnxVariable('identifier', '', false), // TODO complete path
-            new PnxVariable('description', '', false), // TODO complete path
+            new PnxVariable('identifier', 'pnx.display.identifier[0]', false),
+            new PnxVariable('description', 'pnx.display.description[0]', false),
             new PnxVariable('language', 'pnx.display.language[0]', false),
             new PnxVariable('source', 'pnx.display.source[0]', false)
         ];
@@ -80,15 +87,6 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.url = '/static-file/' + this.selectedCategory.key + '?vid=' + this.config.view + '&lang=' + this.selectedLanguage;
-        let frameWindow = window.frames[0];
-        this.iframeService.isAttributesMapInitialized().subscribe((isLoaded) => {
-            if (isLoaded) {
-                this.frameAttributesMap = frameWindow.appConfig['primo-view']['attributes-map'];
-                this.availableLanguages = this.frameAttributesMap.interfaceLanguageOptions.split(',');
-            }
-        });
-
         CodeMirror.commands.save = (instance) => {
             instance.onSave();
         };
@@ -98,6 +96,15 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
                 `${this.variables.filter(variable => variable.inserted).reduce((prev, variable) => prev + variable.calculateTemplate(), '')}`+
                 `</div>`;
         };
+
+        this.url = '/static-file/' + this.selectedCategory.key + '?vid=' + this.config.view + '&lang=' + this.selectedLanguage;
+        let frameWindow = window.frames[0];
+        this.iframeService.isAttributesMapInitialized().subscribe((isLoaded) => {
+            if (isLoaded) {
+                this.frameAttributesMap = frameWindow.appConfig['primo-view']['attributes-map'];
+                this.availableLanguages = this.frameAttributesMap.interfaceLanguageOptions.split(',');
+            }
+        });
     }
 
     ngOnDestroy() {
@@ -207,6 +214,17 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         });
     }
 
+    public isFieldDisabled(field: TemplateContentField): boolean {
+        switch (field.component) {
+            case "prm-brief-result-container":
+                return this.fields.find(field => field.component === "prm-service-details").inserted;
+            case "prm-service-details":
+                return this.fields.find(field => field.component === "prm-brief-result-container").inserted;
+            default:
+                return false;
+        }
+    }
+
     public onDropField(event: CdkDragDrop<string[]>) {
         let field = this.fields[event.previousIndex];
         if (event.currentIndex !== event.previousIndex && field.inserted) {
@@ -226,10 +244,22 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     }
 
     public setFieldToTemplate(field: TemplateContentField, $event: MatCheckboxChange) {
-        if ($event.checked && !$event.source.indeterminate) {
-            this.insertFieldToTemplate(field);
-        } else if (!$event.checked) {
+        if (!$event.checked) {
             this.removeFieldFromTemplate(field);
+        } else if ($event.checked) {
+            if ($event.source.indeterminate) {
+                this.pnxFieldsCheckbox.toggle();
+                this.removeFieldFromTemplate(field);
+            } else {
+                if (field === this.pnxFieldsField && !this.isAnyVariableInTemplate()) {
+                    this.variables.forEach(variable => {
+                        variable.inserted = true;
+                        this.pnxFieldsSelect.options.forEach(item => item.select());
+                    });
+                    this.pnxFieldsSelect.open();
+                }
+                this.insertFieldToTemplate(field);
+            }
         }
     }
 
@@ -305,7 +335,9 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         variable.inserted = false;
         if (!this.variables.some((variable) => variable.inserted)) {
             this.removeFieldFromTemplate(this.pnxFieldsField);
-            this.pnxFieldsCheckbox.toggle();
+            if (this.pnxFieldsCheckbox.checked) {
+                this.pnxFieldsCheckbox.toggle();
+            }
         }
     }
 

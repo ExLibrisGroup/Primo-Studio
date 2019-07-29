@@ -10,4 +10,8 @@ prm-email-print-editor {
     .custom-drag-and-drop {
         width: 100%;
     }
+
+    div[layout="row"] {
+        justify-content: space-between;
+    }
 }

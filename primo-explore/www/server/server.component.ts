@@ -145,11 +145,25 @@ export class ServerComponent implements OnInit {
     }
 
     isTooltipDisplayed(tab: SidenavTab): boolean {
-        return tab.name === "Icons";
+        return tab === this._tabs.icons || tab === this._tabs.emailPrint;
     }
 
     getTooltipMessage(tab: SidenavTab): string {
-        return tab.name + ` is available from Primo ${this.configurationService.isVe ?'VE 2018 October' : '2018 November'} release`;
+        let versions: {[tab: string]: {primo: string, ve: string}} = {
+            "Icons": {
+                primo: '2018 November',
+                ve: 'VE 2018 October'
+            },
+            "Email / Print": {
+                primo: '2019 November',
+                ve: 'VE 2019 November'
+            }
+        };
+        if (versions[tab.name]) {
+            return tab.name + ` is available from Primo ${this.configurationService.isVe ? versions[tab.name].ve : versions[tab.name].primo} release`;
+        } else {
+            return ''
+        }
     }
 
     onUrlChange(suffix: string) {

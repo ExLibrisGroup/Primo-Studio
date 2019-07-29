@@ -47,6 +47,7 @@
                         {{field.name}}:
                     </mat-checkbox>
                     <mat-select
+                        #pnx_fields_select
                         placeholder="Fields"
                         [value]="variables | filterBy: 'inserted' | mapBy: 'name'"
                         (selectionChange)="setVariableToTemplate($event)"
@@ -73,6 +74,7 @@
                     class="custom-drag-and-drop"
                     [checked]="field.inserted"
                     [value]="field.name"
+                    [disabled]="isFieldDisabled(field)"
                     (change)="setFieldToTemplate(field, $event)"
                     cdkdragboundary="prm-email-print-editor"
                     cdkDrag>

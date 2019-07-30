@@ -6,8 +6,6 @@ import {CookieService} from 'ngx-cookie-service';
 import {FormlyModule} from "@ngx-formly/core";
 import {FormlyMaterialModule} from "@ngx-formly/material";
 import {MatCheckboxModule, MatDialogModule, MatMenuModule, MatSelectModule, MatTooltipModule} from '@angular/material';
-import {Angulartics2Module, RouterlessTracking} from "angulartics2";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 import {AppComponent} from './app/app.component';
 import {ConfigurationService} from "./utils/configuration.service";
@@ -100,11 +98,6 @@ const appRoutes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], {
-      pageTracking: {
-        clearQueryParams: false
-      }
-    }),
     RouterModule.forRoot(appRoutes, {
       scrollPositionRestoration: "top",
       anchorScrolling: "enabled"
@@ -126,7 +119,6 @@ const appRoutes: Routes = [
     FileUploaderService,
     IframeService,
     FeaturesService,
-    RouterlessTracking,
     EditorService,
     IconsPickerService
   ],

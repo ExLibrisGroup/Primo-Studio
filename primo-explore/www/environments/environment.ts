@@ -3,11 +3,7 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  googleAnalytics: {
-    domain: 'none',
-    trackingId: 'UA-123598696-1'
-  }
+  production: false
 };
 
 /*

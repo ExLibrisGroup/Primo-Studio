@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {ConfigurationService} from "../utils/configuration.service";
 import {IframeService} from "../utils/iframe.service";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {SidenavTab} from "../classes/sidenav-tab";
 import {TestsService} from "../tests/tests.service";
 import {Animations} from "../utils/animations";
@@ -33,7 +32,6 @@ export class ServerComponent implements OnInit {
                 private router: Router,
                 private configurationService: ConfigurationService,
                 private iframeService: IframeService,
-                private analytics: Angulartics2GoogleAnalytics,
                 private testsService: TestsService) {
         this._tabs = {
             theme: new SidenavTab('Theme', 'palette'),
@@ -56,7 +54,7 @@ export class ServerComponent implements OnInit {
         let params = this.route.snapshot.queryParams;
 
         if (params.packageName) {
-            this.selectedTab = this._tabs[3];
+            this.selectedTab = this._tabs.addons;
             if (this.sidenavCollapsed) {
                 this.sidenavCollapsed = false;
             }
@@ -67,17 +65,6 @@ export class ServerComponent implements OnInit {
         if (params.tests && params.tests === 'true') {
             this._tabs.test = new SidenavTab('Tests', 'test');
         }
-
-        this.analytics.pageTrack(window.location.href);
-        this.analytics.eventTrack('urlToCustomize', {
-            category: 'Configuration',
-            label: this.configurationService.config.url
-        });
-        this.analytics.eventTrack('viewToCustomize', {
-            category: 'Configuration',
-            label: this.configurationService.config.view
-        });
-        this.analytics.eventTrack('isVE', {category: 'Configuration', label: this.configurationService.config.ve});
     }
 
     get appTitle() {
@@ -108,7 +95,6 @@ export class ServerComponent implements OnInit {
         if (this.sidenavCollapsed) {
             this.sidenavCollapsed = false;
         }
-        this.analytics.eventTrack('change', {category: '_tabs', label: tab.name});
     }
 
     toggleSidenav() {

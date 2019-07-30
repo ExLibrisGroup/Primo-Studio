@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 @Component({
   selector: 'prm-download-package',
@@ -9,8 +8,7 @@ import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 })
 export class DownloadPackageComponent  {
 
-  constructor(private $http: HttpClient,
-              private analytics: Angulartics2GoogleAnalytics){
+  constructor(private $http: HttpClient){
   }
 
   downloadPackage(){
@@ -31,7 +29,6 @@ export class DownloadPackageComponent  {
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url);
       }, 100);
-      this.analytics.eventTrack('download', {category: 'downloadPackage', label: 'package'});
     });
   }
 

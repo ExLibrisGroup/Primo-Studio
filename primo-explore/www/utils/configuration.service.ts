@@ -4,8 +4,6 @@ import {CookieService} from "ngx-cookie-service";
 import * as _ from 'lodash';
 import {ActivatedRoute, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {FileUploaderService} from "./file-uploader.service";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 @Injectable({
   providedIn: 'root'

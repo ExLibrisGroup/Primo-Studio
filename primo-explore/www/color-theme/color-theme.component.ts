@@ -3,7 +3,6 @@ import {ColorThemeService} from "./color-theme.service";
 import {IframeService} from "../utils/iframe.service";
 
 import * as _ from 'lodash';
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 
 @Component({
   selector: 'prm-color-theme',
@@ -14,8 +13,7 @@ export class ColorThemeComponent{
   private _inProgress: boolean;
 
   constructor(private colorThemeService: ColorThemeService,
-              private iframeService: IframeService,
-              private analytics: Angulartics2GoogleAnalytics){
+              private iframeService: IframeService){
 
     this._inProgress= false;
   }
@@ -40,7 +38,6 @@ export class ColorThemeComponent{
     }).add(()=>{
       this._inProgress = false;
     });
-    this.analytics.eventTrack('createTheme', {category: 'colorTheme', label: 'all_colors'});
   }
 
   setColor(key: string, newValue: string) {

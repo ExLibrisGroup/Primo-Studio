@@ -67,7 +67,11 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "primo-explore:build"
+            "browserTarget": "primo-explore:build",
+            "proxyConfig": "proxy.conf.json",
+            "sourceMap": {
+              "scripts": true
+            }
           },
           "configurations": {
             "production": {

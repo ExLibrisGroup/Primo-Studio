@@ -41,7 +41,7 @@
                     cdkDrag>
                     <mat-checkbox
                         #pnx_fields_checkbox
-                        [indeterminate]="isAnyVariableInTemplate() && field.inserted"
+                        [indeterminate]="isAnyVariableInTemplate() && field.inserted && !isAllVariablesInTemplate(field)"
                         [checked]="isAllVariablesInTemplate(field)"
                         (change)="setFieldToTemplate(field, $event)">
                         {{field.name}}:

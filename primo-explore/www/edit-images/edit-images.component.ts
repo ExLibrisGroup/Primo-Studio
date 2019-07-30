@@ -2,7 +2,6 @@ import { Component, } from '@angular/core';
 import {FileUploaderService} from "../utils/file-uploader.service";
 import {IframeService} from "../utils/iframe.service";
 import {element} from "angular";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {ConfigurationService} from "../utils/configuration.service";
 import {IconsPickerService} from "../icons-picker/icons-picker.service";
 
@@ -21,7 +20,6 @@ export class EditImagesComponent {
 
   constructor(private fileUploaderService: FileUploaderService,
               private iframeService: IframeService,
-              private analytics: Angulartics2GoogleAnalytics,
               private configurationService: ConfigurationService,
               private iconsPickerService: IconsPickerService){
 
@@ -43,7 +41,6 @@ export class EditImagesComponent {
     if(files.length > 0) {
       this._uploadDisabled = false;
     }
-    this.analytics.eventTrack('setImage', {category: 'Images', label: name + " - " + files[0].name});
   }
 
   uploadImages(){
@@ -56,7 +53,6 @@ export class EditImagesComponent {
     }, (err)=>{
       console.log('failed to upload images: '+ err.stack)
     });
-    this.analytics.eventTrack('uploadImages', {category: 'Images', label: this.images.toLocaleString()});
   }
 
   removeImages() {
@@ -66,7 +62,6 @@ export class EditImagesComponent {
     }, (err)=>{
       console.log('failed to remove images: ' + err.toString())
     });
-    this.analytics.eventTrack('removeImages', {category: 'Images', label: 'all'});
   }
 
   get logoFileLabel(): string {

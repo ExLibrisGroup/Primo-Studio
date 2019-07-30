@@ -7,7 +7,6 @@ import * as _ from 'lodash';
 import {Addon} from "../classes/addon";
 import {FeatureConfigurationFormComponent} from "../feature-configuration-form/feature-configuration-form.component";
 import { MatDialog } from "@angular/material/dialog";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
 import {Overlay} from "@angular/cdk/overlay";
 
 
@@ -33,8 +32,7 @@ export class FeaturesListComponent implements OnInit {
               private iframeService: IframeService,
               private ngDialog: MatDialog,
               private overlay: Overlay,
-              private configurationService: ConfigurationService,
-              private analytics: Angulartics2GoogleAnalytics){
+              private configurationService: ConfigurationService){
     this.selectedFilterField = 'all';
     this._searchTerm = '';
     this._filterOptions = [
@@ -73,7 +71,6 @@ export class FeaturesListComponent implements OnInit {
 
   notifyFilterChanged() {
     this.filterFeatures();
-    this.analytics.eventTrack('filterChange', {category: 'Addons', label: this.selectedFilterField + " - " + this._searchTerm});
   }
 
   selectFeature(addOn: Addon){
@@ -108,7 +105,6 @@ export class FeaturesListComponent implements OnInit {
     }, ()=>{
       this.inProgress[npmid] = false;
     });
-    this.analytics.eventTrack('addFeature', {category: 'Addons', label: addOn.npmid + " - " + featureConfigData});
   }
 
   removeFeature(npmid, hook){
@@ -119,7 +115,6 @@ export class FeaturesListComponent implements OnInit {
     }, ()=>{
       this.inProgress[npmid] = false;
     });
-    this.analytics.eventTrack('removeFeature', {category: 'Addons', label: npmid});
   }
 
   filterFeatures(){

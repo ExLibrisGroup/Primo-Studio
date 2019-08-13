@@ -66,7 +66,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
                 {component: 'prm-search-result-availability-line', parameters: '[result]="::item"'}),
             new TemplateContentField('Detailed display', true,
                 {component: 'prm-service-details', parameters: '[item]="item"'}),
-            new TemplateContentField('PNX Fields', true),
+            new TemplateContentField('Display Fields', true),
             new TemplateContentField('Footer', false, {component: 'prm-explore-footer'})
         ];
         this.variables = [
@@ -81,7 +81,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             new PnxVariable('language', 'pnx.display.language[0]', false),
             new PnxVariable('source', 'pnx.display.source[0]', false)
         ];
-        this.pnxFieldsField = this.fields.find(field => field.name === "PNX Fields");
+        this.pnxFieldsField = this.fields.find(field => field.name === "Display Fields");
         this._expanded = true;
         this.toggleTab();
     }

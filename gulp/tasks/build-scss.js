@@ -113,7 +113,7 @@ function compileScss(userId) {
             }));
         let colorStream = allCss
             .pipe(clone())
-            .pipe(rename('app-colors.css'))
+            .pipe(rename('studio-colors.css'))
             //.pipe(cssnano({safe: true}))
             .pipe(splitCss({colors:true}))
             //.pipe(sourcemaps.write('.'))

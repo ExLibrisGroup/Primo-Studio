@@ -435,7 +435,7 @@ router.post('/package', packageUpload,  (req, res)=>{
     let zipStream = readStream
         .pipe(unzip.Parse())
         .pipe(writeStream);
-    let promise=  streamToPromise(zipStream).then(()=>{
+    streamToPromise(zipStream).then(()=>{
         console.log('unziped package');
         let directories = utils.getDirectories(packagePath);
         if (directories.length !== 1){
@@ -449,6 +449,16 @@ router.post('/package', packageUpload,  (req, res)=>{
             }
             let userManifest=data? JSON.parse(data) : {};
             console.log('user manifest read from features.json.txt: ' + JSON.stringify(userManifest));
+
+            let cssHandlerPromise = new Promise((resolveCssHandlerPromise, rejectCssHandlerPromise) => {
+                let customCssPath = packagePath + '/' + dirName + '/css/custom1.css';
+                if (fs.existsSync(customCssPath)) {
+                    fs.renameSync(customCssPath, packagePath + '/' + dirName + '/css/customUploadedPackage.css');
+                    resolveCssHandlerPromise();
+                } else {
+                    resolveCssHandlerPromise();
+                }
+            });
 
             let javaScriptHandlerPromise = new Promise((resolveJavaScriptHandlerPromise, rejectJavaScriptHandlerPromise)=>{
                 let customJsPath = packagePath + '/' + dirName + '/js/custom.js';
@@ -532,7 +542,7 @@ router.post('/package', packageUpload,  (req, res)=>{
                 }
             });
 
-            javaScriptHandlerPromise.then(() => {
+            Promise.all([cssHandlerPromise, javaScriptHandlerPromise]).then(() => {
                 new Promise((resolve, reject) => {
                     ncp(packagePath + '/' + dirName, utils.getUserCustomDir(userId), {filter: utils.uploadedPackageFileFilter}, function (err) {
                         if (err) {

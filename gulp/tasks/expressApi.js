@@ -6,6 +6,7 @@ const upload = multer();
 const storage = require('node-persist');
 const npmi= require('npmi');
 const buildCustomJs= require('./buildCustomJs');
+const buildCustomCss= require('./buildCustomCss');
 const customJs= require('./buildCustomJs').customJs;
 const appCss= require('./build-scss').appCss;
 const Promise = require('bluebird');
@@ -686,6 +687,7 @@ router.get('/start', function (req, res) {
         return fs.rename("./tmp/VIEW_CODE", "primo-explore/custom/" + userId, ()=>{
             fs.rename("primo-explore/custom/" + userId + '/colors.json', "primo-explore/custom/" + userId + '/colors.json.txt', () => { //change colors.json file to colors.json.txt since BO doesn't accept .json files
                 buildCustomJs.customJs(userId);
+                buildCustomCss.customCss(userId);
             });
         });
     });

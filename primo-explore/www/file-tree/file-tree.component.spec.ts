@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FileTreeComponent } from './file-tree.component';
+import {MockPipe} from 'ng-mocks';
+import {SplitPathPipe} from './split-path.pipe';
+import {SliceCustomizationPathPipe} from './slice-customization-path.pipe';
+import {ConfigurationService} from '../utils/configuration.service';
+import {EditorService} from '../editor-tab/editor.service';
 
 describe('FileTreeComponent', () => {
   let component: FileTreeComponent;
@@ -8,7 +13,15 @@ describe('FileTreeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FileTreeComponent ]
+      declarations: [
+          FileTreeComponent,
+          MockPipe(SplitPathPipe),
+          MockPipe(SliceCustomizationPathPipe)
+      ],
+        providers: [
+            {provide: ConfigurationService, useClass: ConfigurationServiceMock},
+            {provide: EditorService, useClass: EditorServiceMock}
+        ]
     })
     .compileComponents();
   }));
@@ -23,3 +36,13 @@ describe('FileTreeComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+class ConfigurationServiceMock {
+    get config() {
+        return {}
+    }
+}
+
+class EditorServiceMock {
+
+}

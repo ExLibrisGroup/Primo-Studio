@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UploadPackageComponent } from './upload-package.component';
+import {FileUploaderService} from '../utils/file-uploader.service';
 
 describe('UploadPackageComponent', () => {
   let component: UploadPackageComponent;
@@ -8,7 +9,10 @@ describe('UploadPackageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ UploadPackageComponent ]
+      declarations: [ UploadPackageComponent ],
+        providers: [
+            {provide: FileUploaderService, useClass: FileUploaderServiceMock}
+        ]
     })
     .compileComponents();
   }));
@@ -23,3 +27,7 @@ describe('UploadPackageComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+class FileUploaderServiceMock {
+
+}

@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TestsComponent } from './tests.component';
+import {MockComponent} from 'ng-mocks';
+import {SubscribeTestsComponent} from './subscribe/subscribe-tests.component';
+import {TestsService} from './tests.service';
 
 describe('TestsComponent', () => {
   let component: TestsComponent;
@@ -8,7 +11,13 @@ describe('TestsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestsComponent ]
+      declarations: [
+          TestsComponent,
+          MockComponent(SubscribeTestsComponent)
+      ],
+        providers: [
+            {provide: TestsService, useClass: TestsServiceMock}
+        ]
     })
     .compileComponents();
   }));
@@ -23,3 +32,7 @@ describe('TestsComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+class TestsServiceMock {
+
+}

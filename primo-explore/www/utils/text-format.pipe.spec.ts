@@ -1,8 +1,21 @@
-import { TextFormatPipe } from './text-format.pipe';
+import {TextFormatPipe} from './text-format.pipe';
 
 describe('TextFormatPipe', () => {
-  it('create an instance', () => {
-    const pipe = new TextFormatPipe();
-    expect(pipe).toBeTruthy();
-  });
+    let pipe: TextFormatPipe;
+
+    beforeEach(() => {
+        pipe = new TextFormatPipe();
+    });
+
+    it('create an instance', () => {
+        expect(pipe).toBeTruthy();
+    });
+
+    it('should convert "any string" to "Any String"', () => {
+        let original = "any string";
+
+        let result = pipe.transform(original);
+
+        expect(result).toEqual("Any String");
+    });
 });

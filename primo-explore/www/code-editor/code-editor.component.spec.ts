@@ -1,6 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CodeEditorComponent } from './code-editor.component';
+import {CodemirrorModule} from 'ng2-codemirror';
+import {FormsModule} from '@angular/forms';
+import {EditorService} from '../editor-tab/editor.service';
+import {CodeFile} from '../classes/code-file';
 
 describe('CodeEditorComponent', () => {
   let component: CodeEditorComponent;
@@ -8,7 +12,14 @@ describe('CodeEditorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodeEditorComponent ]
+        imports: [
+            CodemirrorModule,
+            FormsModule
+        ],
+      declarations: [ CodeEditorComponent ],
+        providers: [
+            {provide: EditorService, useClass: EditorServiceMock}
+        ]
     })
     .compileComponents();
   }));
@@ -23,3 +34,9 @@ describe('CodeEditorComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+
+class EditorServiceMock {
+    getDefaultCodeFile() {
+        return {}
+    }
+}

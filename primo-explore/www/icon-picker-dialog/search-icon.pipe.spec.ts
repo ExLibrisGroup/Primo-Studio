@@ -1,8 +1,13 @@
-import { SearchIconPipe } from './search-icon.pipe';
+import {SearchIconPipe} from './search-icon.pipe';
 
 describe('SearchIconPipe', () => {
-  it('create an instance', () => {
-    const pipe = new SearchIconPipe();
-    expect(pipe).toBeTruthy();
-  });
+    let pipe: SearchIconPipe;
+
+    beforeEach(() => {
+        pipe = new SearchIconPipe();
+    });
+
+    it('create an instance', () => {
+        expect(pipe).toBeTruthy();
+    });
 });

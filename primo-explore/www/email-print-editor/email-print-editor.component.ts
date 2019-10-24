@@ -29,6 +29,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     private _finalCodeFile: CodeFile;
     public isShowCodeEditor: boolean;
     public pnxFieldsField: TemplateContentField;
+    public templateApproved: boolean;
 
     @Output()
     public urlChange: EventEmitter<string> = new EventEmitter();
@@ -172,6 +173,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             this.editorService.saveFile(finalCodeFile).subscribe((resp)=>{
                 if(+resp.status === 200){
                     console.log('file "' + finalCodeFile.file_path + '" was saved');
+                    this.templateApproved = true;
                 }
             }, (err)=> {
                 console.log(err);

@@ -107,7 +107,7 @@
         <prm-busy-spinner *ngIf="inProgress"></prm-busy-spinner>
         {{'approve template' | textFormat}}
     </button>
-    <button (click)="download()" [disabled]="inProgress">
+    <button (click)="download()" [disabled]="inProgress || !templateApproved">
         <i *ngIf="!inProgress"
            class="icon-cloud_download">
         </i>

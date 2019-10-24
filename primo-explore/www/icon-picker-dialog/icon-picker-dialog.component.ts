@@ -1,9 +1,9 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Icon, IconType} from "../classes/icon";
-import {IconsPickerService} from "../icons-picker/icons-picker.service";
-import {IconsPickerComponent} from "../icons-picker/icons-picker.component";
+import {Icon, IconType} from '../classes/icon';
+import {IconsPickerService} from '../icons-picker/icons-picker.service';
+import {IconsPickerComponent} from '../icons-picker/icons-picker.component';
 import * as _ from 'lodash';
-import {DomSanitizer} from "@angular/platform-browser";
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'prm-icon-picker-dialog',
@@ -49,7 +49,9 @@ export class IconPickerDialogComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private service: IconsPickerService,
     public sanitizer: DomSanitizer,
-  ) { }
+  ) {
+      this.directiveElementRef = this.el;
+  }
 
   setDialog(instance: any, elementRef: ElementRef, icon: string, ipPosition: string, ipHeight: string, ipMaxHeight: string,
             ipWidth: string, ipPlaceHolder: string, ipFallbackIcon: string, ipIconPack: string) {

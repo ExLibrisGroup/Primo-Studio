@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ConfigurationService} from "../utils/configuration.service";
-import {IframeService} from "../utils/iframe.service";
-import {SidenavTab} from "../classes/sidenav-tab";
-import {TestsService} from "../tests/tests.service";
-import {Animations} from "../utils/animations";
-import {ActivatedRoute, Router} from "@angular/router";
-import * as _ from "lodash";
+import {HttpClient} from '@angular/common/http';
+import {ConfigurationService} from '../utils/configuration.service';
+import {IframeService} from '../utils/iframe.service';
+import {SidenavTab} from '../classes/sidenav-tab';
+import {TestsService} from '../tests/tests.service';
+import {Animations} from '../utils/animations';
+import {ActivatedRoute, Router} from '@angular/router';
+import * as _ from 'lodash';
 
 @Component({
     selector: 'prm-server',
@@ -19,7 +19,7 @@ import * as _ from "lodash";
 export class ServerComponent implements OnInit {
 
     private _tabs: {[tabName: string]: SidenavTab};
-    private selectedTab: SidenavTab;
+    public selectedTab: SidenavTab;
     private _sidenavCollapsed: boolean;
     private sidenavAnimating: boolean;
     public expandTab: boolean;
@@ -39,7 +39,7 @@ export class ServerComponent implements OnInit {
             icons: new SidenavTab('Icons', 'icons'),
             addons: new SidenavTab('Addons', 'gift'),
             editor: new SidenavTab('Editor', 'curly_brackets'),
-            emailPrint: new SidenavTab('Email / Print', 'email'),
+            emailPrint: new SidenavTab('Email' /*+ ' / Print'*/, 'email'),
             download: new SidenavTab('Download', 'cloud_download'),
             upload: new SidenavTab('UploadPackage', 'cloud_upload')
         };
@@ -131,18 +131,14 @@ export class ServerComponent implements OnInit {
     }
 
     isTooltipDisplayed(tab: SidenavTab): boolean {
-        return tab === this._tabs.icons || tab === this._tabs.emailPrint;
+        return tab === this._tabs.emailPrint;
     }
 
     getTooltipMessage(tab: SidenavTab): string {
         let versions: {[tab: string]: {primo: string, ve: string}} = {
-            "Icons": {
-                primo: '2018 November',
-                ve: 'VE 2018 October'
-            },
-            "Email / Print": {
+            "Email": {
                 primo: '2019 November',
-                ve: 'VE 2019 November'
+                ve: 'VE 2020 Q1'
             }
         };
         if (versions[tab.name]) {

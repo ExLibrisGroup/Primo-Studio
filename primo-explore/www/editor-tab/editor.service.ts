@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import {ConfigurationService} from "../utils/configuration.service";
-import {HttpClient} from "@angular/common/http";
-import {CodeFile} from "../classes/code-file";
-import {FileTree} from "../classes/file-tree";
-import {IconsPickerService} from "../icons-picker/icons-picker.service";
+import {Injectable} from '@angular/core';
+import {ConfigurationService} from '../utils/configuration.service';
+import {HttpClient} from '@angular/common/http';
+import {CodeFile} from '../classes/code-file';
+import {FileTree} from '../classes/file-tree';
+import {IconsPickerService} from '../icons-picker/icons-picker.service';
 import {EMPTY, Subscription} from 'rxjs';
 import * as CodeMirror from 'codemirror';
 import * as _ from 'lodash';
@@ -136,10 +136,13 @@ export class EditorService {
               })
           },
           "prm-service-details": {
-              attrs: addAttrs({"[item]": ["$ctrl.parentCtrl.item"]})
+              attrs: addAttrs({"[item]": ["item"]})
           },
           "prm-search-result-availability-line": {
-              attrs: addAttrs({"[result]": ["$ctrl.parentCtrl.item"]})
+              attrs: addAttrs({"[result]": ["item"]})
+          },
+          "prm-brief-result-container":{
+              attrs: addAttrs({"[item]": ["item"]})
           }
       };
 

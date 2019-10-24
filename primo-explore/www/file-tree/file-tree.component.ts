@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {FileTree} from "../classes/file-tree";
-import {ConfigurationService} from "../utils/configuration.service";
-import {EditorService} from "../editor-tab/editor.service";
+import {FileTree} from '../classes/file-tree';
+import {ConfigurationService} from '../utils/configuration.service';
+import {EditorService} from '../editor-tab/editor.service';
 
 @Component({
   selector: 'prm-file-tree',
@@ -13,7 +13,7 @@ export class FileTreeComponent implements OnInit {
   @Output()
   private fileSelected: EventEmitter<FileTree> = new EventEmitter();
 
-  private _baseDir: FileTree;
+  private _baseDir: FileTree = {path: '', name: '', size: 0, type: "directory"};
   private _root: FileTree = {path: '', name: '', size: 0, type: "directory"};
 
   constructor(private configurationService: ConfigurationService,

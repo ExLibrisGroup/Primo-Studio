@@ -1,6 +1,5 @@
-import { Component } from '@angular/core';
-import {FileUploaderService} from "../utils/file-uploader.service";
-import {IframeService} from "../utils/iframe.service";
+import {Component} from '@angular/core';
+import {FileUploaderService} from '../utils/file-uploader.service';
 
 @Component({
   selector: 'prm-upload-package',
@@ -11,8 +10,7 @@ export class UploadPackageComponent {
   private _uploadDisabled: boolean;
   private package: any;
 
-  constructor(private fileUploaderService: FileUploaderService,
-              private iframeService: IframeService){
+  constructor(private fileUploaderService: FileUploaderService){
     this._uploadDisabled = true;
   }
 
@@ -26,7 +24,6 @@ export class UploadPackageComponent {
   uploadPackage(){
     this.fileUploaderService.uploadFiles('/package', this.package).subscribe(()=>{
       console.log('package uploaded successfully');
-      //this.iframeService.refreshNuiIFrame();
       location.reload();
       this._uploadDisabled = true;
     }, (err)=>{

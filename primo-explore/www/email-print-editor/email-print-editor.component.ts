@@ -11,6 +11,7 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {TemplateContentField} from '../classes/template-content-field';
 import * as _ from 'lodash';
 import {HttpClient} from '@angular/common/http';
+import {Observable, Subscription} from 'rxjs';
 
 @Component({
     selector: 'prm-email-print-editor',
@@ -24,7 +25,8 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     public availableLanguages: string[];
     public fields: TemplateContentField[];
     public variables: PnxVariable[];
-    public _codeFile: CodeFile;
+    private _codeFile: CodeFile;
+    private _finalCodeFile: CodeFile;
     public isShowCodeEditor: boolean;
     public pnxFieldsField: TemplateContentField;
 
@@ -42,8 +44,10 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     private frameAttributesMap: any = {};
     private _inProgress: boolean;
     private _expanded: boolean;
-    private openRepeat: string = '<div ng-repeat="item in $ctrl.parentCtrl.items"><md-divider ng-if="$first"></md-divider>';
-    private closeRepeat: string = '<md-divider></md-divider></div>';
+    private openRepeat: string = '<tr ng-if="$ctrl.parentCtrl.fullViewLoaded"\n' +
+        '                        ng-repeat="item in $ctrl.parentCtrl.delayedItems">';
+    private closeRepeat: string = '</tr>';
+    private isAttributesMapInitializedSubscription: Subscription;
 
     constructor(public configurationService: ConfigurationService,
                 public iframeService: IframeService,
@@ -56,18 +60,45 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             print: new StaticCategory('print', 'Print', '/email-template') // TODO change to print template
         };
         this.fields = [
-            new TemplateContentField('Logo', false, {component: 'prm-logo'}),
-            new TemplateContentField('Institution Note', false, {parameters: 'translate="nui.email.institutionNote"'}), // TODO get code table from Yael
+            new TemplateContentField('Logo', false,
+                {
+                    component: 'prm-logo',
+                    parameters: 'style="height: 66px;"'
+                }),
+            new TemplateContentField('Institution Note', false,
+                {
+                    parameters: 'translate="nui.email.institutionNote"'
+                }),
             new TemplateContentField('Personal Note (for signed in users)', false,
-                {parameters: 'ng-if="$ctrl.parentCtrl.note"', content: '<b>Note:</b> {{$ctrl.parentCtrl.note}}'}),
+                {
+                    component: 'tr',
+                    parameters: 'ng-if="$ctrl.parentCtrl.note"',
+                    content:'\n                        <td style="padding: 15px 10px;\n' +
+                        '    font-style: italic;">\n' +
+                        '                            <b>Note:</b> {{$ctrl.parentCtrl.note}}\n' +
+                        '                        </td>\n                    '
+                }),
             new TemplateContentField('Brief display', true,
-                {component: 'prm-brief-result-container', parameters: '[item]="item"'}),
+                {
+                    component: 'prm-brief-result-container',
+                    parameters: 'style="width: 100%;"\n                                                        [item]="item"',
+                    content: '\n                            '
+                }),
             new TemplateContentField('Availability status', true,
-                {component: 'prm-search-result-availability-line', parameters: '[result]="::item"'}),
+                {
+                    component: 'prm-search-result-availability-line',
+                    parameters: '[result]="::item"'
+                }),
             new TemplateContentField('Detailed display', true,
-                {component: 'prm-service-details', parameters: '[item]="item"'}),
+                {
+                    component: 'prm-service-details',
+                    parameters: '[item]="item"'
+                }),
             new TemplateContentField('Display Fields', true),
-            new TemplateContentField('Footer', false, {component: 'prm-explore-footer'})
+            new TemplateContentField('Footer', false,
+                {
+                    component: 'prm-explore-footer'
+                })
         ];
         this.variables = [
             new PnxVariable('type', 'pnx.display.type[0]', false),
@@ -84,6 +115,9 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         this.pnxFieldsField = this.fields.find(field => field.name === "Display Fields");
         this._expanded = true;
         this.toggleTab();
+
+        //TODO remove to change editor to not show by default
+        this.isShowCodeEditor = true;
     }
 
     ngOnInit() {
@@ -99,7 +133,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
 
         this.url = '/static-file/' + this.selectedCategory.key + '?vid=' + this.config.view + '&lang=' + this.selectedLanguage;
         let frameWindow = window.frames[0];
-        this.iframeService.isAttributesMapInitialized().subscribe((isLoaded) => {
+        this.isAttributesMapInitializedSubscription = this.iframeService.isAttributesMapInitialized().subscribe((isLoaded) => {
             if (isLoaded) {
                 this.frameAttributesMap = frameWindow.appConfig['primo-view']['attributes-map'];
                 this.availableLanguages = this.frameAttributesMap.interfaceLanguageOptions.split(',');
@@ -112,13 +146,16 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         if (this.expanded) {
             this.expandTab.emit(!this.expanded);
         }
+        if (this.isAttributesMapInitializedSubscription && !this.isAttributesMapInitializedSubscription.closed) {
+            this.isAttributesMapInitializedSubscription.unsubscribe();
+        }
     }
 
     createTheme() {
         this._inProgress = true;
-        this.editorService.saveFile(this._codeFile).subscribe((resp)=>{
+        this.editorService.saveFile(this.codeFile).subscribe((resp)=>{
             if(+resp.status === 200){
-                console.log('file "' + this._codeFile.file_path + '" was saved');
+                console.log('file "' + this.codeFile.file_path + '" was saved');
                 this.iframeService.refreshNuiIFrame();
             }
         }, (err)=> {
@@ -128,8 +165,24 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         });
     }
 
+    generateEmailTemplate() {
+        this._inProgress = true;
+        this.getFinalCodeFile().subscribe(finalCodeFile => {
+            finalCodeFile.data = this.codeFile.data;
+            this.editorService.saveFile(finalCodeFile).subscribe((resp)=>{
+                if(+resp.status === 200){
+                    console.log('file "' + finalCodeFile.file_path + '" was saved');
+                }
+            }, (err)=> {
+                console.log(err);
+            }).add(()=>{
+                this._inProgress = false;
+            });
+        });
+    }
+
     download() {
-        this.$http.get('/single_file?path=' + this.filePath, {
+        this.$http.get('/single_file?path=' + this.filePath.replace('.tmpl', ''), {
             headers: {
                 'Content-Type': 'text/html',
                 'Accept': 'text/html'
@@ -139,7 +192,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             let url = URL.createObjectURL(new Blob([data]));
             let a = document.createElement('a');
             a.href = url;
-            a.download = this.fileName;
+            a.download = this.fileName.replace('.tmpl', '');
             document.body.appendChild(a);
             a.click();
             setTimeout(function(){
@@ -163,13 +216,13 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         let codeFile = new CodeFile('htmlembedded', '', this.filePath, 0);
         this.urlChange.emit(this.selectedCategory.suffix + '?vid=' + this.config.view + '&lang=' + this.selectedLanguage);
         this.editorService.initCode(codeFile).add(() => {
-            this._codeFile = this.editorService.codeFiles.get(this.filePath);
+            this.codeFile = this.editorService.codeFiles.get(this.filePath);
 
             // update selected variables
             this.variables.forEach(variable => this.updateInsertedVariable(variable));
             let insertedVariables = this.variables.filter(variable => variable.inserted);
             if (insertedVariables.length > 1) {
-                let indexesInData = insertedVariables.map(variable => this._codeFile.data.indexOf(variable.calculateTemplate()));
+                let indexesInData = insertedVariables.map(variable => this.codeFile.data.indexOf(variable.calculateTemplate()));
                 let sortedIndexes = indexesInData.slice(0).sort((a, b) => a - b);
                 if (indexesInData !== sortedIndexes) {
                     let sortedVariables = sortedIndexes.map(sortedI => insertedVariables[indexesInData.indexOf(sortedI)]);
@@ -182,7 +235,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             this.fields.forEach(field => this.updateInsertedField(field));
             let insertedFields = this.fields.filter(field => field.inserted);
             if (insertedFields.length > 1) {
-                let indexesInData = insertedFields.map(field => this._codeFile.data.indexOf(field.calculateTemplate()));
+                let indexesInData = insertedFields.map(field => this.codeFile.data.indexOf(field.calculateTemplate()));
                 let sortedIndexes = indexesInData.slice(0).sort((a, b) => a - b);
                 if (indexesInData !== sortedIndexes) {
                     let sortedFields = sortedIndexes.map(sortedI => insertedFields[indexesInData.indexOf(sortedI)]);
@@ -270,7 +323,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         let nextField = insertedFields.length > indexInInsertedFields + 1 ? insertedFields[indexInInsertedFields + 1] : undefined;
         let previousField = 0 < indexInInsertedFields ? insertedFields[indexInInsertedFields - 1] : undefined;
         let betweenRepeatableFields = nextField && previousField && nextField.repeatable && !field.repeatable && previousField.repeatable;
-        this._codeFile.data = this._codeFile.data
+        this.codeFile.data = this.codeFile.data
                                 .replace(betweenRepeatableFields ? this.closeRepeat + calculatedField + this.openRepeat : calculatedField, '')
                                 .replace(this.openRepeat + this.closeRepeat, '');
         field.inserted = false;
@@ -282,19 +335,19 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
         let previousField = this.fields.slice(0, fieldIndex).reverse().find(previousField => previousField.inserted);
         let nextFieldTemplate = nextField ? nextField.calculateTemplate() : '';
         let previousFieldTemplate = previousField ? previousField.calculateTemplate() : '';
-        let previousRepeatable = (previousField && previousField.repeatable);
-        let nextRepeatable = (nextField && nextField.repeatable);
+        let isPreviousRepeatable = (previousField && previousField.repeatable);
+        let isNextRepeatable = (nextField && nextField.repeatable);
         let closeOrOpenRepeat = (before, after) => (before && !after) ? this.closeRepeat : (!before && after) ? this.openRepeat : '';
-        let beforeText = previousFieldTemplate + closeOrOpenRepeat(previousRepeatable, nextRepeatable) + nextFieldTemplate;
-        let afterText = previousFieldTemplate + closeOrOpenRepeat(previousRepeatable, field.repeatable) +
-            field.calculateTemplate() + closeOrOpenRepeat(field.repeatable, nextRepeatable) + nextFieldTemplate;
-        this._codeFile.data = this._codeFile.data.replace(beforeText, afterText);
+        let beforeText = previousFieldTemplate + closeOrOpenRepeat(isPreviousRepeatable, isNextRepeatable) + nextFieldTemplate;
+        let afterText = previousFieldTemplate + closeOrOpenRepeat(isPreviousRepeatable, field.repeatable) +
+            field.calculateTemplate() + closeOrOpenRepeat(field.repeatable, isNextRepeatable) + nextFieldTemplate;
+        this.codeFile.data = this.codeFile.data.replace(beforeText, afterText);
         field.inserted = true;
     }
 
     public updateInsertedField(field: TemplateContentField): void {
         let calculatedField = field.calculateTemplate();
-        field.inserted = this._codeFile.data.includes(calculatedField);
+        field.inserted = this.codeFile.data.includes(calculatedField);
     }
 
     public onDropVariable(event: CdkDragDrop<string[]>) {
@@ -331,7 +384,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
 
     public removeVariableFromTemplate(variable: PnxVariable) {
         let calculatedVariable = variable.calculateTemplate();
-        this._codeFile.data = this._codeFile.data.replace(calculatedVariable, '');
+        this.codeFile.data = this.codeFile.data.replace(calculatedVariable, '');
         variable.inserted = false;
         if (!this.variables.some((variable) => variable.inserted)) {
             this.removeFieldFromTemplate(this.pnxFieldsField);
@@ -350,14 +403,14 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             let previousVariableTemplate = previousVariable ? previousVariable.calculateTemplate() : '<div class="PNX_Fields">';
             let beforeText = previousVariableTemplate + nextVariableTemplate;
             let afterText = previousVariableTemplate + variable.calculateTemplate() + nextVariableTemplate;
-            this._codeFile.data = this._codeFile.data.replace(beforeText, afterText);
+            this.codeFile.data = this.codeFile.data.replace(beforeText, afterText);
         }
         variable.inserted = true;
     }
 
     public updateInsertedVariable(variable: PnxVariable): void {
         let calculatedField = variable.calculateTemplate();
-        variable.inserted = this._codeFile.data.includes(calculatedField);
+        variable.inserted = this.codeFile.data.includes(calculatedField);
     }
 
     public isVariableInData(variable: PnxVariable): boolean {
@@ -388,7 +441,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
 
     get selectedLanguage(): string {
         if (!this._selectedLanguage) {
-            return this.frameAttributesMap.interfaceLanguage || this.configurationService.isVe ? 'en' : 'en_US';
+            return this.frameAttributesMap.interfaceLanguage || (this.configurationService.isVe ? 'en' : 'en_US');
         }
         return this._selectedLanguage;
     }
@@ -405,7 +458,7 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
     }
 
     get fileName(): string {
-        return this.selectedCategory.key + '_' + this.selectedLanguage + '.html';
+        return this.selectedCategory.key + '_' + this.selectedLanguage + '.tmpl.html';
     }
 
     get codeFile(): CodeFile {
@@ -418,6 +471,26 @@ export class EmailPrintEditorComponent implements OnInit, OnDestroy {
             });
             return this._codeFile;
         }
+    }
+
+    set codeFile(value: CodeFile) {
+        this._codeFile = value;
+    }
+
+    private getFinalCodeFile(): Observable<CodeFile> {
+        return new Observable<CodeFile>(observer => {
+            if (this._finalCodeFile) {
+                observer.next(this._finalCodeFile);
+                observer.complete();
+            } else {
+                this._finalCodeFile = new CodeFile('htmlembedded', '', this.filePath.replace('.tmpl.html', '.html'), 0);
+                this.editorService.initCode(this._finalCodeFile).add(() => {
+                    this._finalCodeFile = this.editorService.codeFiles.get(this.filePath.replace('.tmpl.html', '.html'));
+                    observer.next(this._finalCodeFile);
+                    observer.complete();
+                });
+            }
+        });
     }
 
     get inProgress(): boolean {

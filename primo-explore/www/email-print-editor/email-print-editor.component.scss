@@ -1,3 +1,4 @@
+@import '../scss/intrinsic';
 prm-email-print-editor {
     .float-right {
         float: right;
@@ -11,7 +12,9 @@ prm-email-print-editor {
         width: 100%;
     }
 
-    div[layout="row"] {
-        justify-content: space-between;
+    div[layout="column"] {
+        button {
+            @include intrinsic(width, fit-content);
+        }
     }
 }

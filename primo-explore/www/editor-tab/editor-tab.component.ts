@@ -1,10 +1,10 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {EditorService} from "./editor.service";
-import {IframeService} from "../utils/iframe.service";
-import {CodeFile} from "../classes/code-file";
+import {EditorService} from './editor.service';
+import {IframeService} from '../utils/iframe.service';
+import {CodeFile} from '../classes/code-file';
 import * as CodeMirror from 'codemirror';
-import {FileTree} from "../classes/file-tree";
-import {ConfigurationService} from "../utils/configuration.service";
+import {FileTree} from '../classes/file-tree';
+import {ConfigurationService} from '../utils/configuration.service';
 
 @Component({
   selector: 'prm-editor',
@@ -44,7 +44,7 @@ export class EditorTabComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSave(data: CodeFile) {
+  public onSave(data: CodeFile) {
       this._inProgress = true;
       this.editorService.saveFile(data).subscribe((resp)=>{
         if(+resp.status === 200){

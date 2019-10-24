@@ -29,12 +29,6 @@ export class OneTimeBindingDirective implements AfterViewChecked {
             this.detached = true;
         }
     }
-
-    check(): void {
-        if (this.detached) {
-            this.view.detectChanges();
-        }
-    }
 }
 
 export interface NgNoCheckContext {

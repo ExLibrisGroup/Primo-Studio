@@ -1,0 +1,41 @@
+@import "~@angular/material/theming";
+@import "~www/scss/variables";
+
+@include mat-core();
+
+$studio-color: (
+    50: #e3f5f7,
+    100: #b9e4ec,
+    200: #8fd2e0,
+    300: #6fc1d5,
+    400: #5bb4ce,
+    500: #4ea7c8,
+    600: #469abb,
+    700: #3c87a9,
+    800: #3c87a9,
+    900: #2c5773,
+    A100: #b9e4ec,
+    A200: #8fd2e0,
+    A400: #5bb4ce,
+    A700: #3c87a9,
+    contrast: (
+        50: $dark-primary-text,
+        100: $dark-primary-text,
+        200: $dark-primary-text,
+        300: $light-primary-text,
+        400: $light-primary-text,
+        500: $light-primary-text,
+        600: $light-primary-text,
+        700: $light-primary-text,
+        800: $light-primary-text,
+        900: $light-primary-text,
+        A100: $dark-primary-text,
+        A200: $dark-primary-text,
+        A400: $light-primary-text,
+        A700: $light-primary-text,
+    )
+);
+
+$studio-app-theme: mat-light-theme(mat-palette($studio-color), mat-palette($studio-color));
+
+@include angular-material-theme($studio-app-theme);

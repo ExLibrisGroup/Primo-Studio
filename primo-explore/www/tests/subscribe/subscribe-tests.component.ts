@@ -20,7 +20,7 @@ import {isEqual} from 'lodash';
 })
 export class SubscribeTestsComponent implements OnInit {
 
-    @ViewChild(MessagesComponent)
+    @ViewChild(MessagesComponent, { static: false })
     private messagesElement: MessagesComponent;
 
     public checkedSuites: boolean[];

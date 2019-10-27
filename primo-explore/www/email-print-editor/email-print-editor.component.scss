@@ -1,0 +1,20 @@
+@import '../scss/intrinsic';
+prm-email-print-editor {
+    .float-right {
+        float: right;
+    }
+
+    button {
+        margin-bottom: 7px;
+    }
+
+    .custom-drag-and-drop {
+        width: 100%;
+    }
+
+    div[layout="column"] {
+        button {
+            @include intrinsic(width, fit-content);
+        }
+    }
+}

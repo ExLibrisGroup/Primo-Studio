@@ -5,7 +5,7 @@ import {
   Injector,
   Input,
   OnInit,
-  QueryList, Renderer2,
+  QueryList,
   ViewChildren,
   ViewContainerRef
 } from '@angular/core';
@@ -14,8 +14,7 @@ import {IframeService} from "../utils/iframe.service";
 import {IconsPickerService} from "./icons-picker.service";
 import {DomSanitizer} from "@angular/platform-browser";
 import {IconPickerDialogComponent} from "../icon-picker-dialog/icon-picker-dialog.component";
-import {Icon, IconType} from "../classes/icon";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
+import {Icon} from "../classes/icon";
 
 @Component({
   selector: 'prm-icons-picker',
@@ -37,8 +36,7 @@ export class IconsPickerComponent implements OnInit {
               public sanitizer: DomSanitizer,
               private vcRef: ViewContainerRef,
               private el: ElementRef,
-              private cfr: ComponentFactoryResolver,
-              private analytics: Angulartics2GoogleAnalytics) {
+              private cfr: ComponentFactoryResolver) {
     this._inProgress= false;
     this.dialogCreated = false;
   }
@@ -89,7 +87,6 @@ export class IconsPickerComponent implements OnInit {
   }
 
   iconSelected(icon: Icon) {
-    this.analytics.eventTrack('changeIcon', {category: "Icons", label: this.buttonRef.nativeElement.id});
     this.iconsPickerService.iconSelected(this.buttonRef.nativeElement.id, icon);
   }
 
@@ -98,7 +95,6 @@ export class IconsPickerComponent implements OnInit {
     this.iconsPickerService.createTheme().subscribe((resp)=>{
       console.log('icons set created');
       this.iframeService.refreshNuiIFrame();
-      this.analytics.eventTrack('iconSetCreated', {category: 'Icons'});
     }, (err)=> {
       console.log(err);
     }).add(()=>{

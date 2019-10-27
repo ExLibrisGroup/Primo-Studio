@@ -30,8 +30,4 @@ export class CalcSVGViewBoxDirective {
       this.elementRef.nativeElement.setAttribute('viewBox', `${x} ${y} ${height} ${width}`);
   }
 
-  get calcSVGViewBox(): SVGAnimatedRect {
-    return this.viewBox;
-  }
-
 }

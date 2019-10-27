@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
+import {MockPipe} from 'ng-mocks';
+import {TextFormatPipe} from '../utils/text-format.pipe';
+import {MatDialogModule, MatDialogRef} from '@angular/material/dialog';
 
 describe('ConfirmationDialogComponentComponent', () => {
   let component: ConfirmationDialogComponent;
@@ -8,7 +11,16 @@ describe('ConfirmationDialogComponentComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConfirmationDialogComponent ]
+        imports: [
+            MatDialogModule
+        ],
+      declarations: [
+          ConfirmationDialogComponent,
+          MockPipe(TextFormatPipe)
+      ],
+        providers: [
+            {provide: MatDialogRef, useValue: {}}
+        ]
     })
     .compileComponents();
   }));

@@ -1,10 +1,9 @@
 import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {Icon, IconType} from "../classes/icon";
-import {IconsPickerService} from "../icons-picker/icons-picker.service";
-import {IconsPickerComponent} from "../icons-picker/icons-picker.component";
+import {Icon, IconType} from '../classes/icon';
+import {IconsPickerService} from '../icons-picker/icons-picker.service';
+import {IconsPickerComponent} from '../icons-picker/icons-picker.component';
 import * as _ from 'lodash';
-import {DomSanitizer} from "@angular/platform-browser";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'prm-icon-picker-dialog',
@@ -30,7 +29,8 @@ export class IconPickerDialogComponent implements OnInit {
 
   private dialogArrowSize = 10;
 
-  @ViewChild('dialogPopup') dialogElement: ElementRef<HTMLDivElement>;
+  @ViewChild('dialogPopup', { static: true })
+  dialogElement: ElementRef<HTMLDivElement>;
 
   public show: boolean;
   public hidden: boolean;
@@ -49,8 +49,9 @@ export class IconPickerDialogComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private service: IconsPickerService,
     public sanitizer: DomSanitizer,
-    public analytics: Angulartics2GoogleAnalytics
-  ) { }
+  ) {
+      this.directiveElementRef = this.el;
+  }
 
   setDialog(instance: any, elementRef: ElementRef, icon: string, ipPosition: string, ipHeight: string, ipMaxHeight: string,
             ipWidth: string, ipPlaceHolder: string, ipFallbackIcon: string, ipIconPack: string) {
@@ -99,13 +100,10 @@ export class IconPickerDialogComponent implements OnInit {
   selectIcon(icon: Icon): void {
     if (icon.type === IconType.FONT_AWESOME) {
       this.iconsPickerComponent.iconSelected(icon);
-      this.analytics.eventTrack("selectIcon", {category: "IconsDialog", label: "font awesome"});
     } else if (icon.type === IconType.BOOTSTRAP) {
       this.iconsPickerComponent.iconSelected(icon);
-      this.analytics.eventTrack("selectIcon", {category: "IconsDialog", label: "glyphicon"});
     } else if (icon.type === IconType.PRIMO_UI) {
       this.iconsPickerComponent.iconSelected(icon);
-      this.analytics.eventTrack("selectIcon", {category: "IconsDialog", label: "primo ui"});
     }
     this.closeIconPicker();
   }

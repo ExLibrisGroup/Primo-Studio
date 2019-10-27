@@ -5,9 +5,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {CookieService} from 'ngx-cookie-service';
 import {FormlyModule} from "@ngx-formly/core";
 import {FormlyMaterialModule} from "@ngx-formly/material";
-import {MatDialogModule, MatTooltipModule} from "@angular/material";
-import {Angulartics2Module, RouterlessTracking} from "angulartics2";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
+import {MatCheckboxModule, MatDialogModule, MatMenuModule, MatSelectModule, MatTooltipModule} from '@angular/material';
 
 import {AppComponent} from './app/app.component';
 import {ConfigurationService} from "./utils/configuration.service";
@@ -46,6 +44,10 @@ import { TextFormatPipe } from './utils/text-format.pipe';
 import { MessagesComponent } from './messages/messages.component';
 import { SubscribeTestsComponent } from './tests/subscribe/subscribe-tests.component';
 import { TestsResultsComponent } from './tests/results/tests-results.component';
+import { EmailPrintEditorComponent } from './email-print-editor/email-print-editor.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { FilterByPipe } from './utils/filter-by.pipe';
+import { MapByPipe } from './utils/map-by.pipe';
 
 
 const appRoutes: Routes = [
@@ -82,7 +84,10 @@ const appRoutes: Routes = [
     TextFormatPipe,
     MessagesComponent,
     SubscribeTestsComponent,
-    TestsResultsComponent
+    TestsResultsComponent,
+    EmailPrintEditorComponent,
+    FilterByPipe,
+    MapByPipe
   ],
   entryComponents: [
     FeatureConfigurationFormComponent,
@@ -93,11 +98,6 @@ const appRoutes: Routes = [
     BrowserModule,
     HttpClientModule,
     FormsModule,
-    Angulartics2Module.forRoot([Angulartics2GoogleAnalytics], {
-      pageTracking: {
-        clearQueryParams: false
-      }
-    }),
     RouterModule.forRoot(appRoutes, {
       scrollPositionRestoration: "top",
       anchorScrolling: "enabled"
@@ -107,6 +107,10 @@ const appRoutes: Routes = [
     BrowserAnimationsModule,
     MatDialogModule,
     MatTooltipModule,
+    MatCheckboxModule,
+    MatMenuModule,
+    MatSelectModule,
+    DragDropModule,
     CodemirrorModule
   ],
   providers: [
@@ -115,7 +119,6 @@ const appRoutes: Routes = [
     FileUploaderService,
     IframeService,
     FeaturesService,
-    RouterlessTracking,
     EditorService,
     IconsPickerService
   ],

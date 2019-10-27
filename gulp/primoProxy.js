@@ -104,15 +104,23 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
 
 
     //html
-    var paths = glob.sync(viewPackage + "/html/home_**.html", {cwd:appName});
+    var homePaths = glob.sync(viewPackage + "/html/home_**.html", {cwd:appName});
+    var emailPaths = glob.sync(viewPackage + "/html/email_**.html", {cwd:appName});
 
-    if(paths && paths.length > 0){ // for August 2016 version
+    if(homePaths && homePaths.length > 0){ // for August 2016 version
         customizationObject.staticHtml = {};
         customizationObject.staticHtml.homepage = {};
-        for (path of paths) {
+        for (path of homePaths) {
 
             var pathFixed = path.substring(path.indexOf('/html/home_')+11, path.indexOf('.html'));
             customizationObject.staticHtml.homepage[pathFixed] = path;
+        }
+
+        customizationObject.staticHtml.email = {};
+        for (path of emailPaths) {
+
+            var pathFixed = path.substring(path.indexOf('/html/email_')+12, path.indexOf('.tmpl.html'));
+            customizationObject.staticHtml.email[pathFixed] = path;
         }
 
 
@@ -123,6 +131,16 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
                 var pathFixed = path.substring(path.indexOf('/html/home_')+11, path.indexOf('.html'));
                 if (!customizationObject.staticHtml.homepage[pathFixed]) {
                     customizationObject.staticHtml.homepage[pathFixed] = path;
+                }
+
+            }
+
+            paths = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/html/email_**.html", {cwd:appName});
+
+            for (path of paths) {
+                var pathFixed = path.substring(path.indexOf('/html/email_')+12, path.indexOf('.html'));
+                if (!customizationObject.staticHtml.email[pathFixed]) {
+                    customizationObject.staticHtml.email[pathFixed] = path;
                 }
 
             }
@@ -146,7 +164,13 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
     }
     function getLanguage(entry, isVe) {
         var numberOfCharsForLang = isVe ? 2 : 5;
-        var start = entry.indexOf('.html')-numberOfCharsForLang;
+        var start;
+        if (entry.indexOf('.tmpl.html') > -1) {
+            // if email template html
+            start = entry.indexOf('.tmpl.html')-numberOfCharsForLang;
+        } else {
+            start = entry.indexOf('.html')-numberOfCharsForLang;
+        }
         var res = entry.substring(start,start+numberOfCharsForLang);
         return res;
     }
@@ -160,7 +184,8 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
 
         res.forEach((e)=> {
             var lang = getLanguage(e, isVe);
-            var dirName = e.replace('_'+lang+'.html','');
+            var dirName = e.replace('_'+lang+'.tmpl', '_'+lang);
+            dirName = dirName.replace('_'+lang+'.html','');
             if (dirName.indexOf('/') > -1) {
                 var sepIndex = dirName.indexOf('/');
                 dirName = dirName.substr(0, sepIndex);

@@ -1,0 +1,28 @@
+@import "variables";
+@import "intrinsic";
+
+.custom-drag-and-drop {
+    &.cdk-drop-list {
+        @include intrinsic(width, fill-available);
+        @include intrinsic(height, fill-available);
+        overflow-y: auto;
+    }
+
+    &.cdk-drag {
+        cursor: grab;
+        min-height: 24px;
+    }
+
+    &.cdk-drag-preview {
+        cursor: grabbing;
+        min-height: 24px;
+        opacity: 0.5;
+    }
+
+    &.cdk-drag-placeholder {
+        @include intrinsic(width, fill-available);
+        min-height: 24px;
+        border: dotted 2px $background-border;
+        transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+    }
+}

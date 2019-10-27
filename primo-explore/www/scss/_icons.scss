@@ -1,83 +1,60 @@
 @font-face {
     font-family: 'Primo-apps-store';
     src:
-      url('../css/fonts/Primo-apps-store.ttf?80bwww') format('truetype'),
-      url('../css/fonts/Primo-apps-store.woff?80bwww') format('woff'),
-      url('../css/fonts/Primo-apps-store.svg?80bwww#Primo-apps-store') format('svg');
+        url('../css/fonts/Primo-apps-store.ttf?80bwww') format('truetype'),
+        url('../css/fonts/Primo-apps-store.woff?80bwww') format('woff'),
+        url('../css/fonts/Primo-apps-store.svg?80bwww#Primo-apps-store') format('svg');
     font-weight: normal;
     font-style: normal;
-  }
-  
-  [class^="icon-"], [class*=" icon-"] {
-    /* use !important to prevent issues with browser extensions that change fonts */
-    font-family: 'Primo-apps-store';
+}
+
+[class^="icon-"], [class*=" icon-"] {
     speak: none;
     font-style: normal;
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
     line-height: 1;
-  
+
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-  }
+}
 
-  .icon-chevrons-left:before {
-    content: "\e900";
-  }
-  .icon-add:before {
-    content: "\e145";
-  }
-  .icon-remove:before {
-    content: "\e5cd";
-  }
-  .icon-cloud_upload:before {
-    content: "\e2c3";
-  }
-  .icon-close:before {
-    content: "\e5cd";
-  }
-  .icon-cloud_download:before {
-    content: "\e2c0";
-  }
-  .icon-palette:before {
-    content: "\e40a";
-  }
-  .icon-colorize:before {
-    content: "\e3b8";
-  }
-  .icon-play_arrow:before {
-    content: "\e037";
-  }
-  .icon-refresh:before {
-    content: "\e5d5";
-  }
-  .icon-stop:before {
-    content: "\e047";
-  }
-  .icon-image:before {
-    content: "\e90d";
-  }
-  .icon-gift:before {
-    content: "\e99f";
-  }
-  .icon-github:before {
-    content: "\eab0";
-  }
-  .icon-curly_brackets:before {
-    content: "\e900";
-  }
-  .icon-save:before {
-    content: "\e962";
-  }
-  .icon-icons:before {
-    font-family: 'Material Icons';
+%material-icon {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'Material Icons' !important;
     font-size: 24px;
-    content: "\view_module";
-  }
-  .icon-test:before {
-      font-family: 'Material Icons';
-      font-size: 24px;
-      content: "\playlist_add_check";
-  }
+}
+
+@mixin icon($name, $content, $material) {
+    .icon-#{$name}:before {
+        @if $material {
+            @extend %material-icon;
+        } @else {
+            /* use !important to prevent issues with browser extensions that change fonts */
+            font-family: 'Primo-apps-store' !important;
+        }
+        content: "#{$content}";
+    }
+}
+
+@include icon(chevrons-left, "\e900", false);
+@include icon(add, "\e145", false);
+@include icon(remove, "\e5cd", false);
+@include icon(cloud_upload, "\e2c3", false);
+@include icon(close, "\e25cd", false);
+@include icon(cloud_download, "\e2c0", false);
+@include icon(palette, "\e40a", false);
+@include icon(colorize, "\e3b8", false);
+@include icon(play_arrow, "\e037", false);
+@include icon(refersh, "\e5d5", false);
+@include icon(stop, "\e047", false);
+@include icon(image, "\e90d", false);
+@include icon(gift, "\e99f", false);
+@include icon(github, "\eab0", false);
+@include icon(curly_brackets, "\e900", false);
+@include icon(save, "\e962", false);
+@include icon(icons, "\view_module", true);
+@include icon(test, "\playlist_add_check", true);
+@include icon(email, "\mail_outline", true);

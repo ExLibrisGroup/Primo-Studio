@@ -1,10 +1,10 @@
 import {Injectable, Renderer2, RendererFactory2} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {ConfigurationService} from "../utils/configuration.service";
+import {HttpClient} from '@angular/common/http';
+import {ConfigurationService} from '../utils/configuration.service';
 import * as _ from 'lodash';
-import {Icon, IconType} from "../classes/icon";
-import {IconInformation} from "../classes/icon-information";
-import {Observable} from "rxjs";
+import {Icon, IconType} from '../classes/icon';
+import {IconInformation} from '../classes/icon-information';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +105,7 @@ export class IconsPickerService {
     } else {
       let className = `.${icon.type===IconType.FONT_AWESOME? 'fa':'glyphicon'}-${icon.id}`;
       let styles = _.filter(document.head.querySelectorAll("style"), e => e.textContent.indexOf(className)!==-1);
-      let textContent = styles[0].textContent;
+      let textContent = styles.length > 0 ? styles[0].textContent : '';
       let classCssRegex = new RegExp("[\\s\\S]*?(" + className.replace('.', '\\.') + "[\\s\\S]*?:before[\\s]*?{[\\s\\S]*?})[\\s\\S]*");
       let specificCss = textContent.replace(classCssRegex, '$1');
       let contentRegex = /[\s\S]*content:.*"(.*)"[\s\S]*/;

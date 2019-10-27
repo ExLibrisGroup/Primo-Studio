@@ -20,7 +20,7 @@ const fs= require('fs');
 
 let utils= require('./utils/utils');
 
-gulp.task('setup_watchers', ['watch-js', 'watch-custom-scss', 'watch-css'], () => {
+gulp.task('setup_watchers', gulp.series('watch-js', 'watch-custom-scss', 'watch-css'), () => {
     gulp.watch(config.buildParams.customPath(),() => {
         return browserSyncManager.reloadServer();
     });
@@ -230,6 +230,6 @@ function _next(req,res,next,url,vid){
 }
 
 
-gulp.task('run', ['connect:primo_explore','reinstall-primo-node-modules','custom-js','custom-scss','custom-css']); //watch
+gulp.task('run', gulp.series('connect:primo_explore','reinstall-primo-node-modules','custom-js','custom-scss','custom-css')); //watch
 
-gulp.task('web', ['serve']); //watch
+gulp.task('web', gulp.series('serve')); //watch

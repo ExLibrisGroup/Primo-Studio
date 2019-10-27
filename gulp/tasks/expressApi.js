@@ -6,6 +6,7 @@ const upload = multer();
 const storage = require('node-persist');
 const npmi= require('npmi');
 const buildCustomJs= require('./buildCustomJs');
+const buildCustomCss= require('./buildCustomCss');
 const customJs= require('./buildCustomJs').customJs;
 const appCss= require('./build-scss').appCss;
 const Promise = require('bluebird');
@@ -18,7 +19,7 @@ const rename= require('gulp-rename');
 const zip = require('gulp-zip');
 const fstream = require('fstream');
 const streamifier = require('streamifier');
-const unzip = require('unzip');
+const unzip = require('unzipper');
 const streamToPromise = require('./streamToPromise');
 const ncp = require('ncp').ncp;
 const dirTree = require('directory-tree');
@@ -375,6 +376,21 @@ router.delete('/images', (req, res)=>{
     });
 });
 
+router.get('/single_file', (req, res)=>{
+    let userId= utils.getUserId(req);
+    let userCustomDir= utils.getUserCustomDir(userId);
+    let filePath = req.query.path;
+    let readableStream = gulp.src([userCustomDir+filePath], {base: './primo-explore/custom'});
+    let buffer;
+    readableStream.on('data', (data)=>{
+        buffer= data;
+    });
+    readableStream.on('end',()=>{
+        res.type('html');
+        res.end(buffer._contents, 'binary');
+    });
+});
+
 router.get('/package', (req, res)=>{
     let userId= utils.getUserId(req);
     let vid= req.cookies['viewForProxy'];
@@ -420,7 +436,7 @@ router.post('/package', packageUpload,  (req, res)=>{
     let zipStream = readStream
         .pipe(unzip.Parse())
         .pipe(writeStream);
-    let promise=  streamToPromise(zipStream).then(()=>{
+    streamToPromise(zipStream).then(()=>{
         console.log('unziped package');
         let directories = utils.getDirectories(packagePath);
         if (directories.length !== 1){
@@ -434,6 +450,16 @@ router.post('/package', packageUpload,  (req, res)=>{
             }
             let userManifest=data? JSON.parse(data) : {};
             console.log('user manifest read from features.json.txt: ' + JSON.stringify(userManifest));
+
+            let cssHandlerPromise = new Promise((resolveCssHandlerPromise, rejectCssHandlerPromise) => {
+                let customCssPath = packagePath + '/' + dirName + '/css/custom1.css';
+                if (fs.existsSync(customCssPath)) {
+                    fs.renameSync(customCssPath, packagePath + '/' + dirName + '/css/customUploadedPackage.css');
+                    resolveCssHandlerPromise();
+                } else {
+                    resolveCssHandlerPromise();
+                }
+            });
 
             let javaScriptHandlerPromise = new Promise((resolveJavaScriptHandlerPromise, rejectJavaScriptHandlerPromise)=>{
                 let customJsPath = packagePath + '/' + dirName + '/js/custom.js';
@@ -517,7 +543,7 @@ router.post('/package', packageUpload,  (req, res)=>{
                 }
             });
 
-            javaScriptHandlerPromise.then(() => {
+            Promise.all([cssHandlerPromise, javaScriptHandlerPromise]).then(() => {
                 new Promise((resolve, reject) => {
                     ncp(packagePath + '/' + dirName, utils.getUserCustomDir(userId), {filter: utils.uploadedPackageFileFilter}, function (err) {
                         if (err) {
@@ -574,6 +600,9 @@ router.post('/code', function (req, res) {
             if (exists) {
                 resolve();
             } else {
+                if (!fs.existsSync(path.dirname(filename))) {
+                    fs.mkdirSync(path.dirname(filename));
+                }
                 fs.writeFile(filename, "", {flag: 'wx'}, (err) => {
                     if (err) {
                         utils.sendErrorResponse(res, err);
@@ -642,7 +671,7 @@ router.get('/start', function (req, res) {
      path: path.resolve(__dirname, '../../primo-explore/custom/' + n),
      type: 'Directory'
      });*/
-    let writeStream = fstream.Writer({
+    let writeOptions = fstream.Writer({
         path: path.resolve(__dirname, '../../tmp'),
         type: 'Directory'
     });
@@ -650,8 +679,7 @@ router.get('/start', function (req, res) {
         .then(
             () => {
                 let zipStream = readStream
-                    .pipe(unzip.Parse())
-                    .pipe(writeStream);
+                    .pipe(unzip.Extract(writeOptions));
                 return streamToPromise(zipStream)
             });
     //let p2 = rimrafAsync("primo-explore-devenv/primo-explore/custom/" + n);
@@ -659,6 +687,7 @@ router.get('/start', function (req, res) {
         return fs.rename("./tmp/VIEW_CODE", "primo-explore/custom/" + userId, ()=>{
             fs.rename("primo-explore/custom/" + userId + '/colors.json', "primo-explore/custom/" + userId + '/colors.json.txt', () => { //change colors.json file to colors.json.txt since BO doesn't accept .json files
                 buildCustomJs.customJs(userId);
+                buildCustomCss.customCss(userId);
             });
         });
     });

@@ -1,11 +1,10 @@
 import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
-import {EditorService} from "./editor.service";
-import {IframeService} from "../utils/iframe.service";
-import {Angulartics2GoogleAnalytics} from "angulartics2/ga";
-import {CodeFile} from "../classes/code-file";
+import {EditorService} from './editor.service';
+import {IframeService} from '../utils/iframe.service';
+import {CodeFile} from '../classes/code-file';
 import * as CodeMirror from 'codemirror';
-import {FileTree} from "../classes/file-tree";
-import {ConfigurationService} from "../utils/configuration.service";
+import {FileTree} from '../classes/file-tree';
+import {ConfigurationService} from '../utils/configuration.service';
 
 @Component({
   selector: 'prm-editor',
@@ -22,7 +21,6 @@ export class EditorTabComponent implements OnInit, OnDestroy {
 
   constructor(public editorService: EditorService,
               private iframeService: IframeService,
-              private analytics: Angulartics2GoogleAnalytics,
               private configurationService: ConfigurationService){
 
     this._inProgress= false;
@@ -46,7 +44,7 @@ export class EditorTabComponent implements OnInit, OnDestroy {
     }
   }
 
-  onSave(data: CodeFile) {
+  public onSave(data: CodeFile) {
       this._inProgress = true;
       this.editorService.saveFile(data).subscribe((resp)=>{
         if(+resp.status === 200){
@@ -58,7 +56,6 @@ export class EditorTabComponent implements OnInit, OnDestroy {
       }).add(()=>{
         this._inProgress = false;
       });
-      this.analytics.eventTrack('save',{category: 'codeEditor', label: 'single_file: ' + data.file_path});
   }
 
   get codeFiles(): Map<string, CodeFile>{
@@ -72,7 +69,6 @@ export class EditorTabComponent implements OnInit, OnDestroy {
   toggleTab() {
     this._expanded = !this._expanded;
     this.expandTab.emit(this._expanded);
-    this.analytics.eventTrack('expandTab', {category: 'codeEditor', label: this._expanded});
   }
 
   createTheme(){
@@ -87,7 +83,6 @@ export class EditorTabComponent implements OnInit, OnDestroy {
     }).add(()=>{
       this._inProgress = false;
     });
-    this.analytics.eventTrack('save', {category: 'codeEditor', label: 'all_files'});
   }
 
   selectFile(file: FileTree) {

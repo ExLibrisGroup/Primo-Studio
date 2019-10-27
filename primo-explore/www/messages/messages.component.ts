@@ -1,8 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Message} from "../classes/message";
-import {Observable} from "rxjs";
+import {timer} from "rxjs";
 import {Animations} from "../utils/animations";
-import 'rxjs/add/observable/timer';
 
 @Component({
     selector: 'prm-messages',
@@ -29,7 +28,7 @@ export class MessagesComponent implements OnInit {
     public setMessage(message: Message) {
         this.messages.push(message);
         if (this.durationInMilliseconds) {
-            Observable.timer(this.durationInMilliseconds).subscribe(() => {
+            timer(this.durationInMilliseconds).subscribe(() => {
                 let i = this.messages.indexOf(message);
                 if (i > -1) {
                     this.messages.splice(i, 1);

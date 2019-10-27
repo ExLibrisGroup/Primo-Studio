@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ConfigurationService} from "./configuration.service";
 import {DomSanitizer} from "@angular/platform-browser";
+import {Observable, timer} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +10,12 @@ import {DomSanitizer} from "@angular/platform-browser";
 export class IframeService {
   private _up: boolean;
   private _nuiIFrameElement;
+  private _categorySuffix: string;
 
   constructor(private configurationService: ConfigurationService,
               private sanitizer: DomSanitizer) {
     this._up = false;
+    this._categorySuffix = '';
   }
 
   get config(){
@@ -35,8 +39,8 @@ export class IframeService {
   getIframeUrl(){
     let ve = this.configurationService.isVe;
     let appName = ve ? 'discovery' : 'primo-explore';
-    if (this.config.suffix) {
-        let middlePart = this.config.suffix;
+    if (this.config.suffix || this._categorySuffix.length) {
+        let middlePart = this._categorySuffix.length ? this._categorySuffix : this.config.suffix;
         if (middlePart.indexOf('/discovery') > -1) {
             middlePart = middlePart.replace('/discovery', '');
         }
@@ -59,4 +63,23 @@ export class IframeService {
   set up(newVal){
     this._up= newVal;
   }
+
+  set categorySuffix(suffix: string) {
+      this._categorySuffix = suffix;
+  }
+
+  public isAttributesMapInitialized(): Observable<boolean> {
+    return new Observable<boolean>(observer => {
+      timer(0, 100)
+        .pipe(map(() => (!!this.nuiIframeElement.contentWindow.appConfig) &&
+                                (!!this.nuiIframeElement.contentWindow.appConfig['primo-view']) &&
+                                (!!this.nuiIframeElement.contentWindow.appConfig['primo-view']['attributes-map'])))
+        .subscribe(bool => {
+          observer.next(bool);
+            if (bool){
+              observer.complete();
+            }
+          });
+        });
+    }
 }

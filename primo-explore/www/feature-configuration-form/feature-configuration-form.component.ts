@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {copy} from "angular";
 import {merge} from 'lodash';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {Addon} from "../classes/addon";
 import {FeaturesService} from "../utils/features.service";
 

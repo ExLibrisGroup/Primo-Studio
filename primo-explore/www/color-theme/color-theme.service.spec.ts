@@ -1,11 +1,19 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ColorThemeService } from './color-theme.service';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ConfigurationService} from '../utils/configuration.service';
 
 describe('ColorThemeService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ColorThemeService]
+        imports: [
+            HttpClientTestingModule
+        ],
+      providers: [
+          ColorThemeService,
+          {provide: ConfigurationService, useClass: ConfigurationServiceMock}
+      ]
     });
   });
 
@@ -13,3 +21,7 @@ describe('ColorThemeService', () => {
     expect(service).toBeTruthy();
   }));
 });
+
+class ConfigurationServiceMock {
+
+}

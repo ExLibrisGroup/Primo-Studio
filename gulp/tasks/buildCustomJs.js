@@ -27,7 +27,7 @@ gulp.task('watch-js', () => {
 });
 
 
-gulp.task('custom-js', ['custom-html-templates'],() => {
+gulp.task('custom-js', gulp.series('custom-html-templates'),() => {
     customJsRun();
 });
 

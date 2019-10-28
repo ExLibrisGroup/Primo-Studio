@@ -379,7 +379,7 @@ router.delete('/images', (req, res)=>{
 router.get('/single_file', (req, res)=>{
     let userId= utils.getUserId(req);
     let userCustomDir= utils.getUserCustomDir(userId);
-    let filePath = req.query.path;
+    let filePath = req.query.path.replace(/[\/\\]/g, path.sep);
     let readableStream = gulp.src([userCustomDir+filePath], {base: './primo-explore/custom'});
     let buffer;
     readableStream.on('data', (data)=>{
@@ -577,7 +577,7 @@ router.post('/package', packageUpload,  (req, res)=>{
 router.get('/file-tree', function(req, res) {
     let userId = utils.getUserId(req);
     let baseDir = utils.getUserCustomDir(userId);
-    let filename = path.resolve(baseDir).replace(/[\/\\]/g, path.sep);;
+    let filename = path.resolve(baseDir).replace(/[\/\\]/g, path.sep);
     if (filename.indexOf(baseDir.replace(/\//g, path.sep)) === -1 && filename.indexOf(baseDir.replace(/\\/g, path.sep)) === -1) {
         utils.sendErrorResponse(res, new Error('File path is not available for you'));
         return;

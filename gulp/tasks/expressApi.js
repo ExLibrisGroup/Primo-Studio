@@ -34,6 +34,12 @@ const svg2js = require('svgo/lib/svgo/svg2js');
 const svg2jsAsync = Promise.promisify(svg2js);
 const js2svg = require('svgo/lib/svgo/js2svg');
 
+const encodeResponsePaths = [
+    '/primaws/suprimaLogin',
+    '/primaws/suprimaLogout',
+    '/primo_library/libweb/primoExploreLogin',
+    '/primo_library/libweb/primoExploreLogout'
+];
 
 module.exports = router;
 
@@ -863,7 +869,7 @@ router.all('*',function(req, res, next){
 
                     res.body = newBody;
 
-                    /*console.log('newBody: ' newBody);*/
+                    // console.log('newBody: ' + newBody);
                     res.end(newBody);
                 } catch (e) {
                     res.end('');
@@ -952,7 +958,7 @@ function _next(req, res, targetUrl, vid, appPrefix){
     req.removeAllListeners('end');
     process.nextTick(function () {
         if(req.body) {
-            if (path === '/primaws/suprimaLogin') {
+            if (encodeResponsePaths.indexOf(path) >= 0) {
                 var postStr = "";
                 for (var key in req.body) {
                     postStr = postStr + encodeURIComponent(key) + "=" + encodeURIComponent(req.body[key]) + "&";

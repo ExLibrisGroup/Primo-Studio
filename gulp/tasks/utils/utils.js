@@ -95,9 +95,11 @@ function camelCaseToDashSeparated(input){
 function handleExistingPackageCommentLines(content){
     let commentLineRegex = /(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|((?<!https:|http:)\/\/.*)/g;
     let commentLines = content.match(commentLineRegex);
-    for (let comment of commentLines){
-        if (comment.indexOf('angular.module') > -1 || comment.match(new RegExp(closureFuncEndRegExpStr)) || comment.match(new RegExp(closureFuncStartRegExpStr))){
-            content = content.replace(comment, '');
+    if (commentLines){
+        for (let comment of commentLines){
+            if (comment.indexOf('angular.module') > -1 || comment.match(new RegExp(closureFuncEndRegExpStr)) || comment.match(new RegExp(closureFuncStartRegExpStr))){
+                content = content.replace(comment, '');
+            }
         }
     }
     return content;

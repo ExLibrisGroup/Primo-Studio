@@ -7,7 +7,11 @@ var glob = require('glob');
 Promise.promisifyAll(glob);
 var Response = require('http-response-object');
 
-module.exports.getCustimazationObject = function (vid,appName,isVe) {
+const primoHomePageHTMLRegex = /home(?:page)?_([a-zA-Z]{2}_[a-zA-Z]{2})\.html/;
+const primoVEHomePageHTMLRegex = /home(?:page)?_([a-zA-Z]{2})\.html/;
+const primoEmailHTMLRegex = /email_([a-zA-Z]{2}_[a-zA-Z]{2})(?:\.tmpl)?\.html/;
+const primoVEEmailHTMLRegex = /email_([a-zA-Z]{2})(?:\.tmpl)?\.html/;
+module.exports.getCustimazationObject = function (vid, appName, isVe) {
 
 
     var basedir = appName+'/custom';
@@ -104,23 +108,27 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
 
 
     //html
-    var homePaths = glob.sync(viewPackage + "/html/home_**.html", {cwd:appName});
-    var emailPaths = glob.sync(viewPackage + "/html/email_**.html", {cwd:appName});
+    var homePaths = glob.sync(viewPackage + "/html/**/home**.html", {cwd:appName});
+    var emailPaths = glob.sync(viewPackage + "/html/**/email**.html", {cwd:appName});
 
     if(homePaths && homePaths.length > 0){ // for August 2016 version
         customizationObject.staticHtml = {};
         customizationObject.staticHtml.homepage = {};
+        let homepageHtmlPattern =isVe? primoVEHomePageHTMLRegex : primoHomePageHTMLRegex;
         for (path of homePaths) {
-
-            var pathFixed = path.substring(path.indexOf('/html/home_')+11, path.indexOf('.html'));
-            customizationObject.staticHtml.homepage[pathFixed] = path;
+            let match = path.match(homepageHtmlPattern);
+            if (match){
+                customizationObject.staticHtml.homepage[match[1]] = path;
+            }
         }
 
         customizationObject.staticHtml.email = {};
+        let emailHtmlPattern = isVe? primoVEEmailHTMLRegex : primoEmailHTMLRegex;
         for (path of emailPaths) {
-
-            var pathFixed = path.substring(path.indexOf('/html/email_')+12, path.indexOf('.tmpl.html'));
-            customizationObject.staticHtml.email[pathFixed] = path;
+            let match = path.match(emailHtmlPattern)  ;
+            if (match){
+                customizationObject.staticHtml.email[match[1]] = path;
+            }
         }
 
 
@@ -128,9 +136,9 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
             var paths = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/html/home_**.html", {cwd:appName});
 
             for (path of paths) {
-                var pathFixed = path.substring(path.indexOf('/html/home_')+11, path.indexOf('.html'));
-                if (!customizationObject.staticHtml.homepage[pathFixed]) {
-                    customizationObject.staticHtml.homepage[pathFixed] = path;
+                let match = path.match(homepageHtmlPattern);
+                if (match && !customizationObject.staticHtml.homepage[match[1]]) {
+                    customizationObject.staticHtml.homepage[match[1]] = path;
                 }
 
             }
@@ -138,9 +146,9 @@ module.exports.getCustimazationObject = function (vid,appName,isVe) {
             paths = glob.sync(base_path + 'CENTRAL_PACKAGE' + "/html/email_**.html", {cwd:appName});
 
             for (path of paths) {
-                var pathFixed = path.substring(path.indexOf('/html/email_')+12, path.indexOf('.html'));
-                if (!customizationObject.staticHtml.email[pathFixed]) {
-                    customizationObject.staticHtml.email[pathFixed] = path;
+                let match = path.match(emailHtmlPattern);
+                if (match && !customizationObject.staticHtml.email[match[1]]) {
+                    customizationObject.staticHtml.email[match[1]] = path;
                 }
 
             }

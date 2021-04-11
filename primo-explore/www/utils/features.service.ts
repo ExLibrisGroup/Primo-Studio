@@ -56,6 +56,7 @@ export class FeaturesService {
         observer.complete();
       }, (err) => {
         console.log('something went wrong when installing feature:' + err.message);
+        observer.error(err);
       });
     });
   }

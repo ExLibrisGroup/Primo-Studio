@@ -34,6 +34,7 @@ const svg2js = require('svgo/lib/svgo/svg2js');
 const svg2jsAsync = Promise.promisify(svg2js);
 const js2svg = require('svgo/lib/svgo/js2svg');
 
+
 const encodeResponsePaths = [
     '/primaws/suprimaLogin',
     '/primaws/suprimaLogout',
@@ -440,8 +441,7 @@ router.post('/package', packageUpload,  (req, res)=>{
     });
     let readStream = streamifier.createReadStream(Buffer.from(fileObject.buffer));
     let zipStream = readStream
-        .pipe(unzip.Parse())
-        .pipe(writeStream);
+        .pipe(unzip.Extract(writeStream));
     streamToPromise(zipStream).then(()=>{
         console.log('unziped package');
         let directories = utils.getDirectories(packagePath);
@@ -587,6 +587,8 @@ router.post('/package', packageUpload,  (req, res)=>{
                 return console.error('failed to upload package');
             });
         });
+    }).catch((e)=>{
+        return console.error(e);
     });
 
 });

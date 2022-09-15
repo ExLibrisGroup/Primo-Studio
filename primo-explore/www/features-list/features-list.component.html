@@ -1,46 +1,49 @@
 <h2>Features</h2>
-<p class="italics">Add features and addons developed and maintained by the Primo community</p>
+<div>
+    <p class="italics">Add features and addons developed and maintained by the Primo community</p>
+    <a class="terms-of-use-link" href="https://developers.exlibrisgroup.com/about/terms/" target="_blank">Followed by terms of use</a>
+</div>
 
 <div class="content">
-  <div class="filter-container">
-    <input #term type="text" placeholder="Filter Add-ons" [value]="searchTerm" (keyup)="setSearchTerm(term.value)">
-    <select #filter (change)="setSelectedFilter(filter.value)">
-      <option *ngFor="let field of filterOptions" [value]="field.key" [selected]="field.key === selectedFilterField">{{field.displayName}}</option>
-    </select>
-  </div>
-
-  <div class="content-row content-item" *ngFor="let addOn of getFilteredFeatures()">
-
-    <div class="item-body">
-      <h3 class="item-line">{{addOn.what}}</h3>
-      <h4 class="item-line" *ngIf="addOn.hook">Hook: {{addOn.hook}}</h4>
-      <p class="item-line" *ngIf="addOn.notes">{{addOn.notes}}</p>
-      <div class="item-line">
-        <span class="author-image"><img [src]="addOn.face" [alt]="addOn.who" /></span>
-        <small class="author-name">{{addOn.who}}</small>
-      </div>
-      <div class="item-actions">
-        <small class="github-link">
-          <a target="_blank" [href]="addOn.linkGit" title="see it on github">
-            <i class="icon-github"></i>
-            <span>View in Github</span>
-          </a>
-        </small>
-
-        <button class="is-small" *ngIf="!isFeatureInstalled(addOn.npmid)" (click)="selectFeature(addOn)"
-                [disabled]="inProgress[addOn.npmid]">
-          <i *ngIf="!inProgress[addOn.npmid]" class="icon-add"></i>
-          <prm-busy-spinner *ngIf="inProgress[addOn.npmid]"></prm-busy-spinner>
-          Add
-        </button>
-        <button class="is-small" *ngIf="isFeatureInstalled(addOn.npmid)" (click)="removeFeature(addOn.npmid, addOn.hook)"
-                [disabled]="inProgress[addOn.npmid]">
-          <i *ngIf="!inProgress[addOn.npmid]" class="icon-close"></i>
-          <prm-busy-spinner *ngIf="inProgress[addOn.npmid]"></prm-busy-spinner>
-          Remove
-        </button>
-      </div>
+    <div class="filter-container">
+        <input #term type="text" placeholder="Filter Add-ons" [value]="searchTerm" (keyup)="setSearchTerm(term.value)">
+        <select #filter (change)="setSelectedFilter(filter.value)">
+            <option *ngFor="let field of filterOptions" [value]="field.key" [selected]="field.key === selectedFilterField">{{field.displayName}}</option>
+        </select>
     </div>
 
-  </div>
+    <div class="content-row content-item" *ngFor="let addOn of getFilteredFeatures()">
+
+        <div class="item-body">
+            <h3 class="item-line">{{addOn.what}}</h3>
+            <h4 class="item-line" *ngIf="addOn.hook">Hook: {{addOn.hook}}</h4>
+            <p class="item-line" *ngIf="addOn.notes">{{addOn.notes}}</p>
+            <div class="item-line">
+                <span class="author-image"><img [src]="addOn.face" [alt]="addOn.who" /></span>
+                <small class="author-name">{{addOn.who}}</small>
+            </div>
+            <div class="item-actions">
+                <small class="github-link">
+                    <a target="_blank" [href]="addOn.linkGit" title="see it on github">
+                        <i class="icon-github"></i>
+                        <span>View in Github</span>
+                    </a>
+                </small>
+
+                <button class="is-small" *ngIf="!isFeatureInstalled(addOn.npmid)" (click)="selectFeature(addOn)"
+                        [disabled]="inProgress[addOn.npmid]">
+                    <i *ngIf="!inProgress[addOn.npmid]" class="icon-add"></i>
+                    <prm-busy-spinner *ngIf="inProgress[addOn.npmid]"></prm-busy-spinner>
+                    Add
+                </button>
+                <button class="is-small" *ngIf="isFeatureInstalled(addOn.npmid)" (click)="removeFeature(addOn.npmid, addOn.hook)"
+                        [disabled]="inProgress[addOn.npmid]">
+                    <i *ngIf="!inProgress[addOn.npmid]" class="icon-close"></i>
+                    <prm-busy-spinner *ngIf="inProgress[addOn.npmid]"></prm-busy-spinner>
+                    Remove
+                </button>
+            </div>
+        </div>
+
+    </div>
 </div>

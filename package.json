@@ -38,7 +38,7 @@
     "css-color-extractor-cli": "0.0.1",
     "del": "2.2.1",
     "directory-tree": "^2.2.3",
-    "express": "4.16.0",
+    "express": "4.19.2",
     "font-awesome": "^4.7.0",
     "font-blast": "^0.7.0",
     "fs-extra": "2.1.2",

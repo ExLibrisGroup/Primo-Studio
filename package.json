@@ -32,6 +32,7 @@
     "classlist.js": "^1.1.20150312",
     "concat-stream": "^1.6.2",
     "connect-modrewrite": "^0.10.2",
+    "console-stamp": "^3.1.2",
     "cookie-parser": "^1.4.4",
     "css": "^2.2.4",
     "css-color-extractor": "0.0.4",

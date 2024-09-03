@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const storage = require('node-persist');
 const api = require('./expressApi');
 const http = require('http');
-
+require( 'console-stamp' )( console );
 
 gulp.task('serve', function() {
     //1. serve with default settings
@@ -29,6 +29,7 @@ gulp.task('serve', function() {
     //var server = gls.static(['primo-explore/www','primo-explore/api'], 8888);
     const express = require('express');
     const appS = express();
+    appS.use(bodyParser.text({limit: '10mb', type: '*text*'}));
     appS.use( bodyParser.json({limit: '10mb'}) );
     appS.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
     appS.use(express.static('primo-explore/dist/primo-explore'));

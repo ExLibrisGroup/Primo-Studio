@@ -61,6 +61,7 @@
     "gulp-wrap": "^0.14.0",
     "gulp-zip": "3.1.0",
     "http-response-object": "1.1.0",
+    "jscodeshift": "^17.0.0",
     "listdirs": "3.0.0",
     "lodash": "^4.17.11",
     "merge-stream": "1.0.0",

@@ -201,8 +201,8 @@ router.get('/icons', async function(req, res){
     let fileExists;
     let data;
     try {
-         data = await fsp.readFile(customUiPath);
-         fileExists = true;
+        data = await fsp.readFile(customUiPath);
+        fileExists = true;
     }
     catch (err){
         fileExists = false;
@@ -478,11 +478,10 @@ router.post('/package', packageUpload,  (req, res)=>{
                 if (fs.existsSync(customJsPath)) {
                     fs.renameSync(customJsPath, packagePath + '/' + dirName + '/js/customUploadedPackage.js');
                     fs.readFile(packagePath + '/' + dirName + '/js/customUploadedPackage.js', 'utf8', (err,data)=> {
-                        //fixes bug where commented out code was causing problems with parsing the existing custom.js file
-                        data = utils.handleExistingPackageCommentLines(data);
-
                         try {
-                            data = utils.unwrapJs(data); //during concatenation we wrap code with function so we need to unwrap before we concatenate
+                            //during concatenation we wrap code with function so we need to unwrap before we concatenate
+                            //fixes bug where commented out code was causing problems with parsing the existing custom.js file
+                            data = utils.unwrapJSFormIEFEAndHandleExistingPackageCommentLines(data);
                         }
                         catch (e){
                             console.error(e);

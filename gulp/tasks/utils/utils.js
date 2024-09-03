@@ -5,6 +5,8 @@ const npmi= require('npmi');
 const wrap = require("gulp-wrap");
 const gulp = require('gulp');
 const request = require('request');
+// const {run: jscodeshift} = require('jscodeshift/src/Runner')
+const jscodeshift = require('jscodeshift/src/core');
 let expectedSecretCookie;
 try {
     expectedSecretCookie = require('./secretCookie');
@@ -13,10 +15,10 @@ try {
 }
 
 function createNewUserId(){
-     var d = new Date();
-     var n = d.getTime();
-     console.log('created new user id: ' + shorthash.unique(n.toString()));
-     return shorthash.unique(n.toString());
+    var d = new Date();
+    var n = d.getTime();
+    console.log('created new user id: ' + shorthash.unique(n.toString()));
+    return shorthash.unique(n.toString());
 }
 
 function getUserId(req){
@@ -92,67 +94,57 @@ function camelCaseToDashSeparated(input){
         .replace(/([a-z\d])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
-function handleExistingPackageCommentLines(content){
-    let commentLineRegex = /(\/\*([^*]|[\r\n]|(\*+([^*/]|[\r\n])))*\*+\/)|((?<!https:|http:)\/\/.*)/g;
-    let commentLines = content.match(commentLineRegex);
-    if (commentLines){
-        for (let comment of commentLines){
-            if (comment.indexOf('angular.module') > -1 || comment.match(new RegExp(closureFuncEndRegExpStr)) || comment.match(new RegExp(closureFuncStartRegExpStr))){
-                content = content.replace(comment, '');
+function isIifeExpression(node) {
+    return node.expression &&
+        node.expression.type === "CallExpression" &&
+        node.expression.callee.type === "FunctionExpression";
+}
+
+/*uses jscodeshift to transform the code to AST then performs the following and converts AST back to code:
+* 1. unwraps the code that is within the IIFE
+* 2. removes comments that might interfere with parsing of code
+* */
+function unwrapJSFormIEFEAndHandleExistingPackageCommentLines(content){
+    console.time('a')
+
+    const j = jscodeshift.withParser();
+    const ast = j(content);
+    const body = ast.find(j.Program).get("body");
+    const getFirstNode = () => ast.find(j.Program).get('body', 0).node;
+
+    // Save the comments attached to the first node
+    const firstNode = getFirstNode();
+    const { comments } = firstNode;
+
+    ast
+        .find(j.ExpressionStatement, isIifeExpression)
+        .forEach(ast => {
+            if (ast.scope.isGlobal) {
+                j(ast).replaceWith(ast.node.expression.callee.body.body);
             }
-        }
-    }
-    return content;
+
+        });
+
+    ast
+        .find(j.Node).filter(path => path.node.comments)
+        .forEach(path => {
+            //delete path.node.comments
+            let comments = path.node.comments;
+            if (comments) {
+                path.node.comments= comments.filter((comment)=> {
+                    const value = comment.value;
+                    return !(value.indexOf('angular.module') > -1 )
+                })
+            }
+
+        })
+
+
+
+    const res =  ast.toSource();
+    console.timeEnd('a');
+    return res;
 }
-
-
-const closureFuncStartRegExpStr = '(\\()[\\s]*?function[\\s]*?\\([\\s]*\\)[\\s]*?({)';
-const closureFuncEndRegExpStr = '}[\\s]*?\\)[\\s]*?\\([\\s]*?\\)[\\s]*?;';
-
-function unwrapJs(content){
-    let startRegExp = new RegExp(closureFuncStartRegExpStr);
-    let matchFunctionClosureOpening= content.match(startRegExp);
-    let functionClosureOpeningPos = matchFunctionClosureOpening.index + matchFunctionClosureOpening[0].indexOf('{');
-    let functionClosureClosingPos = findClosingBracketMatchIndex(content, functionClosureOpeningPos);
-    if (functionClosureClosingPos === -1){
-        throw new Error('no closing bracket to opening function block');
-    }
-    let endRegExp = new RegExp(closureFuncEndRegExpStr, 'g');
-    content = content.replace(endRegExp, (match, index, originalString)=>{
-        if (index === functionClosureClosingPos){
-            return '';
-        }
-        return match;
-    });
-    content = content.replace(startRegExp, '');
-    return content;
-
-}
-
-function findClosingBracketMatchIndex(str, pos) {
-    let openingBracket = str[pos];
-    let closingBracket;
-    switch (openingBracket){
-        case '(': closingBracket = ')'; break;
-        case '{': closingBracket = '}'; break;
-        default: throw new Error("No opening bracket at index " + pos);
-    }
-    let depth = 1;
-    for (let i = pos + 1; i < str.length; i++) {
-        switch (str[i]) {
-            case openingBracket:
-                depth++;
-                break;
-            case closingBracket:
-                if (--depth == 0) {
-                    return i;
-                }
-                break;
-        }
-    }
-    return -1;    // No matching closing parenthesis
-}
-
 
 function npmInstallWithPromise(installPath, npmId){
     return new Promise((resolve, reject)=>{
@@ -286,7 +278,6 @@ module.exports={
     getUserInstalledFeaturesList: getUserInstalledFeaturesList,
     getDirectories: getDirectories,
     dashSeparatedToCamelCase: dashSeparatedToCamelCase,
-    unwrapJs: unwrapJs,
     npmInstallWithPromise: npmInstallWithPromise,
     fixManuallyAddedComponents: fixManuallyAddedComponents,
     combineObjectsWithArrayValues: combineObjectsWithArrayValues,
@@ -294,5 +285,5 @@ module.exports={
     wrapFilesWithAutoGeneratedHeader: wrapFilesWithAutoGeneratedHeader,
     trustedTravisIp: trustedTravisIp,
     getUserTestsPath: getUserTestsPath,
-    handleExistingPackageCommentLines: handleExistingPackageCommentLines
+    unwrapJSFormIEFEAndHandleExistingPackageCommentLines: unwrapJSFormIEFEAndHandleExistingPackageCommentLines
 }
